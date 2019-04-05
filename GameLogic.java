@@ -1,4 +1,7 @@
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class GameLogic {
     static Set<List<Integer>> visited = new HashSet<List<Integer>>();
@@ -74,7 +77,7 @@ public class GameLogic {
         int[] adjs = getAdjacentCoordinates(y_, x_, height);
         for (int i = 0; i < adjs.length-1; i += 2) {
             if (board_[adjs[i]][adjs[i+1]] == colour && !(visited.contains(Arrays.asList(i, i+1)))) {
-                return willBeCaptured(board_, i, i+1, height, colour);
+                return willBeCaptured(board_, adjs[i], adjs[i+1], height, colour);
             }
         }
         return true;
