@@ -23,9 +23,14 @@ public class GameLogic {
         else initialProposedBoard[y_][x_] = 1;
         int[][] finalProposedBoard = updateBoard(initialProposedBoard, y_, x_, height_, CPT, white_);
         //check move is legal: there is at least 1 liberty around the new piece after captures accounted for
-        if (getLiberties(y_, x_, height_, finalProposedBoard).length == 0) return true;
+        if (getLiberties(y_, x_, height_, finalProposedBoard).length == 0) {
+            System.out.println("suicide is forbidden");
+            return true;
+        }
         //check move is legal: non-suicidal?
-        //TODO
+        visited.clear();
+        int tempColour = finalProposedBoard[y_][x_];
+        if (willBeCaptured(finalProposedBoard, y_, x_, height_, tempColour)) return true;
         //check move is legal: not a repeat of previous game board?
         boolean Same = true;
         for (int i = 0; i < height_; ++i) {
@@ -76,7 +81,7 @@ public class GameLogic {
         if (getLiberties(y_, x_, height, board_).length != 0) return false;
         int[] adjs = getAdjacentCoordinates(y_, x_, height);
         for (int i = 0; i < adjs.length-1; i += 2) {
-            if (board_[adjs[i]][adjs[i+1]] == colour && !(visited.contains(Arrays.asList(i, i+1)))) {
+            if (board_[adjs[i]][adjs[i+1]] == colour && !(visited.contains(Arrays.asList(adjs[i], adjs[i+1])))) {
                 return willBeCaptured(board_, adjs[i], adjs[i+1], height, colour);
             }
         }
