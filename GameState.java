@@ -42,7 +42,7 @@ public class GameState {
         previousBoard = board;
         if (currentPlayerTurn == white) board[y][x] = 2; //2 is white
         else board[y][x] = 1; //1 is black
-        board = GameLogic.updateBoard(board, y, x);
+        board = GameLogic.updateBoard(board, y, x, height, currentPlayerTurn, white);
         ++turnNo;
         if (turnNo % 2 == 0) currentPlayerTurn = black;
         else currentPlayerTurn = white;
