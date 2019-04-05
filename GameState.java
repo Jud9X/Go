@@ -9,11 +9,12 @@ public class GameState {
     public int passCount; //make private later(?)
     private int turnNo;
     public String currentPlayerTurn; //make private later(?)
+    private int[][] previousBoard;
     
-    public GameState(int k, User player1_, User player2_) { //player1 is player 1 user object
+    public GameState(int k, User player1_, User player2_) { //player1_ is a user object
         height = k;
         width = k;
-        board = new int[k][k]; //0 will be empty, 1 will be black and 2 will be white
+        board = new int[k][k]; //0 will mean empty, 1 will mean black and 2 will mean white
         player1 = player1_;
         player2 = player2_;
         if (player1.getWinRate() > player2.getWinRate()) {
@@ -26,23 +27,22 @@ public class GameState {
         }
         else {
             white = player1.getUsername();
-            black = player2.getUsername(); // can randomise this later
+            black = player2.getUsername(); //can randomise this later
         }
         passCount = 0;
         turnNo = 0;
         currentPlayerTurn = black; //or directly enter username
+        previousBoard = new int[k][k];
     }
     
     //y is the first index, x is the second index, starting from (0,0) in the top left corner to (k-1, k-1)
     public void placePiece(int y, int x) {
-        if (board[y][x] != 0) {
-            System.out.println("someone's already here: x=" + x + ", y=" + y);
-            return;
-        }
+        if (GameLogic.moveIsIllegal(previousBoard, board, y, x, height, currentPlayerTurn, white)) return;
         passCount = 0;
+        previousBoard = board;
         if (currentPlayerTurn == white) board[y][x] = 2; //2 is white
         else board[y][x] = 1; //1 is black
-        //TODO: auto-remove pieces if necessary as a result of the move here
+        board = GameLogic.updateBoard(board, y, x);
         ++turnNo;
         if (turnNo % 2 == 0) currentPlayerTurn = black;
         else currentPlayerTurn = white;

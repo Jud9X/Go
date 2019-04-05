@@ -6,7 +6,7 @@ public class User { //should be private??
     //TODO: date and time of last login
     //TODO: profile image
     
-    public User(String username_, String fname_, String lname_) {
+    public User(String username_, String fname_, String lname_) { //should be private??
         this.username = username_;
         this.fname = fname_;
         this.lname = lname_;
@@ -21,5 +21,15 @@ public class User { //should be private??
         return winRate;
     }
     
-    //TODO: toString()?
+    public void updateWinRate(double newRate) {
+        winRate = newRate;
+        return;
+    }
+    
+    public String toString() {
+        return "Username: " + username + "\n"
+            + "First name: " + fname + "\n"
+            + "Last name: " + lname + "\n"
+            + "Win rate: " + winRate;
+    }
 }
