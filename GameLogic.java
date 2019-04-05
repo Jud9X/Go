@@ -20,53 +20,7 @@ public class GameLogic {
         else initialProposedBoard[y_][x_] = 1;
         int[][] finalProposedBoard = updateBoard(initialProposedBoard, y_, x_, height_, CPT, white_);
         //check move is legal: there is at least 1 liberty around the new piece after captures accounted for
-        boolean atLeastOneLiberty = false;
-        //1. interior point case
-        if (x_ > 0 && x_ < height_-1 && y_ > 0 && y_ < height_-1) {
-            if (finalProposedBoard[y_][x_+1] == 0) atLeastOneLiberty = true; //get rid of all these and use new getLiberties function
-            if (finalProposedBoard[y_][x_-1] == 0) atLeastOneLiberty = true;
-            if (finalProposedBoard[y_+1][x_] == 0) atLeastOneLiberty = true;
-            if (finalProposedBoard[y_-1][x_] == 0) atLeastOneLiberty = true;
-        }
-        //2. corner point cases
-        else if (x_ == 0 && y_ == 0) {
-            if (finalProposedBoard[y_][x_+1] == 0) atLeastOneLiberty = true;
-            if (finalProposedBoard[y_+1][x_] == 0) atLeastOneLiberty = true;
-        }
-        else if (x_ == 0 && y_ == height_-1) {
-            if (finalProposedBoard[y_][x_+1] == 0) atLeastOneLiberty = true;
-            if (finalProposedBoard[y_-1][x_] == 0) atLeastOneLiberty = true;
-        }
-        else if (x_ == height_-1 && y_ == 0) {
-            if (finalProposedBoard[y_][x_-1] == 0) atLeastOneLiberty = true;
-            if (finalProposedBoard[y_+1][x_] == 0) atLeastOneLiberty = true;
-        }
-        else if (x_ == height_-1 && y_ == height_-1) {
-            if (finalProposedBoard[y_][x_-1] == 0) atLeastOneLiberty = true;
-            if (finalProposedBoard[y_-1][x_] == 0) atLeastOneLiberty = true;
-        }
-        //3. edge point cases
-        else if (x_ == 0) {
-            if (finalProposedBoard[y_][x_+1] == 0) atLeastOneLiberty = true;
-            if (finalProposedBoard[y_+1][x_] == 0) atLeastOneLiberty = true;
-            if (finalProposedBoard[y_-1][x_] == 0) atLeastOneLiberty = true;
-        }
-        else if (x_ == height_-1) {
-            if (finalProposedBoard[y_][x_-1] == 0) atLeastOneLiberty = true;
-            if (finalProposedBoard[y_+1][x_] == 0) atLeastOneLiberty = true;
-            if (finalProposedBoard[y_-1][x_] == 0) atLeastOneLiberty = true;
-        }
-        else if (y_ == 0) {
-            if (finalProposedBoard[y_][x_+1] == 0) atLeastOneLiberty = true;
-            if (finalProposedBoard[y_][x_-1] == 0) atLeastOneLiberty = true;
-            if (finalProposedBoard[y_+1][x_] == 0) atLeastOneLiberty = true;
-        }
-        else { //y_ == height_-1
-            if (finalProposedBoard[y_][x_+1] == 0) atLeastOneLiberty = true;
-            if (finalProposedBoard[y_][x_-1] == 0) atLeastOneLiberty = true;
-            if (finalProposedBoard[y_-1][x_] == 0) atLeastOneLiberty = true;
-        }
-        if (!atLeastOneLiberty) return true;
+        if (getLiberties(y_, x_, height_, finalProposedBoard).length == 0) return true;
         //check move is legal: non-suicidal?
         //TODO
         //check move is legal: not a repeat of previous game board?
@@ -76,7 +30,7 @@ public class GameLogic {
                 if (finalProposedBoard[i][j] != previousBoard_[i][j]) Same = false;
             }
         }
-        return Same; //this is becoming a very long method...
+        return Same;
     }
     
     public static int[][] updateBoard(int[][] board_, int y_, int x_, int height, String CPT, String white_) { //updates board as a result of a player CPT placing a piece at (x_, y_)
@@ -116,7 +70,7 @@ public class GameLogic {
     public static boolean willBeCaptured(int[][] board_, int y_, int x_, int height, int colour) {
         visited.add(Arrays.asList(y_, x_));
         //int colour = board_[y][x];
-        if (getLiberties(y_, x_, height, board_).length == 0) return false;
+        if (getLiberties(y_, x_, height, board_).length != 0) return false;
         int[] adjs = getAdjacentCoordinates(y_, x_, height);
         for (int i = 0; i < adjs.length-1; i += 2) {
             if (board_[adjs[i]][adjs[i+1]] == colour && !(visited.contains(Arrays.asList(i, i+1)))) {
@@ -133,33 +87,33 @@ public class GameLogic {
         if (x > 0 && x < height-1 && y > 0 && y < height-1) {
             int[] t = new int[8];
             t[0] = y+1; t[1] = x;
-            t[2] = y; t[3] = x+1;
+            t[2] = y;   t[3] = x+1;
             t[4] = y-1; t[5] = x;
-            t[6] = y; t[7] = x-1;
+            t[6] = y;   t[7] = x-1;
             return t;
         }
         //2. corner point cases
         else if (x == 0 && y == 0) {
             int[] t = new int[4];
-            t[0] = y; t[1] = x+1;
-            t[2] = y-1; t[3] = x;
+            t[0] = y;   t[1] = x+1;
+            t[2] = y+1; t[3] = x;
             return t;
         }
         else if (x == 0 && y == height-1) {
             int[] t = new int[4];
             t[0] = y-1; t[1] = x;
-            t[2] = y; t[3] = x+1;
+            t[2] = y;   t[3] = x+1;
             return t;
         }
         else if (x == height-1 && y == 0) {
             int[] t = new int[4];
-            t[0] = y-1; t[1] = x;
-            t[2] = y; t[3] = x-1;
+            t[0] = y+1; t[1] = x;
+            t[2] = y;   t[3] = x-1;
             return t;
         }
         else if (x == height-1 && y == height-1) {
             int[] t = new int[4];
-            t[0] = y; t[1] = x-1;
+            t[0] = y;   t[1] = x-1;
             t[2] = y-1; t[3] = x;
             return t;
         }
@@ -167,7 +121,7 @@ public class GameLogic {
         else if (x == 0) {
             int[] t = new int[6];
             t[0] = y+1; t[1] = x;
-            t[2] = y; t[3] = x+1;
+            t[2] = y;   t[3] = x+1;
             t[4] = y-1; t[5] = x;
             return t;
         }
@@ -175,21 +129,21 @@ public class GameLogic {
             int[] t = new int[6];
             t[0] = y+1; t[1] = x;
             t[2] = y-1; t[3] = x;
-            t[4] = y; t[5] = x-1;
+            t[4] = y;   t[5] = x-1;
             return t;
         }
         else if (y == 0) {
             int[] t = new int[6];
-            t[0] = y; t[1] = x+1;
+            t[0] = y;   t[1] = x+1;
             t[2] = y+1; t[3] = x;
-            t[4] = y; t[5] = x-1;
+            t[4] = y;   t[5] = x-1;
             return t;
         }
         else { //y_ == height_-1
             int[] t = new int[6];
             t[0] = y-1; t[1] = x;
-            t[2] = y; t[3] = x+1;
-            t[4] = y; t[5] = x-1;
+            t[2] = y;   t[3] = x+1;
+            t[4] = y;   t[5] = x-1;
             return t;
         }
     }

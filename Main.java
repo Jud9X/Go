@@ -39,5 +39,9 @@ public class Main {
         g.pass();
         System.out.println("Pass count: " + g.passCount);
         System.out.println(Arrays.deepToString(g.showBoard()));
+        System.out.println(g.currentPlayerTurn);
+        System.out.println(Arrays.deepToString(g.showBoard()));
+        g.placePiece(0, 0);
+        System.out.println(Arrays.deepToString(g.showBoard()));
     }
 }
