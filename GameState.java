@@ -39,7 +39,11 @@ public class GameState {
     public void placePiece(int y, int x) {
         if (GameLogic.moveIsIllegal(previousBoard, board, y, x, height, currentPlayerTurn, white)) return;
         passCount = 0;
-        previousBoard = board;
+        for (int i = 0; i < height; ++i) {
+            for (int j = 0; j < height; ++j) {
+                previousBoard[i][j] = board[i][j];
+            }
+        }
         if (currentPlayerTurn == white) board[y][x] = 2; //2 is white
         else board[y][x] = 1; //1 is black
         board = GameLogic.updateBoard(board, y, x, height, currentPlayerTurn, white);

@@ -9,7 +9,7 @@ public class GameLogic {
     public static boolean moveIsIllegal(int[][] previousBoard_, int[][] board_, int y_, int x_, int height_, String CPT, String white_) { //replace height_ parameter with board_.length in function?
         //check move is legal: place is free?
         if (board_[y_][x_] != 0) {
-            System.out.println("someone's already here: x=" + x_ + ", y=" + y_); //don't need this in the long-term
+            System.out.println("someone's already here: x=" + x_ + ", y=" + y_); //don't need this in the long-term?
             return true;
         }
         //setup final proposed board for checking
@@ -22,15 +22,18 @@ public class GameLogic {
         if (CPT == white_) initialProposedBoard[y_][x_] = 2; //need str.equals() here and elsewhere?
         else initialProposedBoard[y_][x_] = 1;
         int[][] finalProposedBoard = updateBoard(initialProposedBoard, y_, x_, height_, CPT, white_);
-        //check move is legal: there is at least 1 liberty around the new piece after captures accounted for
-        if (getLiberties(y_, x_, height_, finalProposedBoard).length == 0) {
-            System.out.println("suicide is forbidden");
-            return true;
-        }
         //check move is legal: non-suicidal?
         visited.clear();
         int tempColour = finalProposedBoard[y_][x_];
-        if (willBeCaptured(finalProposedBoard, y_, x_, height_, tempColour)) return true;
+        if (willBeCaptured(finalProposedBoard, y_, x_, height_, tempColour)) {
+            System.out.println("suicide is forbidden");
+            return true;
+        }
+        //check move is legal: there is at least 1 liberty around the new piece after captures accounted for
+        if (getLiberties(y_, x_, height_, finalProposedBoard).length == 0) {
+            System.out.println("no liberties around your piece here");
+            return true;
+        }
         //check move is legal: not a repeat of previous game board?
         boolean Same = true;
         for (int i = 0; i < height_; ++i) {
@@ -38,6 +41,7 @@ public class GameLogic {
                 if (finalProposedBoard[i][j] != previousBoard_[i][j]) Same = false;
             }
         }
+        if (Same) System.out.println("no ko, sorry");
         return Same;
     }
     
