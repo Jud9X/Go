@@ -84,12 +84,13 @@ public class GameLogic {
         //int colour = board_[y][x];
         if (getLiberties(y_, x_, height, board_).length != 0) return false;
         int[] adjs = getAdjacentCoordinates(y_, x_, height);
+        boolean willBeCaptured = true;
         for (int i = 0; i < adjs.length-1; i += 2) {
             if (board_[adjs[i]][adjs[i+1]] == colour && !(visited.contains(Arrays.asList(adjs[i], adjs[i+1])))) {
-                return willBeCaptured(board_, adjs[i], adjs[i+1], height, colour);
+                willBeCaptured = willBeCaptured(board_, adjs[i], adjs[i+1], height, colour);
             }
         }
-        return true;
+        return willBeCaptured;
     }
     
     //function gets the coordinates of all existing adjacent places (NESW) to an input coordinate pair

@@ -62,6 +62,8 @@ public class Score {
                     touchesWhite = false;
                     if (isTerritory(finalBoard, i, j)) {
                         confirmedTerritory.addAll(possibleTerritory);
+                        //possibleTerritory.forEach(System.out::println);
+                        //System.out.println("finished " + i + " " + j);
                         if (touchesBlack) territorySums[0] += possibleTerritory.size();
                         else territorySums[1] += possibleTerritory.size();
                     }
@@ -80,12 +82,13 @@ public class Score {
             else if (board[adjs[i]][adjs[i+1]] == 2) touchesWhite = true;
         }
         if (touchesBlack && touchesWhite) return false;
+        boolean isTerritory = true;
         for (int i = 0; i < adjs.length-1; i += 2) {
             if (board[adjs[i]][adjs[i+1]] == 0 && !(possibleTerritory.contains(Arrays.asList(adjs[i], adjs[i+1])))) {
-                return isTerritory(board, adjs[i], adjs[i+1]);
+                isTerritory = isTerritory(board, adjs[i], adjs[i+1]);
             }
         }
-        return true;
+        return isTerritory;
     }
     
     public static int[] calculateFinalScores(int[] territory, int[] captures, int deadBlacks, int deadWhites) {

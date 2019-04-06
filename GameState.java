@@ -66,8 +66,6 @@ public class GameState {
             }
         }
         captures[currentPlayerColour-1] += otherPlayerCountPrevious - otherPlayerCountNew;
-        System.out.println("Captured by black: " + captures[0]);
-        System.out.println("Captured by white: " + captures[1]);
         ++turnNo;
         if (turnNo % 2 == 0) currentPlayerTurn = black;
         else currentPlayerTurn = white;
