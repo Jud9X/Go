@@ -1,6 +1,4 @@
 public class GameState {
-    private int height;
-    private int width;
     private int[][] board; //e.g. 9x9 2D array
     private String white;
     private String black;
@@ -14,8 +12,6 @@ public class GameState {
     public boolean finished; //make private later(?)
     
     public GameState(int k, User player1_, User player2_) { //player1_ is a user object
-        height = k;
-        width = k;
         board = new int[k][k]; //0 will mean empty, 1 will mean black and 2 will mean white
         player1 = player1_;
         player2 = player2_;
@@ -41,10 +37,10 @@ public class GameState {
     
     //y is the first index, x is the second index, starting from (0,0) in the top left corner to (k-1, k-1)
     public void placePiece(int y, int x) {
-        if (GameLogic.moveIsIllegal(previousBoard, board, y, x, height, currentPlayerTurn, white)) return;
+        if (GameLogic.moveIsIllegal(previousBoard, board, y, x, currentPlayerTurn, white)) return;
         passCount = 0;
-        for (int i = 0; i < height; ++i) {
-            for (int j = 0; j < height; ++j) {
+        for (int i = 0; i < board.length; ++i) {
+            for (int j = 0; j < board.length; ++j) {
                 previousBoard[i][j] = board[i][j];
             }
         }
@@ -52,16 +48,16 @@ public class GameState {
         else board[y][x] = 1; //1 is black
         int currentPlayerColour = board[y][x]; //could use this in the following functions to make them simpler?
         int otherPlayerColour = (currentPlayerColour == 1) ? 2 : 1;
-        board = GameLogic.updateBoard(board, y, x, height, currentPlayerTurn, white);
+        board = GameLogic.updateBoard(board, y, x, currentPlayerTurn, white);
         int otherPlayerCountPrevious = 0;
-        for (int i = 0; i < height; ++i) {
-            for (int j = 0; j < height; ++j) {
+        for (int i = 0; i < board.length; ++i) {
+            for (int j = 0; j < board.length; ++j) {
                 if (previousBoard[i][j] == otherPlayerColour) ++otherPlayerCountPrevious;
             }
         }
         int otherPlayerCountNew = 0;
-        for (int i = 0; i < height; ++i) {
-            for (int j = 0; j < height; ++j) {
+        for (int i = 0; i < board.length; ++i) {
+            for (int j = 0; j < board.length; ++j) {
                 if (board[i][j] == otherPlayerColour) ++otherPlayerCountNew;
             }
         }

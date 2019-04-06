@@ -93,8 +93,6 @@ public class Score {
     
     public static int[] calculateFinalScores(int[] territory, int[] captures, int deadBlacks, int deadWhites) {
         int[] finalScores = new int[2]; //finalScores[0] is black's score and [1] is white's score
-        System.out.println("Black's score calc: " + territory[0] + " - " + captures[1] + " - " + deadBlacks);
-        System.out.println("White's score calc: " + territory[1] + " - " + captures[0] + " - " + deadWhites);
         finalScores[0] += territory[0] - captures[1] - deadBlacks;
         finalScores[1] += territory[1] - captures[0] - deadWhites;
         return finalScores;

@@ -6,38 +6,38 @@ import java.util.Set;
 public class GameLogic {
     static Set<List<Integer>> visited = new HashSet<List<Integer>>();
     
-    public static boolean moveIsIllegal(int[][] previousBoard_, int[][] board_, int y_, int x_, int height_, String CPT, String white_) { //replace height_ parameter with board_.length in function?
+    public static boolean moveIsIllegal(int[][] previousBoard_, int[][] board_, int y_, int x_, String CPT, String white_) {
         //check move is legal: place is free?
         if (board_[y_][x_] != 0) {
             System.out.println("someone's already here: x=" + x_ + ", y=" + y_); //don't need this in the long-term?
             return true;
         }
         //setup final proposed board for checking
-        int[][] initialProposedBoard = new int[height_][height_];
-        for (int i = 0; i < height_; ++i) {
-            for (int j = 0; j < height_; ++j) {
+        int[][] initialProposedBoard = new int[board_.length][board_.length];
+        for (int i = 0; i < board_.length; ++i) {
+            for (int j = 0; j < board_.length; ++j) {
                 initialProposedBoard[i][j] = board_[i][j];
             }
         }
         if (CPT == white_) initialProposedBoard[y_][x_] = 2; //need str.equals() here and elsewhere?
         else initialProposedBoard[y_][x_] = 1;
-        int[][] finalProposedBoard = updateBoard(initialProposedBoard, y_, x_, height_, CPT, white_);
+        int[][] finalProposedBoard = updateBoard(initialProposedBoard, y_, x_, CPT, white_);
         //check move is legal: non-suicidal
         int tempColour = finalProposedBoard[y_][x_];
         visited.clear();
-        if (willBeCaptured(finalProposedBoard, y_, x_, height_, tempColour)) {
+        if (willBeCaptured(finalProposedBoard, y_, x_, tempColour)) {
             System.out.println("suicide is forbidden");
             return true;
         }
         //check move is legal: there is at least 1 liberty around the new piece after captures accounted for
-        if (getLiberties(y_, x_, height_, finalProposedBoard).length == 0) {
+        if (getLiberties(y_, x_, finalProposedBoard).length == 0) {
             System.out.println("no liberties around your piece here");
             return true;
         }
         //check move is legal: not a repeat of previous game board
         boolean Same = true;
-        for (int i = 0; i < height_; ++i) {
-            for (int j = 0; j < height_; ++j) {
+        for (int i = 0; i < board_.length; ++i) {
+            for (int j = 0; j < board_.length; ++j) {
                 if (finalProposedBoard[i][j] != previousBoard_[i][j]) Same = false;
             }
         }
@@ -45,12 +45,12 @@ public class GameLogic {
         return Same;
     }
     
-    public static int[][] updateBoard(int[][] board_, int y_, int x_, int height, String CPT, String white_) { //updates board as a result of a player CPT placing a piece at (x_, y_)
-        int[] adjacentCoordinates = getAdjacentCoordinates(y_, x_, height); //use board_.length instead of height
+    public static int[][] updateBoard(int[][] board_, int y_, int x_, String CPT, String white_) { //updates board as a result of a player CPT placing a piece at (x_, y_)
+        int[] adjacentCoordinates = getAdjacentCoordinates(y_, x_, board_.length);
         for (int i = 0; i < adjacentCoordinates.length-1; i += 2) {
             if (board_[adjacentCoordinates[i]][adjacentCoordinates[i+1]] == 2 && CPT != white_) {
                 visited.clear();
-                boolean capturing = willBeCaptured(board_, adjacentCoordinates[i], adjacentCoordinates[i+1], height, 2);
+                boolean capturing = willBeCaptured(board_, adjacentCoordinates[i], adjacentCoordinates[i+1], 2);
                 if (capturing) {
                     while (visited.size() != 0) {
                         List<Integer> point = visited.iterator().next();
@@ -63,7 +63,7 @@ public class GameLogic {
             }
             else if (board_[adjacentCoordinates[i]][adjacentCoordinates[i+1]] == 1 && CPT == white_) {
                 visited.clear();
-                boolean capturing = willBeCaptured(board_, adjacentCoordinates[i], adjacentCoordinates[i+1], height, 1);
+                boolean capturing = willBeCaptured(board_, adjacentCoordinates[i], adjacentCoordinates[i+1], 1);
                 if (capturing) {
                     while (visited.size() != 0) {
                         List<Integer> point = visited.iterator().next();
@@ -79,15 +79,15 @@ public class GameLogic {
     }
     
     //need to empty the hashset before each use...?
-    public static boolean willBeCaptured(int[][] board_, int y_, int x_, int height, int colour) { //use board_.length instead of height
+    public static boolean willBeCaptured(int[][] board_, int y_, int x_, int colour) {
         visited.add(Arrays.asList(y_, x_));
         //int colour = board_[y][x];
-        if (getLiberties(y_, x_, height, board_).length != 0) return false;
-        int[] adjs = getAdjacentCoordinates(y_, x_, height);
+        if (getLiberties(y_, x_, board_).length != 0) return false;
+        int[] adjs = getAdjacentCoordinates(y_, x_, board_.length);
         boolean willBeCaptured = true;
         for (int i = 0; i < adjs.length-1; i += 2) {
             if (board_[adjs[i]][adjs[i+1]] == colour && !(visited.contains(Arrays.asList(adjs[i], adjs[i+1])))) {
-                willBeCaptured = willBeCaptured(board_, adjs[i], adjs[i+1], height, colour);
+                willBeCaptured = willBeCaptured(board_, adjs[i], adjs[i+1], colour);
             }
         }
         return willBeCaptured;
@@ -163,8 +163,8 @@ public class GameLogic {
     
     //function gets the coordinates of all existing liberties around an input coordinate pair
     //returns them as consecutive (y, x) pairs, e.g. first two elements in int[] being 3, 2 means y=3, x=2
-    public static int[] getLiberties(int y, int x, int height, int[][] board_) { //use board_.length instead of height
-        int[] adjacents = getAdjacentCoordinates(y, x, height);
+    public static int[] getLiberties(int y, int x, int[][] board_) {
+        int[] adjacents = getAdjacentCoordinates(y, x, board_.length);
         int libertyCount = 0;
         for (int i = 0; i < adjacents.length-1; i += 2) {
             if (board_[adjacents[i]][adjacents[i+1]] == 0) ++libertyCount;
