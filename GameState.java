@@ -83,10 +83,15 @@ public class GameState {
     public void pass() {
         ++passCount;
         if (passCount == 3) {
-            //TODO: score it and declare winner
             System.out.println("3 consecutive passes so game ends");
             int[] deadStoneCoordinates = Score.markDeadStones(board);
-            for (int i = 0; i < deadStoneCoordinates.length; ++i) System.out.println(deadStoneCoordinates[i]);
+            //for (int i = 0; i < deadStoneCoordinates.length; ++i) System.out.println(deadStoneCoordinates[i]);
+            int[][] finalBoard = Score.removeDeadStones(board, deadStoneCoordinates);
+            int[] territory = Score.calculateTerritory(finalBoard);
+            int[] scores = Score.calculateFinalScores(territory, captures, deadStoneCoordinates[deadStoneCoordinates.length-2], deadStoneCoordinates[deadStoneCoordinates.length-1]);
+            System.out.println("Black's final score: " + scores[0]);
+            System.out.println("White's final score: " + scores[1]);
+            board = finalBoard;
             finished = true;
         }
         ++turnNo;
