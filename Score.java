@@ -30,12 +30,16 @@ public class Score {
                 ++deadsIndex;
                 deads[deadsIndex] = Integer.parseInt(coords[1]);
                 ++deadsIndex;
-                if (endingBoard[deads[deadsIndex-1]][deads[deadsIndex]] == 1) ++removeBlackCount;
-                else ++removeWhiteCount;
+                if (endingBoard[deads[deadsIndex-2]][deads[deadsIndex-1]] == 1) {
+                    ++removeBlackCount;
+                }
+                else {
+                    ++removeWhiteCount; //this assumes the removed stone is actually white!
+                }
             }
         }
-        int[] finalDeads = new int[removeBlackCount + removeWhiteCount + 2];
-        for (int i = 0; i < removeBlackCount  + removeWhiteCount; ++i) finalDeads[i] = deads[i];
+        int[] finalDeads = new int[removeBlackCount*2 + removeWhiteCount*2 + 2];
+        for (int i = 0; i < removeBlackCount*2 + removeWhiteCount*2; ++i) finalDeads[i] = deads[i];
         finalDeads[finalDeads.length-2] = removeBlackCount;
         finalDeads[finalDeads.length-1] = removeWhiteCount;
         return finalDeads;
@@ -73,12 +77,12 @@ public class Score {
         int[] adjs = GameLogic.getAdjacentCoordinates(y, x, board.length);
         for (int i = 0; i < adjs.length-1; i += 2) {
             if (board[adjs[i]][adjs[i+1]] == 1) touchesBlack = true;
-            if (board[adjs[i]][adjs[i+1]] == 2) touchesWhite = true;
+            else if (board[adjs[i]][adjs[i+1]] == 2) touchesWhite = true;
         }
         if (touchesBlack && touchesWhite) return false;
         for (int i = 0; i < adjs.length-1; i += 2) {
             if (board[adjs[i]][adjs[i+1]] == 0 && !(possibleTerritory.contains(Arrays.asList(adjs[i], adjs[i+1])))) {
-                isTerritory(board, adjs[i], adjs[i+1]);
+                return isTerritory(board, adjs[i], adjs[i+1]);
             }
         }
         return true;
@@ -86,6 +90,8 @@ public class Score {
     
     public static int[] calculateFinalScores(int[] territory, int[] captures, int deadBlacks, int deadWhites) {
         int[] finalScores = new int[2]; //finalScores[0] is black's score and [1] is white's score
+        System.out.println("Black's score calc: " + territory[0] + " - " + captures[1] + " - " + deadBlacks);
+        System.out.println("White's score calc: " + territory[1] + " - " + captures[0] + " - " + deadWhites);
         finalScores[0] += territory[0] - captures[1] - deadBlacks;
         finalScores[1] += territory[1] - captures[0] - deadWhites;
         return finalScores;
