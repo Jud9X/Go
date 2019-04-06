@@ -1,3 +1,3 @@
-public class Records {
+public class Record {
     //featuring leaderboard
 }
