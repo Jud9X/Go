@@ -7,14 +7,14 @@ public class Main {
         Player p2 = new Player("fred", "Fred", "West");
         GameState g = new GameState(4, p1, p2);
         Scanner userInput = new Scanner(System.in);
-        while (!g.finished) {
-            System.out.println("This player's turn: " + g.currentPlayerTurn);
+        while (!g.isFinished()) {
+            System.out.println("This player's turn: " + g.getCurrentPlayerTurn());
             System.out.println(Arrays.deepToString(g.getBoard()));
             System.out.println("Type coordinates to place your piece in the form 'y x' without quotes, starting from top left as 0,0 or 'pass' w/o quotes");
             String point = userInput.nextLine();
             if (point.equals("pass")) {
                 g.pass();
-                System.out.println("Number of consecutive passes: " + g.passCount);
+                System.out.println("Number of consecutive passes: " + g.getPassCount());
             }
             else {
                 String[] coords = point.split(" ");

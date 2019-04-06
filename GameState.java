@@ -4,15 +4,15 @@ public class GameState {
     private String black;
     private User player1;
     private User player2;
-    public int passCount; //make private later(?)
+    private int passCount;
     private int turnNo;
-    public String currentPlayerTurn; //make private later(?)
+    private String currentPlayerTurn;
     private int[][] previousBoard;
     private int[] captures; //captures[0] is number captured by black, captures[1] is by white
-    public boolean finished; //make private later(?)
+    private boolean finished;
     
-    public GameState(int k, User player1_, User player2_) { //player1_ is a user object
-        board = new int[k][k]; //0 will mean empty, 1 will mean black and 2 will mean white
+    public GameState(int k, User player1_, User player2_) { //k is board size (e.g. height), player1_ is a user object
+        board = new int[k][k]; //0 in the array will mean empty, 1 will mean black and 2 will mean white
         player1 = player1_;
         player2 = player2_;
         if (player1.getWinRate() > player2.getWinRate()) {
@@ -37,7 +37,9 @@ public class GameState {
     
     //y is the first index, x is the second index, starting from (0,0) in the top left corner to (k-1, k-1)
     public void placePiece(int y, int x) {
-        if (GameLogic.moveIsIllegal(previousBoard, board, y, x, currentPlayerTurn, white)) return;
+        int currentPlayerColour = (currentPlayerTurn == white) ? 2 : 1;
+        int otherPlayerColour = (currentPlayerColour == 1) ? 2 : 1;
+        if (GameLogic.moveIsIllegal(previousBoard, board, y, x, currentPlayerColour)) return;
         passCount = 0;
         for (int i = 0; i < board.length; ++i) {
             for (int j = 0; j < board.length; ++j) {
@@ -46,9 +48,7 @@ public class GameState {
         }
         if (currentPlayerTurn == white) board[y][x] = 2; //2 is white
         else board[y][x] = 1; //1 is black
-        int currentPlayerColour = board[y][x]; //could use this in the following functions to make them simpler?
-        int otherPlayerColour = (currentPlayerColour == 1) ? 2 : 1;
-        board = GameLogic.updateBoard(board, y, x, currentPlayerTurn, white);
+        board = GameLogic.updateBoard(board, y, x, currentPlayerColour);
         int otherPlayerCountPrevious = 0;
         for (int i = 0; i < board.length; ++i) {
             for (int j = 0; j < board.length; ++j) {
@@ -74,6 +74,18 @@ public class GameState {
     
     public int[] getCaptures() {
         return captures;
+    }
+    
+    public int getPassCount() {
+        return passCount;
+    }
+    
+    public String getCurrentPlayerTurn() {
+        return currentPlayerTurn;
+    }
+    
+    public boolean isFinished() {
+        return finished;
     }
     
     public void pass() {

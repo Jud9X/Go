@@ -6,7 +6,7 @@ import java.util.Set;
 public class GameLogic {
     static Set<List<Integer>> visited = new HashSet<List<Integer>>();
     
-    public static boolean moveIsIllegal(int[][] previousBoard_, int[][] board_, int y_, int x_, String CPT, String white_) {
+    public static boolean moveIsIllegal(int[][] previousBoard_, int[][] board_, int y_, int x_, int currentPlayerColour) {
         //check move is legal: place is free?
         if (board_[y_][x_] != 0) {
             System.out.println("someone's already here: x=" + x_ + ", y=" + y_); //don't need this in the long-term?
@@ -19,13 +19,12 @@ public class GameLogic {
                 initialProposedBoard[i][j] = board_[i][j];
             }
         }
-        if (CPT == white_) initialProposedBoard[y_][x_] = 2; //need str.equals() here and elsewhere?
+        if (currentPlayerColour == 2) initialProposedBoard[y_][x_] = 2; //need str.equals() here and elsewhere?
         else initialProposedBoard[y_][x_] = 1;
-        int[][] finalProposedBoard = updateBoard(initialProposedBoard, y_, x_, CPT, white_);
+        int[][] finalProposedBoard = updateBoard(initialProposedBoard, y_, x_, currentPlayerColour);
         //check move is legal: non-suicidal
-        int tempColour = finalProposedBoard[y_][x_];
         visited.clear();
-        if (willBeCaptured(finalProposedBoard, y_, x_, tempColour)) {
+        if (willBeCaptured(finalProposedBoard, y_, x_, currentPlayerColour)) {
             System.out.println("suicide is forbidden");
             return true;
         }
@@ -45,10 +44,10 @@ public class GameLogic {
         return Same;
     }
     
-    public static int[][] updateBoard(int[][] board_, int y_, int x_, String CPT, String white_) { //updates board as a result of a player CPT placing a piece at (x_, y_)
+    public static int[][] updateBoard(int[][] board_, int y_, int x_, int currentPlayerColour_) { //updates board as a result of current player placing a piece at (x_, y_)
         int[] adjacentCoordinates = getAdjacentCoordinates(y_, x_, board_.length);
         for (int i = 0; i < adjacentCoordinates.length-1; i += 2) {
-            if (board_[adjacentCoordinates[i]][adjacentCoordinates[i+1]] == 2 && CPT != white_) {
+            if (board_[adjacentCoordinates[i]][adjacentCoordinates[i+1]] == 2 && currentPlayerColour_ != 2) {
                 visited.clear();
                 boolean capturing = willBeCaptured(board_, adjacentCoordinates[i], adjacentCoordinates[i+1], 2);
                 if (capturing) {
@@ -61,7 +60,7 @@ public class GameLogic {
                     }
                 }
             }
-            else if (board_[adjacentCoordinates[i]][adjacentCoordinates[i+1]] == 1 && CPT == white_) {
+            else if (board_[adjacentCoordinates[i]][adjacentCoordinates[i+1]] == 1 && currentPlayerColour_ == 2) {
                 visited.clear();
                 boolean capturing = willBeCaptured(board_, adjacentCoordinates[i], adjacentCoordinates[i+1], 1);
                 if (capturing) {
@@ -81,7 +80,6 @@ public class GameLogic {
     //need to empty the hashset before each use...?
     public static boolean willBeCaptured(int[][] board_, int y_, int x_, int colour) {
         visited.add(Arrays.asList(y_, x_));
-        //int colour = board_[y][x];
         if (getLiberties(y_, x_, board_).length != 0) return false;
         int[] adjs = getAdjacentCoordinates(y_, x_, board_.length);
         boolean willBeCaptured = true;
