@@ -10,6 +10,8 @@ public class GameState {
     private int turnNo;
     public String currentPlayerTurn; //make private later(?)
     private int[][] previousBoard;
+    private int[] captures; //captures[0] is number captured by black, captures[1] is by white
+    public boolean finished; //make private later(?)
     
     public GameState(int k, User player1_, User player2_) { //player1_ is a user object
         height = k;
@@ -33,6 +35,8 @@ public class GameState {
         turnNo = 0;
         currentPlayerTurn = black; //or directly enter username
         previousBoard = new int[k][k];
+        captures = new int[2];
+        finished = false;
     }
     
     //y is the first index, x is the second index, starting from (0,0) in the top left corner to (k-1, k-1)
@@ -46,22 +50,44 @@ public class GameState {
         }
         if (currentPlayerTurn == white) board[y][x] = 2; //2 is white
         else board[y][x] = 1; //1 is black
+        int currentPlayerColour = board[y][x]; //could use this in the following functions to make them simpler?
+        int otherPlayerColour = (currentPlayerColour == 1) ? 2 : 1;
         board = GameLogic.updateBoard(board, y, x, height, currentPlayerTurn, white);
+        int otherPlayerCountPrevious = 0;
+        for (int i = 0; i < height; ++i) {
+            for (int j = 0; j < height; ++j) {
+                if (previousBoard[i][j] == otherPlayerColour) ++otherPlayerCountPrevious;
+            }
+        }
+        int otherPlayerCountNew = 0;
+        for (int i = 0; i < height; ++i) {
+            for (int j = 0; j < height; ++j) {
+                if (board[i][j] == otherPlayerColour) ++otherPlayerCountNew;
+            }
+        }
+        captures[currentPlayerColour-1] += otherPlayerCountPrevious - otherPlayerCountNew;
         ++turnNo;
         if (turnNo % 2 == 0) currentPlayerTurn = black;
         else currentPlayerTurn = white;
         return;
     }
     
-    public int[][] showBoard() {
+    public int[][] getBoard() {
         return board;
+    }
+    
+    public int[] getCaptures() {
+        return captures;
     }
     
     public void pass() {
         ++passCount;
         if (passCount == 3) {
-            //TODO: end game somehow and score it and declare winner
+            //TODO: score it and declare winner
             System.out.println("3 consecutive passes so game ends");
+            int[] deadStoneCoordinates = Score.markDeadStones(board);
+            for (int i = 0; i < deadStoneCoordinates.length; ++i) System.out.println(deadStoneCoordinates[i]);
+            finished = true;
         }
         ++turnNo;
         if (turnNo % 2 == 0) currentPlayerTurn = black;
