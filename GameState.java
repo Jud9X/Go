@@ -11,10 +11,10 @@ public class GameState {
     private int[] captures; //captures[0] is number captured by black, captures[1] is by white
     private boolean finished;
     
-    public GameState(int k, User player1_, User player2_) { //k is board size (e.g. height), player1_ is a user object
+    public GameState(int k, User player1, User player2) { //k is board size (e.g. height), player1 is a user object
         board = new int[k][k]; //0 in the array will mean empty, 1 will mean black and 2 will mean white
-        player1 = player1_;
-        player2 = player2_;
+        this.player1 = player1;
+        this.player2 = player2;
         if (player1.getWinRate() > player2.getWinRate()) {
             white = player1.getUsername();
             black = player2.getUsername();
@@ -108,4 +108,8 @@ public class GameState {
         return;
     }
     
+    public void forfeitAndQuit() {
+        //stuff
+        return;
+    }
 }

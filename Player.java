@@ -1,6 +1,6 @@
 public class Player extends User {
-    public Player(String username_, String fname_, String lname_) {
-        super(username_, fname_, lname_);
+    public Player(String username, String fname, String lname) {
+        super(username, fname, lname);
     }
     
     public String toString() {

@@ -6,10 +6,10 @@ public class User { //should be private??
     //TODO: date and time of last login
     //TODO: profile image
     
-    public User(String username_, String fname_, String lname_) { //should be private??
-        this.username = username_;
-        this.fname = fname_;
-        this.lname = lname_;
+    public User(String username, String fname, String lname) { //should be private??
+        this.username = username;
+        this.fname = fname;
+        this.lname = lname;
         winRate = 0; //?
     }
     

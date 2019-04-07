@@ -2,9 +2,9 @@ public class Administrator extends User {
     private int adminID;
     //TODO: join date
     
-    public Administrator(String username_, String fname_, String lname_, int adminID_) {
-        super(username_, fname_, lname_);
-        adminID = adminID_;
+    public Administrator(String username, String fname, String lname, int adminID) {
+        super(username, fname, lname);
+        this.adminID = adminID;
     }
     
     public int getID() {
@@ -17,11 +17,11 @@ public class Administrator extends User {
         return super.toString() + "\n" + "Admin ID number: " + adminID;
     }
     
-    public static Player createPlayer(String username_, String fname_, String lname_) {
-        return new Player(username_, fname_, lname_);
+    public static Player createPlayer(String username, String fname, String lname) {
+        return new Player(username, fname, lname);
     }
     
-    public static Administrator createAdmin(String username_, String fname_, String lname_, int adminID_) {
-        return new Administrator(username_, fname_, lname_, adminID_);
+    public static Administrator createAdmin(String username, String fname, String lname, int adminID) {
+        return new Administrator(username, fname, lname, adminID);
     }
 }

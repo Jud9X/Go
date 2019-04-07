@@ -74,7 +74,7 @@ public class Score {
     }
     
     //need to reset the static variables before running?
-    public static boolean isTerritory(int[][] board, int y, int x) {
+    private static boolean isTerritory(int[][] board, int y, int x) {
         possibleTerritory.add(Arrays.asList(y, x));
         int[] adjs = GameLogic.getAdjacentCoordinates(y, x, board.length);
         for (int i = 0; i < adjs.length-1; i += 2) {
