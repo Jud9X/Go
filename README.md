@@ -6,7 +6,9 @@ The game can no longer be played (on command line) as the GUI is in the early st
 
 javac --module-path %PATH_TO_FX% --add-modules=javafx.controls *.java
 
-And make sure you have downloaded JavaFX and set an environment variable PATH_TO_FX which points to the \lib directory of that.
+And make sure you have downloaded JavaFX and set an environment variable PATH_TO_FX which points to the \lib directory of that. Then in order to run the program, use:
+
+java --module-path %PATH_TO_FX% --add-modules=javafx.controls Main
 
 
 Current big "to-do's":
