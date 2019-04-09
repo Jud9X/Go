@@ -2,7 +2,7 @@
 
 Notes:
 
-The game can no longer be played (on command line) as the GUI is in the early stages of development. The code is currently very untidy as I don't really know what I'm doing. In order to compile the files on Windows without an IDE, use something this command in the directory where the .java files are:
+The game can no longer be played (on command line) as the GUI is in the early stages of development. The code is currently very untidy as I don't really know what I'm doing. In order to compile the files on Windows without an IDE, use this command in the directory where the .java files are:
 
 javac --module-path %PATH_TO_FX% --add-modules=javafx.controls *.java
 
