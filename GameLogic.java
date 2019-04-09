@@ -19,7 +19,7 @@ public class GameLogic {
                 initialProposedBoard[i][j] = board[i][j];
             }
         }
-        if (currentPlayerColour == 2) initialProposedBoard[y][x] = 2; //need str.equals() here and elsewhere?
+        if (currentPlayerColour == 2) initialProposedBoard[y][x] = 2;
         else initialProposedBoard[y][x] = 1;
         int[][] finalProposedBoard = updateBoard(initialProposedBoard, y, x, currentPlayerColour);
         //check move is legal: non-suicidal

@@ -1,8 +1,105 @@
-import java.util.Arrays;
-import java.util.Scanner;
+//import java.util.Arrays;
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+//import java.util.Scanner;
 
-public class Main {
+public class Main extends Application {
+    
+    Button button1;
+    Scene scene1, scene2;
+    
     public static void main(final String[] args) {
+        launch(args);
+    }
+        
+        @Override
+        public void start(Stage primaryStage) throws Exception {
+            primaryStage.setTitle("Play Go!");
+            
+            Menu fileMenu = new Menu("_File");
+            Menu editMenu = new Menu("_Edit");
+            Menu otherMenu = new Menu("_Other");
+            
+            MenuItem newFile = new MenuItem("_New...");
+            newFile.setOnAction(e -> System.out.println("testing, new file"));
+            fileMenu.getItems().add(newFile);
+            MenuItem openFile = new MenuItem("_Open...");
+            newFile.setOnAction(e -> System.out.println("testing, open file"));
+            fileMenu.getItems().add(openFile);
+            MenuItem somethingElse = new MenuItem("Do something else...");
+            newFile.setOnAction(e -> System.out.println("testing, something else"));
+            fileMenu.getItems().add(somethingElse);
+            fileMenu.getItems().add(new SeparatorMenuItem());
+            MenuItem exit = new MenuItem("Exit");
+            newFile.setOnAction(e -> System.out.println("exits"));
+            fileMenu.getItems().add(exit);
+            
+            MenuItem copy = new MenuItem("_Copy");
+            copy.setOnAction(e -> System.out.println("copied"));
+            editMenu.getItems().add(copy);
+            MenuItem somethingElse2 = new MenuItem("Do another thing");
+            somethingElse2.setOnAction(e -> System.out.println("the other thing"));
+            editMenu.getItems().add(somethingElse2);
+            
+            MenuItem otherThing = new MenuItem("Other thing");
+            otherThing.setOnAction(e -> System.out.println("some other thing is done"));
+            otherMenu.getItems().add(otherThing);
+            CheckMenuItem binaryOption = new CheckMenuItem("Option that can be on or off");
+            binaryOption.setSelected(true);
+            binaryOption.setOnAction(e -> {
+                if (binaryOption.isSelected()) System.out.println("option is selected");
+                else System.out.println("Option is turned off");
+            });
+            otherMenu.getItems().add(binaryOption);
+            
+            MenuBar menuBar = new MenuBar();
+            menuBar.getMenus().addAll(fileMenu, editMenu, otherMenu);
+            
+            Label label1 = new Label("This is page 1");
+            button1 = new Button("Go to page 2");
+            button1.setOnAction(e -> primaryStage.setScene(scene2));
+            
+            //layout of page 1
+            BorderPane layout1 = new BorderPane();
+            layout1.setCenter(button1);
+            layout1.setTop(menuBar);
+            
+            Button button2 = new Button("Go back to page 1");
+            button2.setOnAction(e -> primaryStage.setScene(scene1));
+            
+            /*
+            //layout of page 2
+            VBox layout2 = new VBox(20);
+            layout2.getChildren().addAll(button2);
+            */
+            
+            GameGrid grid = new GameGrid(13); //13 needs to come from somewhere
+            grid.setAlignment(Pos.CENTER);
+            
+            //GridPane gpane = new GridPane();
+            //gpane.getChildren().addAll(button2);
+            
+            //layout of page 2
+            BorderPane layout2 = new BorderPane();
+            layout2.setCenter(grid);
+            //layout2.setBottom(button2);
+            
+            scene1 = new Scene(layout1, 400, 400);
+            primaryStage.setScene(scene1);
+            primaryStage.show();
+            
+            scene2 = new Scene(layout2, 702, 702);
+        }
+        
+        /*
         Player p1 = new Player("ohart", "Oliver", "Hart");
         Player p2 = new Player("fred", "Fred", "West");
         GameState g = new GameState(4, p1, p2);
@@ -24,5 +121,5 @@ public class Main {
         }
         userInput.close();
         System.out.println("game is over");
-    }
+    }*/
 }

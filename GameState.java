@@ -90,8 +90,8 @@ public class GameState {
     
     public void pass() {
         ++passCount;
-        if (passCount == 3) {
-            System.out.println("3 consecutive passes so game ends");
+        if (passCount == 2) {
+            System.out.println("2 consecutive passes so game ends");
             int[] deadStoneCoordinates = Score.markDeadStones(board);
             //for (int i = 0; i < deadStoneCoordinates.length; ++i) System.out.println(deadStoneCoordinates[i]);
             int[][] finalBoard = Score.removeDeadStones(board, deadStoneCoordinates);
