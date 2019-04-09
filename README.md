@@ -8,3 +8,4 @@ Current big "to-do's":
 4. Add saving and loading
 5. Add Javadoc
 6. Record demonstration video
+7. Optional: unit/integration testing
