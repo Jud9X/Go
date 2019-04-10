@@ -18,5 +18,6 @@ Current big "to-do's":
 3. Add exception handling (after GUI)
 4. Add saving and loading
 5. Add Javadoc
-6. Record demonstration video
-7. Optional: unit/integration testing
+6. Make the GUI look nice and add cool extra features (like different colour themes, optional confirmation boxes after each move, undo (last) move(s), music...)
+7. Record demonstration video
+8. Optional: unit/integration testing
