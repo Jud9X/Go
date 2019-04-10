@@ -95,16 +95,64 @@ public class Tile extends StackPane {
             getChildren().addAll(line1, line2);
         }
         else if (position.equals("top left corner")) {
-            //stuff
+            Line line1 = new Line(this.getWidth()/2, this.getHeight()/2, this.getWidth()/2, 0);
+            line1.startXProperty().bind(this.widthProperty().divide(2));
+            line1.endXProperty().bind(this.widthProperty().divide(2));
+            line1.startYProperty().bind(this.heightProperty().divide(2));
+            Line line2 = new Line(0, this.getHeight()/2, this.getWidth()/2, this.getHeight()/2);
+            line2.startYProperty().bind(this.heightProperty().divide(2));
+            line2.endXProperty().bind(this.widthProperty().divide(2));
+            line2.endYProperty().bind(this.heightProperty().divide(2));
+            //line1.setStroke(Color.BLACK);
+            //line1.setStrokeWidth(1.5);
+            setAlignment(line1, Pos.BOTTOM_CENTER);
+            setAlignment(line2, Pos.CENTER_RIGHT);
+            getChildren().addAll(line1, line2);
         }
         else if (position.equals("top right corner")) {
-            //stuff
+            Line line1 = new Line(this.getWidth()/2, this.getHeight()/2, this.getWidth()/2, 0);
+            line1.startXProperty().bind(this.widthProperty().divide(2));
+            line1.endXProperty().bind(this.widthProperty().divide(2));
+            line1.startYProperty().bind(this.heightProperty().divide(2));
+            Line line2 = new Line(0, this.getHeight()/2, this.getWidth()/2, this.getHeight()/2);
+            line2.startYProperty().bind(this.heightProperty().divide(2));
+            line2.endXProperty().bind(this.widthProperty().divide(2));
+            line2.endYProperty().bind(this.heightProperty().divide(2));
+            //line1.setStroke(Color.BLACK);
+            //line1.setStrokeWidth(1.5);
+            setAlignment(line1, Pos.BOTTOM_CENTER);
+            setAlignment(line2, Pos.CENTER_LEFT);
+            getChildren().addAll(line1, line2);
         }
         else if (position.equals("bottom left corner")) {
-            //stuff
+            Line line1 = new Line(this.getWidth()/2, this.getHeight()/2, this.getWidth()/2, 0);
+            line1.startXProperty().bind(this.widthProperty().divide(2));
+            line1.endXProperty().bind(this.widthProperty().divide(2));
+            line1.startYProperty().bind(this.heightProperty().divide(2));
+            Line line2 = new Line(0, this.getHeight()/2, this.getWidth()/2, this.getHeight()/2);
+            line2.startYProperty().bind(this.heightProperty().divide(2));
+            line2.endXProperty().bind(this.widthProperty().divide(2));
+            line2.endYProperty().bind(this.heightProperty().divide(2));
+            //line1.setStroke(Color.BLACK);
+            //line1.setStrokeWidth(1.5);
+            setAlignment(line1, Pos.TOP_CENTER);
+            setAlignment(line2, Pos.CENTER_RIGHT);
+            getChildren().addAll(line1, line2);
         }
         else if (position.equals("bottom right corner")) {
-            //stuff
+            Line line1 = new Line(this.getWidth()/2, this.getHeight()/2, this.getWidth()/2, 0);
+            line1.startXProperty().bind(this.widthProperty().divide(2));
+            line1.endXProperty().bind(this.widthProperty().divide(2));
+            line1.startYProperty().bind(this.heightProperty().divide(2));
+            Line line2 = new Line(0, this.getHeight()/2, this.getWidth()/2, this.getHeight()/2);
+            line2.startYProperty().bind(this.heightProperty().divide(2));
+            line2.endXProperty().bind(this.widthProperty().divide(2));
+            line2.endYProperty().bind(this.heightProperty().divide(2));
+            //line1.setStroke(Color.BLACK);
+            //line1.setStrokeWidth(1.5);
+            setAlignment(line1, Pos.TOP_CENTER);
+            setAlignment(line2, Pos.CENTER_LEFT);
+            getChildren().addAll(line1, line2);
         }
     }
 
