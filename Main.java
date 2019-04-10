@@ -67,10 +67,20 @@ public class Main extends Application {
             button1 = new Button("Go to page 2");
             button1.setOnAction(e -> primaryStage.setScene(scene2));
             
+            /*
             //layout of page 1
             BorderPane layout1 = new BorderPane();
             layout1.setCenter(button1);
             layout1.setTop(menuBar);
+            */
+            
+            SetupPage setupPage = new SetupPage();
+            
+            //layout of page 1
+            BorderPane layout1 = new BorderPane();
+            layout1.setCenter(setupPage);
+            layout1.setTop(menuBar);
+            layout1.setBottom(button1);
             
             Button button2 = new Button("Go back to page 1");
             button2.setOnAction(e -> primaryStage.setScene(scene1));

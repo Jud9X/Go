@@ -16,9 +16,41 @@ public class GameGrid extends GridPane {
     private void makeGrid(int k) {
         for (int i = 0; i < k; ++i) {
             for (int j = 0; j < k; ++j) {
-                grid[i][j] = new Tile();
-                add(grid[i][j], j, i);
+                if (i == 0 && j == 0) {
+                    //stuff
+                }
+                else if (i == 0 && j == k-1) {
+                    //stuff
+                }
+                else if (i == k-1 && j == 0) {
+                    //stuff
+                }
+                else if (i == k-1 && j == k-1) {
+                    //stuff
+                }
+                else if (i == 0) {
+                    grid[i][j] = new Tile("top edge");
+                    add(grid[i][j], j, i);
+                }
+                else if (i == k-1) {
+                    grid[i][j] = new Tile("bottom edge");
+                    add(grid[i][j], j, i);
+                }
+                else if (j == 0) {
+                    grid[i][j] = new Tile("left edge");
+                    add(grid[i][j], j, i);
+                }
+                else if (j == k-1) {
+                    grid[i][j] = new Tile("right edge");
+                    add(grid[i][j], j, i);
+                }
+                else { //interior case
+                    grid[i][j] = new Tile();
+                    add(grid[i][j], j, i);
+                }
             }
         }
     }
+    
+    //more stuff?
 }
