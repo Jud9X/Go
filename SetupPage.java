@@ -36,6 +36,8 @@ public class SetupPage extends VBox {
             g = new GameState(Integer.parseInt(gridSize.getText()), p1, p2);
             grid = new GameGrid(Integer.parseInt(gridSize.getText()));
             grid.setAlignment(Pos.CENTER);
+            grid.setMinSize(400, 400);
+            grid.setMaxSize(600, 600);
         });
     }
 }
