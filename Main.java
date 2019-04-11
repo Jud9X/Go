@@ -15,6 +15,7 @@ public class Main extends Application {
     
     Button button1;
     Scene scene1, scene2;
+    static SetupPage setupPage;
     
     public static void main(final String[] args) {
         launch(args);
@@ -63,9 +64,34 @@ public class Main extends Application {
             MenuBar menuBar = new MenuBar();
             menuBar.getMenus().addAll(fileMenu, editMenu, otherMenu);
             
+            setupPage = new SetupPage();
+            
             Label label1 = new Label("This is page 1");
             button1 = new Button("Go to page 2");
-            button1.setOnAction(e -> primaryStage.setScene(scene2));
+            button1.setOnAction(e -> {
+                Label label2 = new Label(setupPage.username1.getText());
+                //layout of page 2
+                BorderPane layout2 = new BorderPane();
+                layout2.setCenter(setupPage.grid);
+                layout2.setBottom(label2);
+                VBox gameInfo = new VBox();
+                Label black = new Label(setupPage.g.getBlack());
+                Label white = new Label(setupPage.g.getWhite());
+                Label pc = new Label(""+setupPage.g.getPassCount());
+                Label tn = new Label(""+setupPage.g.getTurnNo());
+                Label CPT = new Label(setupPage.g.getCurrentPlayerTurn());
+                Label capsB = new Label(""+setupPage.g.getCaptures()[0]);
+                Label capsW = new Label(""+setupPage.g.getCaptures()[1]);
+                gameInfo.getChildren().addAll(black, white, pc, tn, CPT, capsB, capsW);
+                layout2.setRight(gameInfo);
+                VBox gameControl = new VBox();
+                Button pass = new Button("Pass");
+                pass.setOnAction(e2 -> setupPage.g.pass());
+                gameControl.getChildren().addAll(pass);
+                layout2.setLeft(gameControl);
+                scene2 = new Scene(layout2, 702, 702);
+                primaryStage.setScene(scene2);
+            });
             
             /*
             //layout of page 1
@@ -73,8 +99,6 @@ public class Main extends Application {
             layout1.setCenter(button1);
             layout1.setTop(menuBar);
             */
-            
-            SetupPage setupPage = new SetupPage();
             
             //layout of page 1
             BorderPane layout1 = new BorderPane();
@@ -90,23 +114,45 @@ public class Main extends Application {
             VBox layout2 = new VBox(20);
             layout2.getChildren().addAll(button2);
             */
-            
-            GameGrid grid = new GameGrid(13); //13 needs to come from somewhere
-            grid.setAlignment(Pos.CENTER);
+
+            //GameGrid grid = new GameGrid(Integer.parseInt(setupPage.gridSize.getText()));
+            //GameGrid grid = new GameGrid(13);//13 needs to come from somewhere
+            //grid.setAlignment(Pos.CENTER);
             
             //GridPane gpane = new GridPane();
             //gpane.getChildren().addAll(button2);
             
+            
+            
+            /*
+            //while (!SetupPage.g.isFinished()) {
+            System.out.println("This player's turn: " + SetupPage.g.getCurrentPlayerTurn());
+            if (point.equals("pass")) {
+                g.pass();
+                System.out.println("Number of consecutive passes: " + g.getPassCount());
+            }
+            else {
+                String[] coords = point.split(" ");
+                g.placePiece(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
+            }
+            //}
+            System.out.println("game is over");
+            */
+
+
+            /*
             //layout of page 2
             BorderPane layout2 = new BorderPane();
-            layout2.setCenter(grid);
-            //layout2.setBottom(button2);
+            layout2.setCenter(setupPage.grid);
+            layout2.setBottom(label2);
+            */
             
             scene1 = new Scene(layout1, 400, 400);
             primaryStage.setScene(scene1);
             primaryStage.show();
             
-            scene2 = new Scene(layout2, 702, 702);
+            //scene2 = new Scene(layout2, 702, 702);
+        
         }
         
         /*

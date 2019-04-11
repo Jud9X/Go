@@ -12,15 +12,15 @@ public class Score {
 
     //get dead stones manually, return int[] with final 2 values being removeBlackCount and then removeWhiteCount
     public static int[] markDeadStones(int[][] endingBoard) {
-        int[] deads = new int[endingBoard.length * endingBoard.length];
+        /*int[] deads = new int[endingBoard.length * endingBoard.length];
         int deadsIndex = 0;
-        Scanner deadStones = new Scanner(System.in);
+        //Scanner deadStones = new Scanner(System.in);
         boolean done = false;
         int removeBlackCount = 0;
         int removeWhiteCount = 0;
         while (!done) { //add an undo possibility (using a stack?)?
-            System.out.println("Type coordinates of dead stones in the form 'y x' without quotes, starting from top left as 0,0 or 'done' w/o quotes");
-            String point = deadStones.nextLine();
+            //System.out.println("Type coordinates of dead stones in the form 'y x' without quotes, starting from top left as 0,0 or 'done' w/o quotes");
+            //String point = deadStones.nextLine();
             if (point.equals("done")) {
                 done = true;
             }
@@ -43,6 +43,8 @@ public class Score {
         finalDeads[finalDeads.length-2] = removeBlackCount;
         finalDeads[finalDeads.length-1] = removeWhiteCount;
         return finalDeads;
+        */
+        return new int[0];
     }
     
     public static int[][] removeDeadStones(int[][] endingBoard, int[] deadCoordinates) { //deadCoordinates includes the 2 counts at the end

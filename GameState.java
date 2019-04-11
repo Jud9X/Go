@@ -88,10 +88,22 @@ public class GameState {
         return finished;
     }
     
+    public String getBlack() {
+        return black;
+    }
+    
+    public String getWhite() {
+        return white;
+    }
+    
+    public int getTurnNo() {
+        return turnNo;
+    }
+    
     public void pass() {
         ++passCount;
         if (passCount == 2) {
-            System.out.println("2 consecutive passes so game ends");
+            //System.out.println("2 consecutive passes so game ends");
             int[] deadStoneCoordinates = Score.markDeadStones(board);
             //for (int i = 0; i < deadStoneCoordinates.length; ++i) System.out.println(deadStoneCoordinates[i]);
             int[][] finalBoard = Score.removeDeadStones(board, deadStoneCoordinates);

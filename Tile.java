@@ -4,6 +4,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Circle;
 //import javafx.scene.Node;
 //import javafx.geometry.Point2D;
 
@@ -11,6 +12,8 @@ public class Tile extends StackPane {
     
     boolean hasBlack;
     boolean hasWhite;
+    Line line1;
+    Line line2;
     
     public Tile() {
         this.hasBlack = false;
@@ -18,18 +21,26 @@ public class Tile extends StackPane {
         setStyle("-fx-border-color : beige");
         this.setPrefSize(50, 50);
         //vertical line
-        Line line1 = new Line(this.getWidth()/2, this.getHeight(), this.getWidth()/2, 0);
+        line1 = new Line(this.getWidth()/2, this.getHeight(), this.getWidth()/2, 0);
         line1.startXProperty().bind(this.widthProperty().divide(2));
         line1.endXProperty().bind(this.widthProperty().divide(2));
         line1.startYProperty().bind(this.heightProperty());
         //horizontal line
-        Line line2 = new Line(0, this.getHeight()/2, this.getWidth(), this.getHeight()/2);
+        line2 = new Line(0, this.getHeight()/2, this.getWidth(), this.getHeight()/2);
         line2.startYProperty().bind(this.heightProperty().divide(2));
         line2.endXProperty().bind(this.widthProperty());
         line2.endYProperty().bind(this.heightProperty().divide(2));
         //line1.setStroke(Color.BLACK);
         //line1.setStrokeWidth(1.5);
         getChildren().addAll(line1, line2);
+        this.setOnMouseClicked(e -> {
+            if (Main.setupPage.g.getCurrentPlayerTurn() == Main.setupPage.g.getBlack()) {
+                this.addBlack();
+            }
+            else {
+                this.addWhite();
+            }
+        });
     }
     
     public Tile(String position) {
@@ -38,11 +49,11 @@ public class Tile extends StackPane {
         setStyle("-fx-border-color : beige");
         this.setPrefSize(50, 50);
         if (position.equals("left edge")) {
-            Line line1 = new Line(this.getWidth()/2, this.getHeight(), this.getWidth()/2, 0);
+            line1 = new Line(this.getWidth()/2, this.getHeight(), this.getWidth()/2, 0);
             line1.startXProperty().bind(this.widthProperty().divide(2));
             line1.endXProperty().bind(this.widthProperty().divide(2));
             line1.startYProperty().bind(this.heightProperty());
-            Line line2 = new Line(this.getWidth()/2, this.getHeight()/2, this.getWidth(), this.getHeight()/2);
+            line2 = new Line(this.getWidth()/2, this.getHeight()/2, this.getWidth(), this.getHeight()/2);
             line2.startXProperty().bind(this.widthProperty().divide(2));
             line2.startYProperty().bind(this.heightProperty().divide(2));
             line2.endXProperty().bind(this.widthProperty());
@@ -53,11 +64,11 @@ public class Tile extends StackPane {
             getChildren().addAll(line1, line2);
         }
         else if (position.equals("right edge")) {
-            Line line1 = new Line(this.getWidth()/2, this.getHeight(), this.getWidth()/2, 0);
+            line1 = new Line(this.getWidth()/2, this.getHeight(), this.getWidth()/2, 0);
             line1.startXProperty().bind(this.widthProperty().divide(2));
             line1.endXProperty().bind(this.widthProperty().divide(2));
             line1.startYProperty().bind(this.heightProperty());
-            Line line2 = new Line(0, this.getHeight()/2, this.getWidth()/2, this.getHeight()/2);
+            line2 = new Line(0, this.getHeight()/2, this.getWidth()/2, this.getHeight()/2);
             line2.startYProperty().bind(this.heightProperty().divide(2));
             line2.endXProperty().bind(this.widthProperty().divide(2));
             line2.endYProperty().bind(this.heightProperty().divide(2));
@@ -67,11 +78,11 @@ public class Tile extends StackPane {
             getChildren().addAll(line1, line2);
         }
         else if (position.equals("top edge")) {
-            Line line1 = new Line(this.getWidth()/2, this.getHeight()/2, this.getWidth()/2, 0);
+            line1 = new Line(this.getWidth()/2, this.getHeight()/2, this.getWidth()/2, 0);
             line1.startXProperty().bind(this.widthProperty().divide(2));
             line1.endXProperty().bind(this.widthProperty().divide(2));
             line1.startYProperty().bind(this.heightProperty().divide(2));
-            Line line2 = new Line(0, this.getHeight()/2, this.getWidth(), this.getHeight()/2);
+            line2 = new Line(0, this.getHeight()/2, this.getWidth(), this.getHeight()/2);
             line2.startYProperty().bind(this.heightProperty().divide(2));
             line2.endXProperty().bind(this.widthProperty());
             line2.endYProperty().bind(this.heightProperty().divide(2));
@@ -81,11 +92,11 @@ public class Tile extends StackPane {
             getChildren().addAll(line1, line2);
         }
         else if (position.equals("bottom edge")) {
-            Line line1 = new Line(this.getWidth()/2, this.getHeight()/2, this.getWidth()/2, 0);
+            line1 = new Line(this.getWidth()/2, this.getHeight()/2, this.getWidth()/2, 0);
             line1.startXProperty().bind(this.widthProperty().divide(2));
             line1.endXProperty().bind(this.widthProperty().divide(2));
             line1.startYProperty().bind(this.heightProperty().divide(2));
-            Line line2 = new Line(0, this.getHeight()/2, this.getWidth(), this.getHeight()/2);
+            line2 = new Line(0, this.getHeight()/2, this.getWidth(), this.getHeight()/2);
             line2.startYProperty().bind(this.heightProperty().divide(2));
             line2.endXProperty().bind(this.widthProperty());
             line2.endYProperty().bind(this.heightProperty().divide(2));
@@ -95,11 +106,11 @@ public class Tile extends StackPane {
             getChildren().addAll(line1, line2);
         }
         else if (position.equals("top left corner")) {
-            Line line1 = new Line(this.getWidth()/2, this.getHeight()/2, this.getWidth()/2, 0);
+            line1 = new Line(this.getWidth()/2, this.getHeight()/2, this.getWidth()/2, 0);
             line1.startXProperty().bind(this.widthProperty().divide(2));
             line1.endXProperty().bind(this.widthProperty().divide(2));
             line1.startYProperty().bind(this.heightProperty().divide(2));
-            Line line2 = new Line(0, this.getHeight()/2, this.getWidth()/2, this.getHeight()/2);
+            line2 = new Line(0, this.getHeight()/2, this.getWidth()/2, this.getHeight()/2);
             line2.startYProperty().bind(this.heightProperty().divide(2));
             line2.endXProperty().bind(this.widthProperty().divide(2));
             line2.endYProperty().bind(this.heightProperty().divide(2));
@@ -110,11 +121,11 @@ public class Tile extends StackPane {
             getChildren().addAll(line1, line2);
         }
         else if (position.equals("top right corner")) {
-            Line line1 = new Line(this.getWidth()/2, this.getHeight()/2, this.getWidth()/2, 0);
+            line1 = new Line(this.getWidth()/2, this.getHeight()/2, this.getWidth()/2, 0);
             line1.startXProperty().bind(this.widthProperty().divide(2));
             line1.endXProperty().bind(this.widthProperty().divide(2));
             line1.startYProperty().bind(this.heightProperty().divide(2));
-            Line line2 = new Line(0, this.getHeight()/2, this.getWidth()/2, this.getHeight()/2);
+            line2 = new Line(0, this.getHeight()/2, this.getWidth()/2, this.getHeight()/2);
             line2.startYProperty().bind(this.heightProperty().divide(2));
             line2.endXProperty().bind(this.widthProperty().divide(2));
             line2.endYProperty().bind(this.heightProperty().divide(2));
@@ -125,11 +136,11 @@ public class Tile extends StackPane {
             getChildren().addAll(line1, line2);
         }
         else if (position.equals("bottom left corner")) {
-            Line line1 = new Line(this.getWidth()/2, this.getHeight()/2, this.getWidth()/2, 0);
+            line1 = new Line(this.getWidth()/2, this.getHeight()/2, this.getWidth()/2, 0);
             line1.startXProperty().bind(this.widthProperty().divide(2));
             line1.endXProperty().bind(this.widthProperty().divide(2));
             line1.startYProperty().bind(this.heightProperty().divide(2));
-            Line line2 = new Line(0, this.getHeight()/2, this.getWidth()/2, this.getHeight()/2);
+            line2 = new Line(0, this.getHeight()/2, this.getWidth()/2, this.getHeight()/2);
             line2.startYProperty().bind(this.heightProperty().divide(2));
             line2.endXProperty().bind(this.widthProperty().divide(2));
             line2.endYProperty().bind(this.heightProperty().divide(2));
@@ -140,11 +151,11 @@ public class Tile extends StackPane {
             getChildren().addAll(line1, line2);
         }
         else if (position.equals("bottom right corner")) {
-            Line line1 = new Line(this.getWidth()/2, this.getHeight()/2, this.getWidth()/2, 0);
+            line1 = new Line(this.getWidth()/2, this.getHeight()/2, this.getWidth()/2, 0);
             line1.startXProperty().bind(this.widthProperty().divide(2));
             line1.endXProperty().bind(this.widthProperty().divide(2));
             line1.startYProperty().bind(this.heightProperty().divide(2));
-            Line line2 = new Line(0, this.getHeight()/2, this.getWidth()/2, this.getHeight()/2);
+            line2 = new Line(0, this.getHeight()/2, this.getWidth()/2, this.getHeight()/2);
             line2.startYProperty().bind(this.heightProperty().divide(2));
             line2.endXProperty().bind(this.widthProperty().divide(2));
             line2.endYProperty().bind(this.heightProperty().divide(2));
@@ -156,5 +167,33 @@ public class Tile extends StackPane {
         }
     }
 
-    //more stuff?
+    public void addBlack() {
+        hasBlack = true;
+        Circle circle = new Circle(this.getWidth()/2, this.getHeight()/2, this.getWidth()/2);
+        circle.centerXProperty().bind(this.widthProperty().divide(2));
+        circle.centerYProperty().bind(this.heightProperty().divide(2));
+        circle.radiusProperty().bind(this.widthProperty().divide(2));
+        circle.setFill(Color.BLACK);
+        getChildren().add(circle);
+    }
+    
+    public void addWhite() {
+        hasWhite = true;
+        Circle circle = new Circle(this.getWidth()/2, this.getHeight()/2, this.getWidth()/2);
+        circle.centerXProperty().bind(this.widthProperty().divide(2));
+        circle.centerYProperty().bind(this.heightProperty().divide(2));
+        circle.radiusProperty().bind(this.widthProperty().divide(2));
+        circle.setFill(Color.WHITE);
+        getChildren().add(circle);
+    }
+    
+    public void removeBlack() {
+        hasBlack = false;
+        getChildren().remove(lookup(".circle"));
+    }
+    
+    public void removeWhite() {
+        hasWhite = false;
+        getChildren().remove(lookup(".circle"));
+    }
 }

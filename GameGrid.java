@@ -56,5 +56,5 @@ public class GameGrid extends GridPane {
         }
     }
     
-    //more stuff?
+    //methods for when the grid is clicked on a particular player's turn
 }
