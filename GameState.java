@@ -1,3 +1,4 @@
+import javafx.beans.property.StringProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class GameState {
@@ -7,12 +8,16 @@ public class GameState {
     private User player1;
     private User player2;
     private int passCount;
+    private StringProperty passCountP;
     private int turnNo;
+    private StringProperty turnNoP;
     private String currentPlayerTurn;
+    private StringProperty currentPlayerTurnP;
     private int[][] previousBoard;
     private int[] captures; //captures[0] is number captured by black, captures[1] is by white
+    private StringProperty capsBP;
+    private StringProperty capsWP;
     private boolean finished;
-    public SimpleStringProperty tn;
     
     public GameState(int k, User player1, User player2) { //k is board size (e.g. height), player1 is a user object
         board = new int[k][k]; //0 in the array will mean empty, 1 will mean black and 2 will mean white
@@ -36,7 +41,11 @@ public class GameState {
         previousBoard = new int[k][k];
         captures = new int[2];
         finished = false;
-        tn = new SimpleStringProperty("" + turnNo);
+        passCountP = new SimpleStringProperty(""+passCount);
+        turnNoP = new SimpleStringProperty(""+turnNo);
+        currentPlayerTurnP = new SimpleStringProperty(currentPlayerTurn);
+        capsBP = new SimpleStringProperty("0");
+        capsWP = new SimpleStringProperty("0");
     }
     
     //y is the first index, x is the second index, starting from (0,0) in the top left corner to (k-1, k-1)
@@ -45,6 +54,7 @@ public class GameState {
         int otherPlayerColour = (currentPlayerColour == 1) ? 2 : 1;
         if (GameLogic.moveIsIllegal(previousBoard, board, y, x, currentPlayerColour)) return;
         passCount = 0;
+        passCountP.set(""+passCount);
         for (int i = 0; i < board.length; ++i) {
             for (int j = 0; j < board.length; ++j) {
                 previousBoard[i][j] = board[i][j];
@@ -66,9 +76,13 @@ public class GameState {
             }
         }
         captures[currentPlayerColour-1] += otherPlayerCountPrevious - otherPlayerCountNew;
+        capsBP.set(""+captures[0]);
+        capsWP.set(""+captures[1]);
         ++turnNo;
+        turnNoP.set(""+turnNo);
         if (turnNo % 2 == 0) currentPlayerTurn = black;
         else currentPlayerTurn = white;
+        currentPlayerTurnP.set(currentPlayerTurn);
         return;
     }
     
@@ -104,8 +118,29 @@ public class GameState {
         return turnNo;
     }
     
+    public StringProperty getPassCountP() {
+        return passCountP;
+    }
+    
+    public StringProperty getTurnNoP() {
+        return turnNoP;
+    }
+    
+    public StringProperty getCurrentPlayerTurnP() {
+        return currentPlayerTurnP;
+    }
+    
+    public StringProperty getCapsBP() {
+        return capsBP;
+    }
+    
+    public StringProperty getCapsWP() {
+        return capsWP;
+    }
+    
     public void pass() {
         ++passCount;
+        passCountP.set(""+passCount);
         if (passCount == 2) {
             //System.out.println("2 consecutive passes so game ends");
             int[] deadStoneCoordinates = Score.markDeadStones(board);
@@ -119,8 +154,10 @@ public class GameState {
             finished = true;
         }
         ++turnNo;
+        turnNoP.set(""+turnNo);
         if (turnNo % 2 == 0) currentPlayerTurn = black;
         else currentPlayerTurn = white;
+        currentPlayerTurnP.set(currentPlayerTurn);
         return;
     }
     
