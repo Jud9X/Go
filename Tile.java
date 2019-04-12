@@ -39,12 +39,60 @@ public class Tile extends Pane {
             if (Main.setupPage.g.getCurrentPlayerTurn() == Main.setupPage.g.getBlack()) {
                 Main.setupPage.g.placePiece(Main.setupPage.grid.getRowIndex(this), Main.setupPage.grid.getColumnIndex(this));
                 if (Main.setupPage.g.getCurrentPlayerTurn() != Main.setupPage.g.getBlack()) {
-                    this.addBlack();
+                    for (int i = 0; i < Main.setupPage.g.getBoard().length; ++i) {
+                        for (int j = 0; j < Main.setupPage.g.getBoard().length; ++j) {
+                            if (Main.setupPage.g.getBoard()[i][j] == 1) {
+                                if (Main.setupPage.grid.getGrid()[i][j].getHasWhite()) {
+                                    Main.setupPage.grid.getGrid()[i][j].removeWhite();
+                                }
+                                Main.setupPage.grid.getGrid()[i][j].addBlack();
+                            }
+                            else if (Main.setupPage.g.getBoard()[i][j] == 2) {
+                                if (Main.setupPage.grid.getGrid()[i][j].getHasBlack()) {
+                                    Main.setupPage.grid.getGrid()[i][j].removeBlack();
+                                }
+                                Main.setupPage.grid.getGrid()[i][j].addWhite();
+                            }
+                            else {
+                                if (Main.setupPage.grid.getGrid()[i][j].getHasBlack()) {
+                                    Main.setupPage.grid.getGrid()[i][j].removeBlack();
+                                }
+                                if (Main.setupPage.grid.getGrid()[i][j].getHasWhite()) {
+                                    Main.setupPage.grid.getGrid()[i][j].removeWhite();
+                                }
+                            }
+                        }
+                    }
                 }
             }
             else { //it's white's turn
                 Main.setupPage.g.placePiece(Main.setupPage.grid.getRowIndex(this), Main.setupPage.grid.getColumnIndex(this));
-                if (Main.setupPage.g.getCurrentPlayerTurn() != Main.setupPage.g.getWhite()) this.addWhite();
+                if (Main.setupPage.g.getCurrentPlayerTurn() != Main.setupPage.g.getWhite()) {
+                    for (int i = 0; i < Main.setupPage.g.getBoard().length; ++i) {
+                        for (int j = 0; j < Main.setupPage.g.getBoard().length; ++j) {
+                            if (Main.setupPage.g.getBoard()[i][j] == 1) {
+                                if (Main.setupPage.grid.getGrid()[i][j].getHasWhite()) {
+                                    Main.setupPage.grid.getGrid()[i][j].removeWhite();
+                                }
+                                Main.setupPage.grid.getGrid()[i][j].addBlack();
+                            }
+                            else if (Main.setupPage.g.getBoard()[i][j] == 2) {
+                                if (Main.setupPage.grid.getGrid()[i][j].getHasBlack()) {
+                                    Main.setupPage.grid.getGrid()[i][j].removeBlack();
+                                }
+                                Main.setupPage.grid.getGrid()[i][j].addWhite();
+                            }
+                            else {
+                                if (Main.setupPage.grid.getGrid()[i][j].getHasBlack()) {
+                                    Main.setupPage.grid.getGrid()[i][j].removeBlack();
+                                }
+                                if (Main.setupPage.grid.getGrid()[i][j].getHasWhite()) {
+                                    Main.setupPage.grid.getGrid()[i][j].removeWhite();
+                                }
+                            }
+                        }
+                    }
+                }
             }
         });
     }
@@ -201,6 +249,14 @@ public class Tile extends Pane {
             getChildren().addAll(line1, line2);
         }
     }
+    
+    public boolean getHasBlack() {
+        return hasBlack;
+    }
+    
+    public boolean getHasWhite() {
+        return hasWhite;
+    }
 
     public void addBlack() {
         hasBlack = true;
@@ -224,11 +280,11 @@ public class Tile extends Pane {
     
     public void removeBlack() {
         hasBlack = false;
-        getChildren().remove(lookup(".circle"));
+        getChildren().remove(2);
     }
     
     public void removeWhite() {
         hasWhite = false;
-        getChildren().remove(lookup(".circle"));
+        getChildren().remove(2);
     }
 }

@@ -1,5 +1,6 @@
 //import java.util.Arrays;
 import javafx.application.Application;
+//import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -77,11 +78,12 @@ public class Main extends Application {
                 VBox gameInfo = new VBox();
                 Label black = new Label("Black: " + setupPage.g.getBlack());
                 Label white = new Label("White: " + setupPage.g.getWhite());
-                Label tn = new Label("Turn number: "+setupPage.g.getTurnNo());
-                Label capsB = new Label("Captures by " + setupPage.g.getBlack() + ": " +setupPage.g.getCaptures()[0]);
-                Label capsW = new Label("Captures by " + setupPage.g.getWhite() + ": " +setupPage.g.getCaptures()[1]);
+                Label tn = new Label();//Label("Turn number: " + setupPage.g.getTurnNo());
+                Label capsB = new Label("Captures by " + setupPage.g.getBlack() + ": " + setupPage.g.getCaptures()[0]);
+                Label capsW = new Label("Captures by " + setupPage.g.getWhite() + ": " + setupPage.g.getCaptures()[1]);
                 Label pc = new Label("Pass count: "+setupPage.g.getPassCount());
                 Label CPT = new Label("Current player's turn: " + setupPage.g.getCurrentPlayerTurn());
+                tn.textProperty().bind(setupPage.g.tn);
                 gameInfo.getChildren().addAll(black, white, tn, capsB, capsW, pc, CPT);
                 layout2.setRight(gameInfo);
                 VBox gameControl = new VBox();

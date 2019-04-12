@@ -1,3 +1,5 @@
+import javafx.beans.property.SimpleStringProperty;
+
 public class GameState {
     private int[][] board; //e.g. 9x9 2D array
     private String white;
@@ -10,6 +12,7 @@ public class GameState {
     private int[][] previousBoard;
     private int[] captures; //captures[0] is number captured by black, captures[1] is by white
     private boolean finished;
+    public SimpleStringProperty tn;
     
     public GameState(int k, User player1, User player2) { //k is board size (e.g. height), player1 is a user object
         board = new int[k][k]; //0 in the array will mean empty, 1 will mean black and 2 will mean white
@@ -33,6 +36,7 @@ public class GameState {
         previousBoard = new int[k][k];
         captures = new int[2];
         finished = false;
+        tn = new SimpleStringProperty("" + turnNo);
     }
     
     //y is the first index, x is the second index, starting from (0,0) in the top left corner to (k-1, k-1)
