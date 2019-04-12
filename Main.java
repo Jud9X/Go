@@ -77,11 +77,11 @@ public class Main extends Application {
                 VBox gameInfo = new VBox();
                 Label black = new Label("Black: " + setupPage.g.getBlack());
                 Label white = new Label("White: " + setupPage.g.getWhite());
-                Label tn = new Label(""+setupPage.g.getTurnNo());
-                Label capsB = new Label(""+setupPage.g.getCaptures()[0]);
-                Label capsW = new Label(""+setupPage.g.getCaptures()[1]);
-                Label pc = new Label(""+setupPage.g.getPassCount());
-                Label CPT = new Label(setupPage.g.getCurrentPlayerTurn());
+                Label tn = new Label("Turn number: "+setupPage.g.getTurnNo());
+                Label capsB = new Label("Captures by " + setupPage.g.getBlack() + ": " +setupPage.g.getCaptures()[0]);
+                Label capsW = new Label("Captures by " + setupPage.g.getWhite() + ": " +setupPage.g.getCaptures()[1]);
+                Label pc = new Label("Pass count: "+setupPage.g.getPassCount());
+                Label CPT = new Label("Current player's turn: " + setupPage.g.getCurrentPlayerTurn());
                 gameInfo.getChildren().addAll(black, white, tn, capsB, capsW, pc, CPT);
                 layout2.setRight(gameInfo);
                 VBox gameControl = new VBox();

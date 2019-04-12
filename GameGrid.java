@@ -85,5 +85,15 @@ public class GameGrid extends GridPane {
         }
     }
     
+    /*grid[0][0].setOnMouseClicked(e -> {
+        if (Main.setupPage.g.getCurrentPlayerTurn() == Main.setupPage.g.getBlack()) {
+            Main.setupPage.g.placePiece(getRowIndex, getColumnIndex);
+            if (Main.setupPage.g.getCurrentPlayerTurn() != Main.setupPage.g.getBlack()) grid[0][0].addBlack();
+        }
+        else {
+            grid[0][0].addWhite();
+        }
+    });*/
+    
     //methods for when the grid is clicked on a particular player's turn?
 }

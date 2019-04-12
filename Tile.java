@@ -37,10 +37,14 @@ public class Tile extends Pane {
         getChildren().addAll(line1, line2);
         this.setOnMouseClicked(e -> {
             if (Main.setupPage.g.getCurrentPlayerTurn() == Main.setupPage.g.getBlack()) {
-                this.addBlack();
+                Main.setupPage.g.placePiece(Main.setupPage.grid.getRowIndex(this), Main.setupPage.grid.getColumnIndex(this));
+                if (Main.setupPage.g.getCurrentPlayerTurn() != Main.setupPage.g.getBlack()) {
+                    this.addBlack();
+                }
             }
-            else {
-                this.addWhite();
+            else { //it's white's turn
+                Main.setupPage.g.placePiece(Main.setupPage.grid.getRowIndex(this), Main.setupPage.grid.getColumnIndex(this));
+                if (Main.setupPage.g.getCurrentPlayerTurn() != Main.setupPage.g.getWhite()) this.addWhite();
             }
         });
     }
