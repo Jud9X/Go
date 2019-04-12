@@ -5,14 +5,53 @@ import java.util.Scanner;
 import java.util.Set;
 
 public class Score {
-    static Set<List<Integer>> possibleTerritory = new HashSet<List<Integer>>();
-    static Set<List<Integer>> confirmedTerritory = new HashSet<List<Integer>>();
-    static boolean touchesBlack = false;
-    static boolean touchesWhite = false;
-
+    private Set<List<Integer>> possibleTerritory;
+    private Set<List<Integer>> confirmedTerritory;
+    private boolean touchesBlack;
+    private boolean touchesWhite;
+    private int[][] endingBoard;
+    private int[] deads;
+    private int deadsIndex;
+    private int removeBlackCount;
+    private int removeWhiteCount;
+    private int[] finalDeads;
+    private int[] territorySums;
+    public int[] finalScores; //make private
+    
+    public Score(int[][] board) {
+        possibleTerritory = new HashSet<List<Integer>>();
+        confirmedTerritory = new HashSet<List<Integer>>();
+        touchesBlack = false;
+        touchesWhite = false;
+        endingBoard = board;
+        deads = new int[endingBoard.length * endingBoard.length];
+        deadsIndex = 0;
+        removeBlackCount = 0;
+        removeWhiteCount = 0;
+    }
+    
+    public int[][] getEndingBoard() {
+        return endingBoard;
+    }
+    
+    public void markDeadStone(int y, int x, int oldValue) {
+        endingBoard[y][x] = 0;
+        deads[deadsIndex] = y;
+        ++deadsIndex;
+        deads[deadsIndex] = x;
+        if (oldValue == 1) ++removeBlackCount;
+        else ++removeWhiteCount;
+    }
+    /*
+    public void deadStonesUpdate() {
+        finalDeads = new int[removeBlackCount*2 + removeWhiteCount*2];
+        for (int i = 0; i < removeBlackCount*2 + removeWhiteCount*2; ++i) finalDeads[i] = deads[i];
+    }*/
+    
+    /*
     //get dead stones manually, return int[] with final 2 values being removeBlackCount and then removeWhiteCount
-    public static int[] markDeadStones(int[][] endingBoard) {
-        /*int[] deads = new int[endingBoard.length * endingBoard.length];
+    public int[] markDeadStones() {
+        int[] deads = new int[endingBoard.length * endingBoard.length];
         int deadsIndex = 0;
         //Scanner deadStones = new Scanner(System.in);
         boolean done = false;
@@ -21,6 +60,7 @@ public class Score {
         while (!done) { //add an undo possibility (using a stack?)?
             //System.out.println("Type coordinates of dead stones in the form 'y x' without quotes, starting from top left as 0,0 or 'done' w/o quotes");
             //String point = deadStones.nextLine();
+            
             if (point.equals("done")) {
                 done = true;
             }
@@ -43,26 +83,26 @@ public class Score {
         finalDeads[finalDeads.length-2] = removeBlackCount;
         finalDeads[finalDeads.length-1] = removeWhiteCount;
         return finalDeads;
-        */
-        return new int[0];
     }
     
-    public static int[][] removeDeadStones(int[][] endingBoard, int[] deadCoordinates) { //deadCoordinates includes the 2 counts at the end
+    public int[][] removeDeadStones(int[][] endingBoard, int[] deadCoordinates) { //deadCoordinates includes the 2 counts at the end
         for (int i = 0; i < deadCoordinates.length-3; i += 2) {
             endingBoard[deadCoordinates[i]][deadCoordinates[i+1]] = 0;
         }
         return endingBoard;
-    }
+    }*/
     
-    public static int[] calculateTerritory(int[][] finalBoard) { //returns int[] where array[0] is black's territory and array[1] is white's
-        int[] territorySums = new int[2];
-        for (int i = 0; i < finalBoard.length; ++i) {
-            for (int j = 0; j < finalBoard.length; ++j) {
-                if (finalBoard[i][j] == 0 && !(confirmedTerritory.contains(Arrays.asList(i, j)))) {
+    public void calculateFinalScores() { //returns int[] where array[0] is black's territory and array[1] is white's
+        finalDeads = new int[removeBlackCount*2 + removeWhiteCount*2];
+        for (int i = 0; i < removeBlackCount*2 + removeWhiteCount*2; ++i) finalDeads[i] = deads[i];
+        territorySums = new int[2];
+        for (int i = 0; i < endingBoard.length; ++i) {
+            for (int j = 0; j < endingBoard.length; ++j) {
+                if (endingBoard[i][j] == 0 && !(confirmedTerritory.contains(Arrays.asList(i, j)))) {
                     possibleTerritory.clear();
                     touchesBlack = false;
                     touchesWhite = false;
-                    if (isTerritory(finalBoard, i, j)) {
+                    if (isTerritory(endingBoard, i, j)) {
                         confirmedTerritory.addAll(possibleTerritory);
                         //possibleTerritory.forEach(System.out::println);
                         //System.out.println("finished " + i + " " + j);
@@ -72,11 +112,13 @@ public class Score {
                 }
             }
         }
-        return territorySums;
+        finalScores = new int[2]; //finalScores[0] is black's score and [1] is white's score
+        finalScores[0] += territorySums[0] - Main.setupPage.g.getCaptures()[1] - removeBlackCount;
+        finalScores[1] += territorySums[1] - Main.setupPage.g.getCaptures()[0] - removeWhiteCount;
     }
     
     //need to reset the static variables before running?
-    private static boolean isTerritory(int[][] board, int y, int x) {
+    private boolean isTerritory(int[][] board, int y, int x) {
         possibleTerritory.add(Arrays.asList(y, x));
         int[] adjs = GameLogic.getAdjacentCoordinates(y, x, board.length);
         for (int i = 0; i < adjs.length-1; i += 2) {
@@ -92,11 +134,10 @@ public class Score {
         }
         return isTerritory;
     }
-    
-    public static int[] calculateFinalScores(int[] territory, int[] captures, int deadBlacks, int deadWhites) {
-        int[] finalScores = new int[2]; //finalScores[0] is black's score and [1] is white's score
+    /*
+    public void calculateFinalScores(int[] territory, int[] captures, int deadBlacks, int deadWhites) {
+        finalScores = new int[2]; //finalScores[0] is black's score and [1] is white's score
         finalScores[0] += territory[0] - captures[1] - deadBlacks;
         finalScores[1] += territory[1] - captures[0] - deadWhites;
-        return finalScores;
-    }
+    }*/
 }

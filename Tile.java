@@ -80,6 +80,24 @@ public class Tile extends Pane {
         }
     }
     
+    public void handleClick2() {
+        //include confirmation before each removal?
+        int row = Main.setupPage.grid.getRowIndex(this);
+        int col = Main.setupPage.grid.getColumnIndex(this);
+        if (Main.setupPage.g.getBoard()[row][col] == 1) {
+            if (Main.setupPage.grid.getGrid()[row][col].getHasBlack()) {
+                Main.setupPage.grid.getGrid()[row][col].removeBlack();
+                Main.setupPage.g.s.markDeadStone(row, col, 1);
+            }
+        }
+        else if (Main.setupPage.g.getBoard()[row][col] == 2) {
+            if (Main.setupPage.grid.getGrid()[row][col].getHasWhite()) {
+                Main.setupPage.grid.getGrid()[row][col].removeWhite();
+                Main.setupPage.g.s.markDeadStone(row, col, 2);
+            }
+        }
+    }
+    
     public Tile() {
         this.hasBlack = false;
         this.hasWhite = false;
@@ -101,7 +119,8 @@ public class Tile extends Pane {
         getChildren().addAll(line1, line2);
         nodes.addAll(getChildren());
         this.setOnMouseClicked(e -> {
-            handleClick();
+            if (Main.setupPage.g.getPassCount() != 2) handleClick();
+            else handleClick2();
         });
     }
     

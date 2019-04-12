@@ -78,7 +78,7 @@ public class Main extends Application {
                 VBox gameInfo = new VBox();
                 Label black = new Label("Black: " + setupPage.g.getBlack());
                 Label white = new Label("White: " + setupPage.g.getWhite());
-                Label tn = new Label("Turn number: ");
+                Label tn = new Label("Turns played: ");
                 Label tnLive = new Label();
                 tnLive.textProperty().bind(setupPage.g.getTurnNoP());
                 Label capsB = new Label("Captures by black: ");
@@ -98,7 +98,14 @@ public class Main extends Application {
                 VBox gameControl = new VBox();
                 Button pass = new Button("Pass");
                 pass.setOnAction(e2 -> setupPage.g.pass());
-                gameControl.getChildren().addAll(pass);
+                Button done = new Button("Finished marking"); //make invisible until passcount=2
+                done.setOnAction(e3 -> {
+                    setupPage.g.s.calculateFinalScores();
+                    System.out.println(setupPage.g.s.finalScores[0]);
+                    System.out.println(setupPage.g.s.finalScores[1]);
+                    //hide button after finished? block all further action?
+                });
+                gameControl.getChildren().addAll(pass, done);
                 layout2.setLeft(gameControl);
                 scene2 = new Scene(layout2, 702, 702);
                 primaryStage.setScene(scene2);
