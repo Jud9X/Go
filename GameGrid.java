@@ -7,7 +7,7 @@ import javafx.scene.shape.Rectangle;
 
 public class GameGrid extends GridPane {
     
-    Tile[][] grid;
+    Tile[][] grid; //make private
     
     public GameGrid(int k) {
         this.grid = new Tile[k][k];
@@ -88,6 +88,4 @@ public class GameGrid extends GridPane {
     public Tile[][] getGrid() {
         return grid;
     }
-    
-    //methods for when the grid is clicked on a particular player's turn?
 }

@@ -14,9 +14,8 @@ public class Score {
     private int deadsIndex;
     private int removeBlackCount;
     private int removeWhiteCount;
-    private int[] finalDeads;
     private int[] territorySums;
-    public int[] finalScores; //make private
+    private int[] finalScores;
     
     public Score(int[][] board) {
         possibleTerritory = new HashSet<List<Integer>>();
@@ -24,8 +23,6 @@ public class Score {
         touchesBlack = false;
         touchesWhite = false;
         endingBoard = board;
-        deads = new int[endingBoard.length * endingBoard.length];
-        deadsIndex = 0;
         removeBlackCount = 0;
         removeWhiteCount = 0;
     }
@@ -34,11 +31,12 @@ public class Score {
         return endingBoard;
     }
     
+    public int[] getFinalScores() {
+        return finalScores;
+    }
+    
     public void markDeadStone(int y, int x, int oldValue) {
         endingBoard[y][x] = 0;
-        deads[deadsIndex] = y;
-        ++deadsIndex;
-        deads[deadsIndex] = x;
         if (oldValue == 1) ++removeBlackCount;
         else ++removeWhiteCount;
     }
@@ -93,8 +91,6 @@ public class Score {
     }*/
     
     public void calculateFinalScores() { //returns int[] where array[0] is black's territory and array[1] is white's
-        finalDeads = new int[removeBlackCount*2 + removeWhiteCount*2];
-        for (int i = 0; i < removeBlackCount*2 + removeWhiteCount*2; ++i) finalDeads[i] = deads[i];
         territorySums = new int[2];
         for (int i = 0; i < endingBoard.length; ++i) {
             for (int j = 0; j < endingBoard.length; ++j) {

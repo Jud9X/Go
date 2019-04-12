@@ -18,7 +18,7 @@ public class GameState {
     private StringProperty capsBP;
     private StringProperty capsWP;
     private boolean finished;
-    Score s;
+    Score s; //make private
     
     public GameState(int k, User player1, User player2) { //k is board size (e.g. height), player1 is a user object
         board = new int[k][k]; //0 in the array will mean empty, 1 will mean black and 2 will mean white
@@ -91,7 +91,7 @@ public class GameState {
         return board;
     }
     
-    public int[] getCaptures() {
+    public int[] getCaptures() { //remove these if unused
         return captures;
     }
     
@@ -101,6 +101,10 @@ public class GameState {
     
     public String getCurrentPlayerTurn() {
         return currentPlayerTurn;
+    }
+    
+    public void setFinished() {
+        finished = true;
     }
     
     public boolean isFinished() {
@@ -156,7 +160,8 @@ public class GameState {
             System.out.println("Black's final score: " + scores[0]);
             System.out.println("White's final score: " + scores[1]);
             board = finalBoard;*/
-            finished = true;
+            //finished = true; //remove this if it never gets used
+            return;
         }
         ++turnNo;
         turnNoP.set(""+turnNo);

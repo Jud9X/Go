@@ -11,7 +11,7 @@ import javafx.scene.Node;
 
 public class Tile extends Pane {
     
-    boolean hasBlack;
+    boolean hasBlack; //make all these private, add getters if necessary
     boolean hasWhite;
     Line line1;
     Line line2;
@@ -19,7 +19,7 @@ public class Tile extends Pane {
     Circle circle2;
     List<Node> nodes = new ArrayList<>();
     
-    private void handleClick() {
+    private void handleClick1() {
         if (Main.setupPage.g.getCurrentPlayerTurn() == Main.setupPage.g.getBlack()) {
             Main.setupPage.g.placePiece(Main.setupPage.grid.getRowIndex(this), Main.setupPage.grid.getColumnIndex(this));
             if (Main.setupPage.g.getCurrentPlayerTurn() != Main.setupPage.g.getBlack()) {
@@ -119,12 +119,12 @@ public class Tile extends Pane {
         getChildren().addAll(line1, line2);
         nodes.addAll(getChildren());
         this.setOnMouseClicked(e -> {
-            if (Main.setupPage.g.getPassCount() != 2) handleClick();
-            else handleClick2();
+            if (Main.setupPage.g.getPassCount() != 2) handleClick1();
+            else if (!Main.setupPage.g.isFinished()) handleClick2();
         });
     }
     
-    public Tile(String position) {
+    public Tile(String position) { //make this constructor shorter? by taking out line1 and line2 setup and making calls to that
         this.hasBlack = false;
         this.hasWhite = false;
         setStyle("-fx-border-color : beige");
@@ -149,7 +149,8 @@ public class Tile extends Pane {
             getChildren().addAll(line1, line2);
             nodes.addAll(getChildren());
             this.setOnMouseClicked(e -> {
-                handleClick();
+                if (Main.setupPage.g.getPassCount() != 2) handleClick1();
+                else handleClick2();
             });
         }
         else if (position.equals("right edge")) {
@@ -171,7 +172,8 @@ public class Tile extends Pane {
             getChildren().addAll(line1, line2);
             nodes.addAll(getChildren());
             this.setOnMouseClicked(e -> {
-                handleClick();
+                if (Main.setupPage.g.getPassCount() != 2) handleClick1();
+                else handleClick2();
             });
         }
         else if (position.equals("top edge")) {
@@ -196,7 +198,8 @@ public class Tile extends Pane {
             getChildren().addAll(line1, line2);
             nodes.addAll(getChildren());
             this.setOnMouseClicked(e -> {
-                handleClick();
+                if (Main.setupPage.g.getPassCount() != 2) handleClick1();
+                else handleClick2();
             });
         }
         else if (position.equals("bottom edge")) {
@@ -216,7 +219,8 @@ public class Tile extends Pane {
             getChildren().addAll(line1, line2);
             nodes.addAll(getChildren());
             this.setOnMouseClicked(e -> {
-                handleClick();
+                if (Main.setupPage.g.getPassCount() != 2) handleClick1();
+                else handleClick2();
             });
         }
         else if (position.equals("top left corner")) {
@@ -239,7 +243,8 @@ public class Tile extends Pane {
             getChildren().addAll(line1, line2);
             nodes.addAll(getChildren());
             this.setOnMouseClicked(e -> {
-                handleClick();
+                if (Main.setupPage.g.getPassCount() != 2) handleClick1();
+                else handleClick2();
             });
         }
         else if (position.equals("top right corner")) {
@@ -261,7 +266,8 @@ public class Tile extends Pane {
             getChildren().addAll(line1, line2);
             nodes.addAll(getChildren());
             this.setOnMouseClicked(e -> {
-                handleClick();
+                if (Main.setupPage.g.getPassCount() != 2) handleClick1();
+                else handleClick2();
             });
         }
         else if (position.equals("bottom left corner")) {
@@ -283,7 +289,8 @@ public class Tile extends Pane {
             getChildren().addAll(line1, line2);
             nodes.addAll(getChildren());
             this.setOnMouseClicked(e -> {
-                handleClick();
+                if (Main.setupPage.g.getPassCount() != 2) handleClick1();
+                else handleClick2();
             });
         }
         else if (position.equals("bottom right corner")) {
@@ -304,7 +311,8 @@ public class Tile extends Pane {
             getChildren().addAll(line1, line2);
             nodes.addAll(getChildren());
             this.setOnMouseClicked(e -> {
-                handleClick();
+                if (Main.setupPage.g.getPassCount() != 2) handleClick1();
+                else handleClick2();
             });
         }
     }

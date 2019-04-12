@@ -9,7 +9,7 @@ public class GameLogic {
     public static boolean moveIsIllegal(int[][] previousBoard, int[][] board, int y, int x, int currentPlayerColour) {
         //check move is legal: place is free?
         if (board[y][x] != 0) {
-            System.out.println("someone's already here: x=" + x + ", y=" + y); //don't need this in the long-term?
+            System.out.println("someone's already here: x=" + x + ", y=" + y); //turn these into popup boxes
             return true;
         }
         //setup final proposed board for checking

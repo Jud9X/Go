@@ -10,7 +10,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-//import java.util.Scanner;
 
 public class Main extends Application {
     
@@ -98,16 +97,29 @@ public class Main extends Application {
                 VBox gameControl = new VBox();
                 Button pass = new Button("Pass");
                 pass.setOnAction(e2 -> setupPage.g.pass());
-                Button done = new Button("Finished marking"); //make invisible until passcount=2
+                Button done = new Button("Finished marking");
+                done.setVisible(false);
+                Label instructions = new Label("Game is over. Click on stones to mark them as dead, then click 'Finished marking' when done.");
+                instructions.setMaxWidth(100);
+                instructions.setWrapText(true);
+                instructions.setVisible(false);
+                setupPage.g.getPassCountP().addListener((o, oV, nV) -> {
+                    if (nV.equals("2")) {
+                        pass.setVisible(false);
+                        done.setVisible(true);
+                        instructions.setVisible(true);
+                    }
+                });
                 done.setOnAction(e3 -> {
+                    setupPage.g.setFinished();
                     setupPage.g.s.calculateFinalScores();
-                    System.out.println(setupPage.g.s.finalScores[0]);
-                    System.out.println(setupPage.g.s.finalScores[1]);
+                    System.out.println("Black's score: " + setupPage.g.s.getFinalScores()[0]); //make g and s private :(
+                    System.out.println("White's score: " + setupPage.g.s.getFinalScores()[1]); //make these scores a popup box with a 'close game' button that returns to start page; also update players' win%
                     //hide button after finished? block all further action?
                 });
-                gameControl.getChildren().addAll(pass, done);
+                gameControl.getChildren().addAll(pass, instructions, done);
                 layout2.setLeft(gameControl);
-                scene2 = new Scene(layout2, 702, 702);
+                scene2 = new Scene(layout2, 802, 702); //fix these random screen size values, maybe using: https://stackoverflow.com/questions/38216268/how-to-listen-resize-event-of-stage-in-javafx
                 primaryStage.setScene(scene2);
             });
             
