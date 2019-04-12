@@ -5,8 +5,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Circle;
-//import javafx.scene.Node;
-//import javafx.geometry.Point2D;
+import java.util.ArrayList;
+import java.util.List;
+import javafx.scene.Node;
 
 public class Tile extends Pane {
     
@@ -14,13 +15,76 @@ public class Tile extends Pane {
     boolean hasWhite;
     Line line1;
     Line line2;
+    Circle circle1;
+    Circle circle2;
+    List<Node> nodes = new ArrayList<>();
+    
+    private void handleClick() {
+        if (Main.setupPage.g.getCurrentPlayerTurn() == Main.setupPage.g.getBlack()) {
+            Main.setupPage.g.placePiece(Main.setupPage.grid.getRowIndex(this), Main.setupPage.grid.getColumnIndex(this));
+            if (Main.setupPage.g.getCurrentPlayerTurn() != Main.setupPage.g.getBlack()) {
+                for (int i = 0; i < Main.setupPage.g.getBoard().length; ++i) {
+                    for (int j = 0; j < Main.setupPage.g.getBoard().length; ++j) {
+                        if (Main.setupPage.g.getBoard()[i][j] == 1) {
+                            if (Main.setupPage.grid.getGrid()[i][j].getHasWhite()) {
+                                Main.setupPage.grid.getGrid()[i][j].removeWhite();
+                            }
+                            Main.setupPage.grid.getGrid()[i][j].addBlack();
+                        }
+                        else if (Main.setupPage.g.getBoard()[i][j] == 2) {
+                            if (Main.setupPage.grid.getGrid()[i][j].getHasBlack()) {
+                                Main.setupPage.grid.getGrid()[i][j].removeBlack();
+                            }
+                            Main.setupPage.grid.getGrid()[i][j].addWhite();
+                        }
+                        else {
+                            if (Main.setupPage.grid.getGrid()[i][j].getHasBlack()) {
+                                Main.setupPage.grid.getGrid()[i][j].removeBlack();
+                            }
+                            if (Main.setupPage.grid.getGrid()[i][j].getHasWhite()) {
+                                Main.setupPage.grid.getGrid()[i][j].removeWhite();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        else { //it's white's turn
+            Main.setupPage.g.placePiece(Main.setupPage.grid.getRowIndex(this), Main.setupPage.grid.getColumnIndex(this));
+            if (Main.setupPage.g.getCurrentPlayerTurn() != Main.setupPage.g.getWhite()) {
+                for (int i = 0; i < Main.setupPage.g.getBoard().length; ++i) {
+                    for (int j = 0; j < Main.setupPage.g.getBoard().length; ++j) {
+                        if (Main.setupPage.g.getBoard()[i][j] == 1) {
+                            if (Main.setupPage.grid.getGrid()[i][j].getHasWhite()) {
+                                Main.setupPage.grid.getGrid()[i][j].removeWhite();
+                            }
+                            Main.setupPage.grid.getGrid()[i][j].addBlack();
+                        }
+                        else if (Main.setupPage.g.getBoard()[i][j] == 2) {
+                            if (Main.setupPage.grid.getGrid()[i][j].getHasBlack()) {
+                                Main.setupPage.grid.getGrid()[i][j].removeBlack();
+                            }
+                            Main.setupPage.grid.getGrid()[i][j].addWhite();
+                        }
+                        else {
+                            if (Main.setupPage.grid.getGrid()[i][j].getHasBlack()) {
+                                Main.setupPage.grid.getGrid()[i][j].removeBlack();
+                            }
+                            if (Main.setupPage.grid.getGrid()[i][j].getHasWhite()) {
+                                Main.setupPage.grid.getGrid()[i][j].removeWhite();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
     
     public Tile() {
         this.hasBlack = false;
         this.hasWhite = false;
         setStyle("-fx-border-color : beige");
         this.setPrefSize(50, 50);
-        //vertical line
         line1 = new Line(this.getWidth()/2, this.getHeight(), this.getWidth()/2, 0);
         line1.startXProperty().bind(this.widthProperty().divide(2));
         line1.endXProperty().bind(this.widthProperty().divide(2));
@@ -35,65 +99,9 @@ public class Tile extends Pane {
         line1.setLayoutX(this.getWidth()/2 - line1.getLayoutBounds().getMinX());
         line2.setLayoutY(this.getHeight()/2 - line1.getLayoutBounds().getMinY());
         getChildren().addAll(line1, line2);
+        nodes.addAll(getChildren());
         this.setOnMouseClicked(e -> {
-            if (Main.setupPage.g.getCurrentPlayerTurn() == Main.setupPage.g.getBlack()) {
-                Main.setupPage.g.placePiece(Main.setupPage.grid.getRowIndex(this), Main.setupPage.grid.getColumnIndex(this));
-                if (Main.setupPage.g.getCurrentPlayerTurn() != Main.setupPage.g.getBlack()) {
-                    for (int i = 0; i < Main.setupPage.g.getBoard().length; ++i) {
-                        for (int j = 0; j < Main.setupPage.g.getBoard().length; ++j) {
-                            if (Main.setupPage.g.getBoard()[i][j] == 1) {
-                                if (Main.setupPage.grid.getGrid()[i][j].getHasWhite()) {
-                                    Main.setupPage.grid.getGrid()[i][j].removeWhite();
-                                }
-                                Main.setupPage.grid.getGrid()[i][j].addBlack();
-                            }
-                            else if (Main.setupPage.g.getBoard()[i][j] == 2) {
-                                if (Main.setupPage.grid.getGrid()[i][j].getHasBlack()) {
-                                    Main.setupPage.grid.getGrid()[i][j].removeBlack();
-                                }
-                                Main.setupPage.grid.getGrid()[i][j].addWhite();
-                            }
-                            else {
-                                if (Main.setupPage.grid.getGrid()[i][j].getHasBlack()) {
-                                    Main.setupPage.grid.getGrid()[i][j].removeBlack();
-                                }
-                                if (Main.setupPage.grid.getGrid()[i][j].getHasWhite()) {
-                                    Main.setupPage.grid.getGrid()[i][j].removeWhite();
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            else { //it's white's turn
-                Main.setupPage.g.placePiece(Main.setupPage.grid.getRowIndex(this), Main.setupPage.grid.getColumnIndex(this));
-                if (Main.setupPage.g.getCurrentPlayerTurn() != Main.setupPage.g.getWhite()) {
-                    for (int i = 0; i < Main.setupPage.g.getBoard().length; ++i) {
-                        for (int j = 0; j < Main.setupPage.g.getBoard().length; ++j) {
-                            if (Main.setupPage.g.getBoard()[i][j] == 1) {
-                                if (Main.setupPage.grid.getGrid()[i][j].getHasWhite()) {
-                                    Main.setupPage.grid.getGrid()[i][j].removeWhite();
-                                }
-                                Main.setupPage.grid.getGrid()[i][j].addBlack();
-                            }
-                            else if (Main.setupPage.g.getBoard()[i][j] == 2) {
-                                if (Main.setupPage.grid.getGrid()[i][j].getHasBlack()) {
-                                    Main.setupPage.grid.getGrid()[i][j].removeBlack();
-                                }
-                                Main.setupPage.grid.getGrid()[i][j].addWhite();
-                            }
-                            else {
-                                if (Main.setupPage.grid.getGrid()[i][j].getHasBlack()) {
-                                    Main.setupPage.grid.getGrid()[i][j].removeBlack();
-                                }
-                                if (Main.setupPage.grid.getGrid()[i][j].getHasWhite()) {
-                                    Main.setupPage.grid.getGrid()[i][j].removeWhite();
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            handleClick();
         });
     }
     
@@ -120,6 +128,10 @@ public class Tile extends Pane {
             line2.setLayoutX(this.getWidth()/2 - line1.getLayoutBounds().getMinX());
             line2.setLayoutY(this.getHeight()/2 - line1.getLayoutBounds().getMinY());
             getChildren().addAll(line1, line2);
+            nodes.addAll(getChildren());
+            this.setOnMouseClicked(e -> {
+                handleClick();
+            });
         }
         else if (position.equals("right edge")) {
             line1 = new Line(this.getWidth()/2, this.getHeight(), this.getWidth()/2, 0);
@@ -138,6 +150,10 @@ public class Tile extends Pane {
             line2.setLayoutX(0 - line1.getLayoutBounds().getMinX());
             line2.setLayoutY(this.getHeight()/2 - line1.getLayoutBounds().getMinY());
             getChildren().addAll(line1, line2);
+            nodes.addAll(getChildren());
+            this.setOnMouseClicked(e -> {
+                handleClick();
+            });
         }
         else if (position.equals("top edge")) {
             line1 = new Line(this.getWidth()/2, this.getHeight()/2, this.getWidth()/2, this.getHeight());
@@ -159,6 +175,10 @@ public class Tile extends Pane {
             //line2.setLayoutX(this.getWidth()/2 - line1.getLayoutBounds().getMinX());
             line2.setLayoutY(this.getHeight()/2 - line1.getLayoutBounds().getMinY());
             getChildren().addAll(line1, line2);
+            nodes.addAll(getChildren());
+            this.setOnMouseClicked(e -> {
+                handleClick();
+            });
         }
         else if (position.equals("bottom edge")) {
             line1 = new Line(this.getWidth()/2, this.getHeight()/2, this.getWidth()/2, 0);
@@ -175,6 +195,10 @@ public class Tile extends Pane {
             line1.relocate(this.getWidth()/2, this.getHeight()/2);
             line2.relocate(this.getWidth()/2, this.getHeight()/2);
             getChildren().addAll(line1, line2);
+            nodes.addAll(getChildren());
+            this.setOnMouseClicked(e -> {
+                handleClick();
+            });
         }
         else if (position.equals("top left corner")) {
             line1 = new Line(this.getWidth()/2, this.getHeight()/2, this.getWidth()/2, this.getHeight());
@@ -194,6 +218,10 @@ public class Tile extends Pane {
             line1.relocate(this.getWidth()/2, this.getHeight());
             line2.relocate(this.getWidth()/2, this.getHeight()/2);
             getChildren().addAll(line1, line2);
+            nodes.addAll(getChildren());
+            this.setOnMouseClicked(e -> {
+                handleClick();
+            });
         }
         else if (position.equals("top right corner")) {
             line1 = new Line(this.getWidth()/2, this.getHeight()/2, this.getWidth()/2, this.getHeight());
@@ -212,6 +240,10 @@ public class Tile extends Pane {
             line1.relocate(this.getWidth()/2, this.getHeight());
             line2.relocate(this.getWidth()/2, this.getHeight()/2);
             getChildren().addAll(line1, line2);
+            nodes.addAll(getChildren());
+            this.setOnMouseClicked(e -> {
+                handleClick();
+            });
         }
         else if (position.equals("bottom left corner")) {
             line1 = new Line(this.getWidth()/2, this.getHeight()/2, this.getWidth()/2, 0);
@@ -230,6 +262,10 @@ public class Tile extends Pane {
             line1.relocate(this.getWidth()/2, this.getHeight());
             line2.relocate(this.getWidth()/2, this.getHeight()/2);
             getChildren().addAll(line1, line2);
+            nodes.addAll(getChildren());
+            this.setOnMouseClicked(e -> {
+                handleClick();
+            });
         }
         else if (position.equals("bottom right corner")) {
             line1 = new Line(this.getWidth()/2, this.getHeight()/2, this.getWidth()/2, 0);
@@ -247,6 +283,10 @@ public class Tile extends Pane {
             line1.relocate(this.getWidth()/2, this.getHeight());
             line2.relocate(this.getWidth()/2, this.getHeight()/2);
             getChildren().addAll(line1, line2);
+            nodes.addAll(getChildren());
+            this.setOnMouseClicked(e -> {
+                handleClick();
+            });
         }
     }
     
@@ -260,31 +300,35 @@ public class Tile extends Pane {
 
     public void addBlack() {
         hasBlack = true;
-        Circle circle = new Circle(this.getWidth()/2, this.getHeight()/2, this.getWidth()/2);
-        circle.centerXProperty().bind(this.widthProperty().divide(2));
-        circle.centerYProperty().bind(this.heightProperty().divide(2));
-        circle.radiusProperty().bind(this.widthProperty().divide(2));
-        circle.setFill(Color.BLACK);
-        getChildren().add(circle);
+        circle1 = new Circle(this.getWidth()/2, this.getHeight()/2, this.getWidth()/2);
+        circle1.centerXProperty().bind(this.widthProperty().divide(2));
+        circle1.centerYProperty().bind(this.heightProperty().divide(2));
+        circle1.radiusProperty().bind(this.widthProperty().divide(2));
+        circle1.setFill(Color.BLACK);
+        this.getChildren().addAll(circle1);
     }
     
     public void addWhite() {
         hasWhite = true;
-        Circle circle = new Circle(this.getWidth()/2, this.getHeight()/2, this.getWidth()/2);
-        circle.centerXProperty().bind(this.widthProperty().divide(2));
-        circle.centerYProperty().bind(this.heightProperty().divide(2));
-        circle.radiusProperty().bind(this.widthProperty().divide(2));
-        circle.setFill(Color.WHITE);
-        getChildren().add(circle);
+        circle2 = new Circle(this.getWidth()/2, this.getHeight()/2, this.getWidth()/2);
+        circle2.centerXProperty().bind(this.widthProperty().divide(2));
+        circle2.centerYProperty().bind(this.heightProperty().divide(2));
+        circle2.radiusProperty().bind(this.widthProperty().divide(2));
+        circle2.setFill(Color.WHITE);
+        this.getChildren().add(circle2);
     }
     
     public void removeBlack() {
         hasBlack = false;
-        getChildren().remove(2);
+        //have to do work-around here as I think there's a javafx bug that stops .remove(circle1) working here
+        this.getChildren().clear();
+        for (Node n : nodes) this.getChildren().addAll(n);
     }
     
     public void removeWhite() {
         hasWhite = false;
-        getChildren().remove(2);
+        //have to do work-around here as I think there's a javafx bug that stops .remove(2) working here
+        this.getChildren().clear();
+        for (Node n : nodes) this.getChildren().addAll(n);
     }
 }
