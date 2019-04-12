@@ -2,7 +2,7 @@
 
 Notes:
 
-The game can no longer be played (on command line) as the GUI is in the early stages of development. The code is currently very untidy as I don't really know what I'm doing. In order to compile the files on Windows without an IDE, use this command in the directory where the .java files are:
+The GUI is almost complete in terms of functionality (but not in terms of design!). The code is currently very untidy as I didn't really know what I was doing but I will clean it up later. In order to compile the files on Windows without an IDE, use this command in the directory where the .java files are:
 
 javac --module-path %PATH_TO_FX% --add-modules=javafx.controls *.java
 
@@ -14,7 +14,7 @@ java --module-path %PATH_TO_FX% --add-modules=javafx.controls Main
 Current big "to-do's":
 
 1. Complete the required functionality (e.g. Record class, dates, profile pictures etc...)
-2. Improve JavaFX GUI (and add login page)
+2. Add login page and improve GUI (including design, popup boxes, end game box)
 3. Add exception handling (as part of improving GUI)
 4. Add saving and loading
 5. Add Javadoc
