@@ -13,6 +13,7 @@ java --module-path %PATH_TO_FX% --add-modules=javafx.controls Main
 
 
 Current big "to-do's":
+
 0. Make certain objects private; may require a fairly large re-structuring
 1. Complete the required functionality (e.g. Record class, dates, profile pictures etc...)
 2. Add login page and improve GUI (including design and layout)
