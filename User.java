@@ -1,4 +1,4 @@
-public class User { //should be private??
+public class User {
     private String username;
     private String fname;
     private String lname;
@@ -6,7 +6,7 @@ public class User { //should be private??
     //TODO: date and time of last login
     //TODO: profile image
     
-    public User(String username, String fname, String lname) { //should be private??
+    public User(String username, String fname, String lname) {
         this.username = username;
         this.fname = fname;
         this.lname = lname;
