@@ -1,11 +1,13 @@
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Pos;//
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;//fix
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;//
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -66,7 +68,7 @@ public class Main extends Application {
             
             Label label1 = new Label("This is page 1");
             button1 = new Button("Go to page 2");
-            button1.setOnAction(e -> {
+            button1.setOnAction(e -> { //tidy up this huge button click?
                 Label label2 = new Label(setupPage.username1.getText());
                 //layout of page 2
                 BorderPane layout2 = new BorderPane();
@@ -173,23 +175,47 @@ public class Main extends Application {
                 layout2.setLeft(gameControl);
                 scene2 = new Scene(layout2, 802, 702); //fix these random screen size values, maybe using: https://stackoverflow.com/questions/38216268/how-to-listen-resize-event-of-stage-in-javafx
                 primaryStage.setScene(scene2);
+                primaryStage.centerOnScreen();
             });
             
-            //layout of page 1
+            //login page (page 0)
+            VBox login = new VBox(10);
+            login.setAlignment(Pos.CENTER);
+            Label welcome = new Label("Welcome to the Go app, please type your username and password in the fields below then click 'Login'.");
+            welcome.setWrapText(true);
+            welcome.setMaxWidth(300);
+            TextField username = new TextField();
+            username.setPromptText("Username");
+            username.setMaxWidth(200);
+            TextField password = new TextField();
+            password.setPromptText("Password");
+            password.setMaxWidth(200);
+            Button loginButton = new Button("Login");
+            loginButton.requestFocus();
+            loginButton.setOnAction(e -> {
+                primaryStage.setScene(scene1);
+            });
+            login.getChildren().addAll(welcome, username, password, loginButton);
+            Scene loginScene = new Scene(login, 400, 400);
+            
+            //page 1
+            HBox bottomRow = new HBox();
+            bottomRow.setPadding(new Insets(10,10,10,10));
+            bottomRow.setSpacing(10);
+            Button logout = new Button("Logout");
+            logout.setOnAction(e -> primaryStage.setScene(loginScene));
+            bottomRow.getChildren().addAll(button1, logout);
             BorderPane layout1 = new BorderPane();
             layout1.setCenter(setupPage);
             layout1.setTop(menuBar);
-            layout1.setBottom(button1);
-            
-            Button button2 = new Button("Go back to page 1");
-            button2.setOnAction(e -> primaryStage.setScene(scene1));
+            layout1.setBottom(bottomRow);
+            scene1 = new Scene(layout1, 400, 400);
 
             //GameGrid grid = new GameGrid(Integer.parseInt(setupPage.gridSize.getText()));
             //GameGrid grid = new GameGrid(13);//13 needs to come from somewhere
             //grid.setAlignment(Pos.CENTER);
             
-            scene1 = new Scene(layout1, 400, 400);
-            primaryStage.setScene(scene1);
+            primaryStage.setScene(loginScene);
             primaryStage.show();
         }
 }
