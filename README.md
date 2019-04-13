@@ -14,7 +14,7 @@ java --module-path %PATH_TO_FX% --add-modules=javafx.controls Main
 Current big "to-do's":
 
 1. Complete the required functionality (e.g. Record class, dates, profile pictures etc...)
-2. Add login page and improve GUI (including design, popup boxes, end game box)
+2. Add login page and improve GUI (including design and layout)
 3. Add exception handling if necessary (as part of improving GUI)
 4. Add saving and loading
 5. Add Javadoc
