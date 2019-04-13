@@ -100,10 +100,11 @@ public class Main extends Application {
                 passInfo.setWrapText(true);
                 Button pass = new Button("Pass");
                 pass.setOnAction(e2 -> setupPage.g.pass());
-                Label undoInfo = new Label("Undo previous move, unless that move was passed:");
+                Label undoInfo = new Label("Click the button below to undo the previous move (unless that move was passed):");
                 undoInfo.setMaxWidth(100);
                 undoInfo.setWrapText(true);
                 Button undo = new Button("Undo");
+                undo.setDisable(true);
                 undo.setOnAction(e3 -> {
                     setupPage.g.undoLastMove();
                     setupPage.grid.updateGrid();
@@ -112,6 +113,9 @@ public class Main extends Application {
                     if (nV == true) undo.setDisable(true);
                     else undo.setDisable(false);
                 });
+                //setupPage.g.getTurnNoP().addListener((o, oV, nV) -> {
+                //    if (!nV.equals("0")) undo.setDisable(false);
+                //});
                 Button done = new Button("Finished marking");
                 done.setVisible(false);
                 Label instructions = new Label("Game is over. Click on stones to mark them as dead, then click 'Finished marking' when done.");

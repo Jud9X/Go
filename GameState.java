@@ -52,7 +52,7 @@ public class GameState {
         currentPlayerTurnP = new SimpleStringProperty(currentPlayerTurn);
         capsBP = new SimpleStringProperty("0");
         capsWP = new SimpleStringProperty("0");
-        undoStateP = new SimpleBooleanProperty(false);
+        undoStateP = new SimpleBooleanProperty(true);
     }
     
     //y is the first index, x is the second index, starting from (0,0) in the top left corner to (k-1, k-1)

@@ -16,6 +16,7 @@ public class Score {
     private int removeWhiteCount;
     private int[] territorySums;
     private int[] finalScores;
+    private int[] previousDead;
     
     public Score(int[][] board) {
         possibleTerritory = new HashSet<List<Integer>>();
@@ -25,6 +26,7 @@ public class Score {
         endingBoard = board;
         removeBlackCount = 0;
         removeWhiteCount = 0;
+        previousDead = new int[3]; //will contain y, x and colourvalue
     }
     
     public int[][] getEndingBoard() {
@@ -39,7 +41,15 @@ public class Score {
         endingBoard[y][x] = 0;
         if (oldValue == 1) ++removeBlackCount;
         else ++removeWhiteCount;
+        previousDead[0] = y;
+        previousDead[1] = x;
+        previousDead[2] = oldValue;
     }
+    
+    public void undoMarkDeadStone() {
+        //
+    }
+    
     /*
     public void deadStonesUpdate() {
         finalDeads = new int[removeBlackCount*2 + removeWhiteCount*2];
@@ -103,7 +113,7 @@ public class Score {
                         //possibleTerritory.forEach(System.out::println);
                         //System.out.println("finished " + i + " " + j);
                         if (touchesBlack) territorySums[0] += possibleTerritory.size();
-                        else territorySums[1] += possibleTerritory.size();
+                        else if (touchesWhite) territorySums[1] += possibleTerritory.size();
                     }
                 }
             }
