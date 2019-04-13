@@ -15,7 +15,7 @@ Current big "to-do's":
 
 1. Complete the required functionality (e.g. Record class, dates, profile pictures etc...)
 2. Add login page and improve GUI (including design, popup boxes, end game box)
-3. Add exception handling (as part of improving GUI)
+3. Add exception handling if necessary (as part of improving GUI)
 4. Add saving and loading
 5. Add Javadoc
 6. Make the GUI look nice and add cool extra features (like highlighting where a piece will go when the mouse hovers over that area, different colour themes, optional confirmation boxes after each move, undo (last) move(s), music...)
