@@ -157,8 +157,10 @@ public class Main extends Application {
                     undoMark.setVisible(false);
                     setupPage.g.setFinished();
                     setupPage.g.s.calculateFinalScores();
-                    System.out.println("Black's score: " + setupPage.g.s.getFinalScores()[0]); //make g and s private :(
-                    System.out.println("White's score: " + setupPage.g.s.getFinalScores()[1]); //make these scores a popup box with a 'close game' button that returns to start page; also update players' win%
+                    InformationBox.display("Game Complete", "Final scores:\n" + setupPage.g.getBlack() + ": " 
+                                               + setupPage.g.s.getFinalScores()[0] + "\n" + setupPage.g.getWhite() 
+                                               + ": " + setupPage.g.s.getFinalScores()[1]); //add new win%s?
+                    primaryStage.setScene(scene1);
                     //hide button after finished? block all further action?
                 });
                 gameControl.getChildren().addAll(passInfo, pass, undoInfo, undo, instructions, done, undoMarkInfo, undoMark);
