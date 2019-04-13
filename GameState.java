@@ -22,6 +22,7 @@ public class GameState {
     private StringProperty capsWP;
     private boolean finished;
     private BooleanProperty undoStateP;
+    private BooleanProperty ready;
     Score s; //make private
     
     public GameState(int k, User player1, User player2) { //k is board size (e.g. height), player1 is a user object
@@ -53,6 +54,7 @@ public class GameState {
         capsBP = new SimpleStringProperty("0");
         capsWP = new SimpleStringProperty("0");
         undoStateP = new SimpleBooleanProperty(true);
+        ready = new SimpleBooleanProperty(false);
     }
     
     //y is the first index, x is the second index, starting from (0,0) in the top left corner to (k-1, k-1)
@@ -141,6 +143,10 @@ public class GameState {
         return undoStateP;
     }
     
+    public BooleanProperty getReady() {
+        return ready;
+    }
+    
     public int[][] getBoard() {
         return board;
     }
@@ -206,6 +212,7 @@ public class GameState {
             currentPlayerTurn = "none - game is over";
             currentPlayerTurnP.set(currentPlayerTurn);
             s = new Score(board);
+            ready.set(true);
             /*int[] deadStoneCoordinates = s.markDeadStones();
             //for (int i = 0; i < deadStoneCoordinates.length; ++i) System.out.println(deadStoneCoordinates[i]);
             int[][] finalBoard = s.removeDeadStones(board, deadStoneCoordinates);

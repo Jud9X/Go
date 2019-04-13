@@ -3,6 +3,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 
 public class Score {
     private Set<List<Integer>> possibleTerritory;
@@ -17,6 +19,7 @@ public class Score {
     private int[] territorySums;
     private int[] finalScores;
     private int[] previousDead;
+    private BooleanProperty undoP;
     
     public Score(int[][] board) {
         possibleTerritory = new HashSet<List<Integer>>();
@@ -27,10 +30,15 @@ public class Score {
         removeBlackCount = 0;
         removeWhiteCount = 0;
         previousDead = new int[3]; //will contain y, x and colourvalue
+        undoP = new SimpleBooleanProperty(true);
     }
     
     public int[][] getEndingBoard() {
         return endingBoard;
+    }
+    
+    public BooleanProperty getUndoP() {
+        return undoP;
     }
     
     public int[] getFinalScores() {
@@ -38,6 +46,7 @@ public class Score {
     }
     
     public void markDeadStone(int y, int x, int oldValue) {
+        undoP.set(false);
         endingBoard[y][x] = 0;
         if (oldValue == 1) ++removeBlackCount;
         else ++removeWhiteCount;
@@ -47,7 +56,10 @@ public class Score {
     }
     
     public void undoMarkDeadStone() {
-        //
+        undoP.set(true);
+        if (previousDead[2] == 1) --removeBlackCount;
+        else --removeWhiteCount;
+        endingBoard[previousDead[0]][previousDead[1]] = previousDead[2];
     }
     
     /*

@@ -115,4 +115,31 @@ public class GameGrid extends GridPane {
             }
         }
     }
+    
+    public void updateGrid(Score score) {
+        for (int i = 0; i < score.getEndingBoard().length; ++i) {
+            for (int j = 0; j < score.getEndingBoard().length; ++j) {
+                if (score.getEndingBoard()[i][j] == 1) {
+                    if (getGrid()[i][j].getHasWhite()) {
+                        getGrid()[i][j].removeWhite();
+                    }
+                    getGrid()[i][j].addBlack();
+                }
+                else if (score.getEndingBoard()[i][j] == 2) {
+                    if (getGrid()[i][j].getHasBlack()) {
+                        getGrid()[i][j].removeBlack();
+                    }
+                    getGrid()[i][j].addWhite();
+                }
+                else {
+                    if (getGrid()[i][j].getHasBlack()) {
+                        getGrid()[i][j].removeBlack();
+                    }
+                    if (getGrid()[i][j].getHasWhite()) {
+                        getGrid()[i][j].removeWhite();
+                    }
+                }
+            }
+        }
+    }
 }

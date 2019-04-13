@@ -113,9 +113,17 @@ public class Main extends Application {
                     if (nV == true) undo.setDisable(true);
                     else undo.setDisable(false);
                 });
-                //setupPage.g.getTurnNoP().addListener((o, oV, nV) -> {
-                //    if (!nV.equals("0")) undo.setDisable(false);
-                //});
+                Label undoMarkInfo = new Label("Click the button below to undo the previous dead stone marking:");
+                undoMarkInfo.setMaxWidth(100);
+                undoMarkInfo.setWrapText(true);
+                undoMarkInfo.setVisible(false);
+                Button undoMark = new Button("Undo mark");
+                undoMark.setDisable(true);
+                undoMark.setVisible(false);
+                undoMark.setOnAction(e4 -> {
+                    setupPage.g.s.undoMarkDeadStone();
+                    setupPage.grid.updateGrid(setupPage.g.s);
+                });
                 Button done = new Button("Finished marking");
                 done.setVisible(false);
                 Label instructions = new Label("Game is over. Click on stones to mark them as dead, then click 'Finished marking' when done.");
@@ -129,19 +137,31 @@ public class Main extends Application {
                         undoInfo.setVisible(false);
                         undo.setVisible(false);
                         instructions.setVisible(true);
+                        undoMarkInfo.setVisible(true);
+                        undoMark.setVisible(true);
                         done.setVisible(true);
                     }
                 });
-                done.setOnAction(e4 -> {
+                setupPage.g.getReady().addListener((o, oV, nV) -> {
+                    if (nV) {
+                        setupPage.g.s.getUndoP().addListener((o2, oV2, nV2) -> {
+                            if (nV2 == true) undoMark.setDisable(true);
+                            else undoMark.setDisable(false);
+                        });
+                    }
+                });
+                done.setOnAction(e5 -> {
                     instructions.setVisible(false);
                     done.setVisible(false);
+                    undoMarkInfo.setVisible(false);
+                    undoMark.setVisible(false);
                     setupPage.g.setFinished();
                     setupPage.g.s.calculateFinalScores();
                     System.out.println("Black's score: " + setupPage.g.s.getFinalScores()[0]); //make g and s private :(
                     System.out.println("White's score: " + setupPage.g.s.getFinalScores()[1]); //make these scores a popup box with a 'close game' button that returns to start page; also update players' win%
                     //hide button after finished? block all further action?
                 });
-                gameControl.getChildren().addAll(passInfo, pass, undoInfo, undo, instructions, done);
+                gameControl.getChildren().addAll(passInfo, pass, undoInfo, undo, instructions, done, undoMarkInfo, undoMark);
                 layout2.setLeft(gameControl);
                 scene2 = new Scene(layout2, 802, 702); //fix these random screen size values, maybe using: https://stackoverflow.com/questions/38216268/how-to-listen-resize-event-of-stage-in-javafx
                 primaryStage.setScene(scene2);
