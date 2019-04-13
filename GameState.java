@@ -207,21 +207,11 @@ public class GameState {
         ++passCount;
         passCountP.set(""+passCount);
         if (passCount == 2) {
-            //System.out.println("2 consecutive passes so game ends");
-            //popup with dialogue box saying need to click dead stones
             currentPlayerTurn = "none (game is over)";
             currentPlayerTurnP.set(currentPlayerTurn);
             s = new Score(board);
             ready.set(true);
-            /*int[] deadStoneCoordinates = s.markDeadStones();
-            //for (int i = 0; i < deadStoneCoordinates.length; ++i) System.out.println(deadStoneCoordinates[i]);
-            int[][] finalBoard = s.removeDeadStones(board, deadStoneCoordinates);
-            int[] territory = s.calculateTerritory(finalBoard);
-            int[] scores = s.calculateFinalScores(territory, captures, deadStoneCoordinates[deadStoneCoordinates.length-2], deadStoneCoordinates[deadStoneCoordinates.length-1]);
-            System.out.println("Black's final score: " + scores[0]);
-            System.out.println("White's final score: " + scores[1]);
-            board = finalBoard;*/
-            //finished = true; //remove this if it never gets used
+
             return;
         }
         ++turnNo;

@@ -104,7 +104,7 @@ public class Tile extends Pane {
         setStyle("-fx-border-color : beige");
         this.setPrefSize(50, 50);
         line1 = new Line(this.getWidth()/2, this.getHeight(), this.getWidth()/2, 0);
-        line1.startXProperty().bind(this.widthProperty().divide(2));
+        line1.startXProperty().bind(this.widthProperty().divide(2)); //remove all these properties if they're not needed
         line1.endXProperty().bind(this.widthProperty().divide(2));
         line1.startYProperty().bind(this.heightProperty());
         //horizontal line
@@ -112,8 +112,6 @@ public class Tile extends Pane {
         line2.startYProperty().bind(this.heightProperty().divide(2));
         line2.endXProperty().bind(this.widthProperty());
         line2.endYProperty().bind(this.heightProperty().divide(2));
-        //line1.setStroke(Color.BLACK);
-        //line1.setStrokeWidth(1.5);
         line1.setLayoutX(this.getWidth()/2 - line1.getLayoutBounds().getMinX());
         line2.setLayoutY(this.getHeight()/2 - line1.getLayoutBounds().getMinY());
         getChildren().addAll(line1, line2);
@@ -139,11 +137,7 @@ public class Tile extends Pane {
             line2.startYProperty().bind(this.heightProperty().divide(2));
             line2.endXProperty().bind(this.widthProperty());
             line2.endYProperty().bind(this.heightProperty().divide(2));
-            //line1.setStroke(Color.BLACK);
-            //line1.setStrokeWidth(1.5);
-            //setAlignment(line2, Pos.CENTER_RIGHT);
             line1.setLayoutX(this.getWidth()/2 - line1.getLayoutBounds().getMinX());
-            //line1.layoutYProperty().bind(this.heightProperty());
             line2.setLayoutX(this.getWidth()/2 - line1.getLayoutBounds().getMinX());
             line2.setLayoutY(this.getHeight()/2 - line1.getLayoutBounds().getMinY());
             getChildren().addAll(line1, line2);
@@ -162,11 +156,7 @@ public class Tile extends Pane {
             line2.startYProperty().bind(this.heightProperty().divide(2));
             line2.endXProperty().bind(this.widthProperty().divide(2));
             line2.endYProperty().bind(this.heightProperty().divide(2));
-            //line1.setStroke(Color.BLACK);
-            //line1.setStrokeWidth(1.5);
-            //setAlignment(line2, Pos.CENTER_LEFT);
             line1.setLayoutX(this.getWidth()/2 - line1.getLayoutBounds().getMinX());
-            //line1.layoutYProperty().bind(this.heightProperty());
             line2.setLayoutX(0 - line1.getLayoutBounds().getMinX());
             line2.setLayoutY(this.getHeight()/2 - line1.getLayoutBounds().getMinY());
             getChildren().addAll(line1, line2);
@@ -186,14 +176,7 @@ public class Tile extends Pane {
             line2.startYProperty().bind(this.heightProperty().divide(2));
             line2.endXProperty().bind(this.widthProperty());
             line2.endYProperty().bind(this.heightProperty().divide(2));
-            //line1.setStroke(Color.BLACK);
-            //line1.setStrokeWidth(1.5);
-            //setAlignment(line1, Pos.BOTTOM_CENTER);
-            //line1.setLayoutX(this.getWidth()/2 - line1.getLayoutBounds().getMinX());
-            //line1.setLayoutY(this.getHeight() - line1.getLayoutBounds().getMinY());
             line1.relocate(this.getWidth()/2, this.getHeight()/2);
-            //line1.layoutYProperty().bind(this.heightProperty());
-            //line2.setLayoutX(this.getWidth()/2 - line1.getLayoutBounds().getMinX());
             line2.setLayoutY(this.getHeight()/2 - line1.getLayoutBounds().getMinY());
             getChildren().addAll(line1, line2);
             nodes.addAll(getChildren());
@@ -211,9 +194,6 @@ public class Tile extends Pane {
             line2.startYProperty().bind(this.heightProperty().divide(2));
             line2.endXProperty().bind(this.widthProperty());
             line2.endYProperty().bind(this.heightProperty().divide(2));
-            //line1.setStroke(Color.BLACK);
-            //line1.setStrokeWidth(1.5);
-            //setAlignment(line1, Pos.TOP_CENTER);
             line1.relocate(this.getWidth()/2, this.getHeight()/2);
             line2.relocate(this.getWidth()/2, this.getHeight()/2);
             getChildren().addAll(line1, line2);
@@ -234,10 +214,6 @@ public class Tile extends Pane {
             line2.startYProperty().bind(this.heightProperty().divide(2));
             line2.endXProperty().bind(this.widthProperty());
             line2.endYProperty().bind(this.heightProperty().divide(2));
-            //line1.setStroke(Color.BLACK);
-            //line1.setStrokeWidth(1.5);
-            //setAlignment(line1, Pos.BOTTOM_CENTER);
-            //setAlignment(line2, Pos.CENTER_RIGHT);
             line1.relocate(this.getWidth()/2, this.getHeight());
             line2.relocate(this.getWidth()/2, this.getHeight()/2);
             getChildren().addAll(line1, line2);
@@ -257,10 +233,6 @@ public class Tile extends Pane {
             line2.startYProperty().bind(this.heightProperty().divide(2));
             line2.endXProperty().bind(this.widthProperty().divide(2));
             line2.endYProperty().bind(this.heightProperty().divide(2));
-            //line1.setStroke(Color.BLACK);
-            //line1.setStrokeWidth(1.5);
-            //setAlignment(line1, Pos.BOTTOM_CENTER);
-            //setAlignment(line2, Pos.CENTER_LEFT);
             line1.relocate(this.getWidth()/2, this.getHeight());
             line2.relocate(this.getWidth()/2, this.getHeight()/2);
             getChildren().addAll(line1, line2);
@@ -280,10 +252,6 @@ public class Tile extends Pane {
             line2.startYProperty().bind(this.heightProperty().divide(2));
             line2.endXProperty().bind(this.widthProperty());
             line2.endYProperty().bind(this.heightProperty().divide(2));
-            //line1.setStroke(Color.BLACK);
-            //line1.setStrokeWidth(1.5);
-            //setAlignment(line1, Pos.TOP_CENTER);
-            //setAlignment(line2, Pos.CENTER_RIGHT);
             line1.relocate(this.getWidth()/2, this.getHeight());
             line2.relocate(this.getWidth()/2, this.getHeight()/2);
             getChildren().addAll(line1, line2);
@@ -302,10 +270,6 @@ public class Tile extends Pane {
             line2.startYProperty().bind(this.heightProperty().divide(2));
             line2.endXProperty().bind(this.widthProperty().divide(2));
             line2.endYProperty().bind(this.heightProperty().divide(2));
-            //line1.setStroke(Color.BLACK);
-            //line1.setStrokeWidth(1.5);
-            //setAlignment(line1, Pos.TOP_CENTER);
-            //setAlignment(line2, Pos.CENTER_LEFT);
             line1.relocate(this.getWidth()/2, this.getHeight());
             line2.relocate(this.getWidth()/2, this.getHeight()/2);
             getChildren().addAll(line1, line2);

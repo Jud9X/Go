@@ -1,13 +1,11 @@
-//import java.util.Arrays;
 import javafx.application.Application;
-//import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Pos;
+import javafx.geometry.Pos;//
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.*;//fix
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.GridPane;//
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -170,20 +168,12 @@ public class Main extends Application {
                                                + setupPage.g.s.getFinalScores()[0] + "\n" + setupPage.g.getWhite() 
                                                + ": " + setupPage.g.s.getFinalScores()[1]); //add new win%s?
                     primaryStage.setScene(scene1);
-                    //hide button after finished? block all further action?
                 });
                 gameControl.getChildren().addAll(passInfo, pass, undoInfo, undo, instructions, done, undoMarkInfo, undoMark);
                 layout2.setLeft(gameControl);
                 scene2 = new Scene(layout2, 802, 702); //fix these random screen size values, maybe using: https://stackoverflow.com/questions/38216268/how-to-listen-resize-event-of-stage-in-javafx
                 primaryStage.setScene(scene2);
             });
-            
-            /*
-            //layout of page 1
-            BorderPane layout1 = new BorderPane();
-            layout1.setCenter(button1);
-            layout1.setTop(menuBar);
-            */
             
             //layout of page 1
             BorderPane layout1 = new BorderPane();
@@ -193,74 +183,13 @@ public class Main extends Application {
             
             Button button2 = new Button("Go back to page 1");
             button2.setOnAction(e -> primaryStage.setScene(scene1));
-            
-            /*
-            //layout of page 2
-            VBox layout2 = new VBox(20);
-            layout2.getChildren().addAll(button2);
-            */
 
             //GameGrid grid = new GameGrid(Integer.parseInt(setupPage.gridSize.getText()));
             //GameGrid grid = new GameGrid(13);//13 needs to come from somewhere
             //grid.setAlignment(Pos.CENTER);
             
-            //GridPane gpane = new GridPane();
-            //gpane.getChildren().addAll(button2);
-            
-            
-            
-            /*
-            //while (!SetupPage.g.isFinished()) {
-            System.out.println("This player's turn: " + SetupPage.g.getCurrentPlayerTurn());
-            if (point.equals("pass")) {
-                g.pass();
-                System.out.println("Number of consecutive passes: " + g.getPassCount());
-            }
-            else {
-                String[] coords = point.split(" ");
-                g.placePiece(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
-            }
-            //}
-            System.out.println("game is over");
-            */
-
-
-            /*
-            //layout of page 2
-            BorderPane layout2 = new BorderPane();
-            layout2.setCenter(setupPage.grid);
-            layout2.setBottom(label2);
-            */
-            
             scene1 = new Scene(layout1, 400, 400);
             primaryStage.setScene(scene1);
             primaryStage.show();
-            
-            //scene2 = new Scene(layout2, 702, 702);
-        
         }
-        
-        /*
-        Player p1 = new Player("ohart", "Oliver", "Hart");
-        Player p2 = new Player("fred", "Fred", "West");
-        GameState g = new GameState(4, p1, p2);
-        Scanner userInput = new Scanner(System.in);
-        while (!g.isFinished()) {
-            System.out.println("This player's turn: " + g.getCurrentPlayerTurn());
-            System.out.println(Arrays.deepToString(g.getBoard()));
-            System.out.println("Type coordinates to place your piece in the form 'y x' without quotes, starting from top left as 0,0 or 'pass' w/o quotes");
-            String point = userInput.nextLine();
-            if (point.equals("pass")) {
-                g.pass();
-                System.out.println("Number of consecutive passes: " + g.getPassCount());
-            }
-            else {
-                String[] coords = point.split(" ");
-                g.placePiece(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
-            }
-            System.out.println(Arrays.deepToString(g.getBoard()));
-        }
-        userInput.close();
-        System.out.println("game is over");
-    }*/
 }

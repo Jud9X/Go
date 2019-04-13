@@ -84,56 +84,6 @@ public class Score {
         endingBoard[previousDead[0]][previousDead[1]] = previousDead[2];
     }
     
-    /*
-    public void deadStonesUpdate() {
-        finalDeads = new int[removeBlackCount*2 + removeWhiteCount*2];
-        for (int i = 0; i < removeBlackCount*2 + removeWhiteCount*2; ++i) finalDeads[i] = deads[i];
-    }*/
-    
-    /*
-    //get dead stones manually, return int[] with final 2 values being removeBlackCount and then removeWhiteCount
-    public int[] markDeadStones() {
-        int[] deads = new int[endingBoard.length * endingBoard.length];
-        int deadsIndex = 0;
-        //Scanner deadStones = new Scanner(System.in);
-        boolean done = false;
-        int removeBlackCount = 0;
-        int removeWhiteCount = 0;
-        while (!done) { //add an undo possibility (using a stack?)?
-            //System.out.println("Type coordinates of dead stones in the form 'y x' without quotes, starting from top left as 0,0 or 'done' w/o quotes");
-            //String point = deadStones.nextLine();
-            
-            if (point.equals("done")) {
-                done = true;
-            }
-            else { //should check that they've actually chosen a stone rather than an empty intersection?
-                String[] coords = point.split(" ");
-                deads[deadsIndex] = Integer.parseInt(coords[0]);
-                ++deadsIndex;
-                deads[deadsIndex] = Integer.parseInt(coords[1]);
-                ++deadsIndex;
-                if (endingBoard[deads[deadsIndex-2]][deads[deadsIndex-1]] == 1) {
-                    ++removeBlackCount;
-                }
-                else {
-                    ++removeWhiteCount; //this assumes the removed stone is actually white!
-                }
-            }
-        }
-        int[] finalDeads = new int[removeBlackCount*2 + removeWhiteCount*2 + 2];
-        for (int i = 0; i < removeBlackCount*2 + removeWhiteCount*2; ++i) finalDeads[i] = deads[i];
-        finalDeads[finalDeads.length-2] = removeBlackCount;
-        finalDeads[finalDeads.length-1] = removeWhiteCount;
-        return finalDeads;
-    }
-    
-    public int[][] removeDeadStones(int[][] endingBoard, int[] deadCoordinates) { //deadCoordinates includes the 2 counts at the end
-        for (int i = 0; i < deadCoordinates.length-3; i += 2) {
-            endingBoard[deadCoordinates[i]][deadCoordinates[i+1]] = 0;
-        }
-        return endingBoard;
-    }*/
-    
     public void calculateFinalScores() { //returns int[] where array[0] is black's territory and array[1] is white's
         territorySums = new int[2];
         for (int i = 0; i < endingBoard.length; ++i) {
@@ -144,8 +94,6 @@ public class Score {
                     touchesWhite = false;
                     if (isTerritory(endingBoard, i, j)) {
                         confirmedTerritory.addAll(possibleTerritory);
-                        //possibleTerritory.forEach(System.out::println);
-                        //System.out.println("finished " + i + " " + j);
                         if (touchesBlack) territorySums[0] += possibleTerritory.size();
                         else if (touchesWhite) territorySums[1] += possibleTerritory.size();
                     }
@@ -174,10 +122,4 @@ public class Score {
         }
         return isTerritory;
     }
-    /*
-    public void calculateFinalScores(int[] territory, int[] captures, int deadBlacks, int deadWhites) {
-        finalScores = new int[2]; //finalScores[0] is black's score and [1] is white's score
-        finalScores[0] += territory[0] - captures[1] - deadBlacks;
-        finalScores[1] += territory[1] - captures[0] - deadWhites;
-    }*/
 }
