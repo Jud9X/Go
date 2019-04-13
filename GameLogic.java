@@ -9,7 +9,7 @@ public class GameLogic {
     public static boolean moveIsIllegal(int[][] previousBoard, int[][] board, int y, int x, int currentPlayerColour) {
         //check move is legal: place is free?
         if (board[y][x] != 0) {
-            System.out.println("someone's already here: x=" + x + ", y=" + y); //turn these into popup boxes
+            InformationBox.display("Illegal Move", "There is already a piece on this intersection, please choose a different one or click 'Pass'.");
             return true;
         }
         //setup final proposed board for checking
@@ -25,12 +25,12 @@ public class GameLogic {
         //check move is legal: non-suicidal
         visited.clear();
         if (willBeCaptured(finalProposedBoard, y, x, currentPlayerColour)) {
-            System.out.println("suicide is forbidden");
+            InformationBox.display("Illegal Move", "Suicide is forbidden, please choose a different intersection or click 'Pass'.");
             return true;
         }
         //check move is legal: there is at least 1 liberty around the new piece after captures accounted for
         if (getLiberties(y, x, finalProposedBoard).length == 0) {
-            System.out.println("no liberties around your piece here");
+            InformationBox.display("Illegal Move", "There are no liberties around this intersection, please choose a different one or click 'Pass'.");
             return true;
         }
         //check move is legal: not a repeat of previous game board
@@ -40,7 +40,7 @@ public class GameLogic {
                 if (finalProposedBoard[i][j] != previousBoard[i][j]) Same = false;
             }
         }
-        if (Same) System.out.println("no ko, sorry");
+        if (Same) InformationBox.display("Illegal Move", "Repeat board states are forbidden (ko), please choose a different intersection or click 'Pass'.");
         return Same;
     }
     
