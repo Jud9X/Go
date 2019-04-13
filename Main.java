@@ -95,8 +95,23 @@ public class Main extends Application {
                 gameInfo.getChildren().addAll(black, white, tn, tnLive, capsB, capsBLive, capsW, capsWLive, pc, pcLive, CPT, CPTLive);
                 layout2.setRight(gameInfo);
                 VBox gameControl = new VBox();
+                Label passInfo = new Label("Click the button below to pass your turn:");
+                passInfo.setMaxWidth(100);
+                passInfo.setWrapText(true);
                 Button pass = new Button("Pass");
                 pass.setOnAction(e2 -> setupPage.g.pass());
+                Label undoInfo = new Label("Undo previous move, unless that move was passed:");
+                undoInfo.setMaxWidth(100);
+                undoInfo.setWrapText(true);
+                Button undo = new Button("Undo");
+                undo.setOnAction(e3 -> {
+                    setupPage.g.undoLastMove();
+                    setupPage.grid.updateGrid();
+                });
+                setupPage.g.getUndoStateP().addListener((o, oV, nV) -> {
+                    if (nV == true) undo.setDisable(true);
+                    else undo.setDisable(false);
+                });
                 Button done = new Button("Finished marking");
                 done.setVisible(false);
                 Label instructions = new Label("Game is over. Click on stones to mark them as dead, then click 'Finished marking' when done.");
@@ -105,19 +120,24 @@ public class Main extends Application {
                 instructions.setVisible(false);
                 setupPage.g.getPassCountP().addListener((o, oV, nV) -> {
                     if (nV.equals("2")) {
+                        passInfo.setVisible(false);
                         pass.setVisible(false);
-                        done.setVisible(true);
+                        undoInfo.setVisible(false);
+                        undo.setVisible(false);
                         instructions.setVisible(true);
+                        done.setVisible(true);
                     }
                 });
-                done.setOnAction(e3 -> {
+                done.setOnAction(e4 -> {
+                    instructions.setVisible(false);
+                    done.setVisible(false);
                     setupPage.g.setFinished();
                     setupPage.g.s.calculateFinalScores();
                     System.out.println("Black's score: " + setupPage.g.s.getFinalScores()[0]); //make g and s private :(
                     System.out.println("White's score: " + setupPage.g.s.getFinalScores()[1]); //make these scores a popup box with a 'close game' button that returns to start page; also update players' win%
                     //hide button after finished? block all further action?
                 });
-                gameControl.getChildren().addAll(pass, instructions, done);
+                gameControl.getChildren().addAll(passInfo, pass, undoInfo, undo, instructions, done);
                 layout2.setLeft(gameControl);
                 scene2 = new Scene(layout2, 802, 702); //fix these random screen size values, maybe using: https://stackoverflow.com/questions/38216268/how-to-listen-resize-event-of-stage-in-javafx
                 primaryStage.setScene(scene2);

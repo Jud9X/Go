@@ -1,3 +1,5 @@
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.property.SimpleStringProperty;
 
@@ -14,10 +16,12 @@ public class GameState {
     private String currentPlayerTurn;
     private StringProperty currentPlayerTurnP;
     private int[][] previousBoard;
+    private int[][] previousBoard2;
     private int[] captures; //captures[0] is number captured by black, captures[1] is by white
     private StringProperty capsBP;
     private StringProperty capsWP;
     private boolean finished;
+    private BooleanProperty undoStateP;
     Score s; //make private
     
     public GameState(int k, User player1, User player2) { //k is board size (e.g. height), player1 is a user object
@@ -40,6 +44,7 @@ public class GameState {
         turnNo = 0;
         currentPlayerTurn = black; //or directly enter username
         previousBoard = new int[k][k];
+        previousBoard2 = new int[k][k];
         captures = new int[2];
         finished = false;
         passCountP = new SimpleStringProperty(""+passCount);
@@ -47,6 +52,7 @@ public class GameState {
         currentPlayerTurnP = new SimpleStringProperty(currentPlayerTurn);
         capsBP = new SimpleStringProperty("0");
         capsWP = new SimpleStringProperty("0");
+        undoStateP = new SimpleBooleanProperty(false);
     }
     
     //y is the first index, x is the second index, starting from (0,0) in the top left corner to (k-1, k-1)
@@ -56,6 +62,11 @@ public class GameState {
         if (GameLogic.moveIsIllegal(previousBoard, board, y, x, currentPlayerColour)) return;
         passCount = 0;
         passCountP.set(""+passCount);
+        for (int i = 0; i < board.length; ++i) {
+            for (int j = 0; j < board.length; ++j) {
+                previousBoard2[i][j] = previousBoard[i][j];
+            }
+        }
         for (int i = 0; i < board.length; ++i) {
             for (int j = 0; j < board.length; ++j) {
                 previousBoard[i][j] = board[i][j];
@@ -84,7 +95,50 @@ public class GameState {
         if (turnNo % 2 == 0) currentPlayerTurn = black;
         else currentPlayerTurn = white;
         currentPlayerTurnP.set(currentPlayerTurn);
+        undoStateP.set(false);
         return;
+    }
+    
+    public void undoLastMove() {
+        if (passCount > 0) return;
+        undoStateP.set(true);
+        int newCurrentPlayerColour = (currentPlayerTurn == white) ? 1 : 2;
+        int newOtherPlayerColour = (newCurrentPlayerColour == 1) ? 2 : 1;
+        int newOtherPlayerCountPrevious = 0;
+        for (int i = 0; i < board.length; ++i) {
+            for (int j = 0; j < board.length; ++j) {
+                if (previousBoard[i][j] == newOtherPlayerColour) ++newOtherPlayerCountPrevious;
+            }
+        }
+        int newOtherPlayerCountNew = 0;
+        for (int i = 0; i < board.length; ++i) {
+            for (int j = 0; j < board.length; ++j) {
+                if (board[i][j] == newOtherPlayerColour) ++newOtherPlayerCountNew;
+            }
+        }
+        captures[newCurrentPlayerColour-1] -= newOtherPlayerCountPrevious - newOtherPlayerCountNew;
+        capsBP.set(""+captures[0]);
+        capsWP.set(""+captures[1]);
+        for (int i = 0; i < board.length; ++i) {
+            for (int j = 0; j < board.length; ++j) {
+                board[i][j] = previousBoard[i][j];
+            }
+        }
+        for (int i = 0; i < board.length; ++i) {
+            for (int j = 0; j < board.length; ++j) {
+                previousBoard[i][j] = previousBoard2[i][j];
+            }
+        }
+        --turnNo;
+        turnNoP.set(""+turnNo);
+        if (turnNo % 2 == 0) currentPlayerTurn = black;
+        else currentPlayerTurn = white;
+        currentPlayerTurnP.set(currentPlayerTurn);
+        return;
+    }
+    
+    public BooleanProperty getUndoStateP() {
+        return undoStateP;
     }
     
     public int[][] getBoard() {
@@ -149,7 +203,7 @@ public class GameState {
         if (passCount == 2) {
             //System.out.println("2 consecutive passes so game ends");
             //popup with dialogue box saying need to click dead stones
-            currentPlayerTurn = "none";
+            currentPlayerTurn = "none - game is over";
             currentPlayerTurnP.set(currentPlayerTurn);
             s = new Score(board);
             /*int[] deadStoneCoordinates = s.markDeadStones();

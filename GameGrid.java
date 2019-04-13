@@ -88,4 +88,31 @@ public class GameGrid extends GridPane {
     public Tile[][] getGrid() {
         return grid;
     }
+    
+    public void updateGrid() {
+        for (int i = 0; i < Main.setupPage.g.getBoard().length; ++i) {
+            for (int j = 0; j < Main.setupPage.g.getBoard().length; ++j) {
+                if (Main.setupPage.g.getBoard()[i][j] == 1) {
+                    if (getGrid()[i][j].getHasWhite()) {
+                        getGrid()[i][j].removeWhite();
+                    }
+                    getGrid()[i][j].addBlack();
+                }
+                else if (Main.setupPage.g.getBoard()[i][j] == 2) {
+                    if (getGrid()[i][j].getHasBlack()) {
+                        getGrid()[i][j].removeBlack();
+                    }
+                    getGrid()[i][j].addWhite();
+                }
+                else {
+                    if (getGrid()[i][j].getHasBlack()) {
+                        getGrid()[i][j].removeBlack();
+                    }
+                    if (getGrid()[i][j].getHasWhite()) {
+                        getGrid()[i][j].removeWhite();
+                    }
+                }
+            }
+        }
+    }
 }
