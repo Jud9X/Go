@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
 
 public class Score {
     private Set<List<Integer>> possibleTerritory;
@@ -20,6 +22,8 @@ public class Score {
     private int[] finalScores;
     private int[] previousDead;
     private BooleanProperty undoP;
+    private StringProperty dbP;
+    private StringProperty dwP;
     
     public Score(int[][] board) {
         possibleTerritory = new HashSet<List<Integer>>();
@@ -31,6 +35,8 @@ public class Score {
         removeWhiteCount = 0;
         previousDead = new int[3]; //will contain y, x and colourvalue
         undoP = new SimpleBooleanProperty(true);
+        dbP = new SimpleStringProperty("0");
+        dwP = new SimpleStringProperty("0");
     }
     
     public int[][] getEndingBoard() {
@@ -45,11 +51,25 @@ public class Score {
         return finalScores;
     }
     
+    public StringProperty getDbP() {
+        return dbP;
+    }
+    
+    public StringProperty getDwP() {
+        return dwP;
+    }
+    
     public void markDeadStone(int y, int x, int oldValue) {
         undoP.set(false);
         endingBoard[y][x] = 0;
-        if (oldValue == 1) ++removeBlackCount;
-        else ++removeWhiteCount;
+        if (oldValue == 1) {
+            ++removeBlackCount;
+            dbP.set(""+removeBlackCount);
+        }
+        else {
+            ++removeWhiteCount;
+            dwP.set(""+removeWhiteCount);
+        }
         previousDead[0] = y;
         previousDead[1] = x;
         previousDead[2] = oldValue;
@@ -59,6 +79,8 @@ public class Score {
         undoP.set(true);
         if (previousDead[2] == 1) --removeBlackCount;
         else --removeWhiteCount;
+        dbP.set(""+removeBlackCount);
+        dwP.set(""+removeWhiteCount);
         endingBoard[previousDead[0]][previousDead[1]] = previousDead[2];
     }
     

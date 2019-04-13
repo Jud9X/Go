@@ -149,6 +149,15 @@ public class Main extends Application {
                             else undoMark.setDisable(false);
                         });
                     }
+                    if (true) {
+                        Label deadBlacks = new Label("Dead black stones:");
+                        Label deadBlacksLive = new Label();
+                        deadBlacksLive.textProperty().bind(setupPage.g.s.getDbP());
+                        Label deadWhites = new Label("Dead white stones:");
+                        Label deadWhitesLive = new Label();
+                        deadWhitesLive.textProperty().bind(setupPage.g.s.getDwP());
+                        gameInfo.getChildren().addAll(deadBlacks, deadBlacksLive, deadWhites, deadWhitesLive);
+                    }
                 });
                 done.setOnAction(e5 -> {
                     instructions.setVisible(false);

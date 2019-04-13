@@ -209,7 +209,7 @@ public class GameState {
         if (passCount == 2) {
             //System.out.println("2 consecutive passes so game ends");
             //popup with dialogue box saying need to click dead stones
-            currentPlayerTurn = "none - game is over";
+            currentPlayerTurn = "none (game is over)";
             currentPlayerTurnP.set(currentPlayerTurn);
             s = new Score(board);
             ready.set(true);
