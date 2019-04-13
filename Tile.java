@@ -1,5 +1,5 @@
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
+import javafx.scene.control.*;//fix
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;

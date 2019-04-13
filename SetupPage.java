@@ -7,34 +7,41 @@ import javafx.geometry.Pos;
 public class SetupPage extends VBox {
     
     Label label1, label2, label3, label4, label5, label6, label7; //make all these private and do getters...
-    TextField username1, fname1, lname1, username2, fname2, lname2, gridSize;
+    TextField username1, fname1, lname1, username2, fname2, lname2;
+    ToggleGroup gridSizes;
+    RadioButton r1, r2;
     Button startGame;
     GameState g;
     GameGrid grid;
     
     public SetupPage() {
-        this.label1 = new Label("Enter P1 username:");
-        this.label2 = new Label("Enter P1 first name:");
-        this.label3 = new Label("Enter P1 last name:");
-        this.label4 = new Label("Enter P2 username:");
-        this.label5 = new Label("Enter P2 first name:");
-        this.label6 = new Label("Enter P2 last name:");
-        this.label7 = new Label("Enter grid size:");
-        this.username1 = new TextField();
-        this.fname1 = new TextField();
-        this.lname1 = new TextField();
-        this.username2 = new TextField();
-        this.fname2 = new TextField();
-        this.lname2 = new TextField();
-        this.gridSize = new TextField(); //this needs to be a radio button later
-        this.startGame = new Button("Start game");
-        getChildren().addAll(label1, username1, label2, fname1, label3, lname1, label4, username2, label5, fname2, label6, lname2, label7, gridSize, startGame);
+        label1 = new Label("Enter P1 username:");
+        label2 = new Label("Enter P1 first name:");
+        label3 = new Label("Enter P1 last name:");
+        label4 = new Label("Enter P2 username:");
+        label5 = new Label("Enter P2 first name:");
+        label6 = new Label("Enter P2 last name:");
+        label7 = new Label("Enter grid size:");
+        username1 = new TextField();
+        fname1 = new TextField();
+        lname1 = new TextField();
+        username2 = new TextField();
+        fname2 = new TextField();
+        lname2 = new TextField();
+        gridSizes = new ToggleGroup();
+        r1 = new RadioButton("9");
+        r2 = new RadioButton("13");
+        r1.setToggleGroup(gridSizes);
+        r2.setToggleGroup(gridSizes);
+        r2.setSelected(true);
+        startGame = new Button("Start game");
+        getChildren().addAll(label1, username1, label2, fname1, label3, lname1, label4, username2, label5, fname2, label6, lname2, label7, r1, r2, startGame);
         
         startGame.setOnAction(e -> {
             Player p1 = new Player(username1.getText(), fname1.getText(), lname1.getText());
             Player p2 = new Player(username2.getText(), fname2.getText(), lname2.getText());
-            g = new GameState(Integer.parseInt(gridSize.getText()), p1, p2);
-            grid = new GameGrid(Integer.parseInt(gridSize.getText()));
+            g = new GameState(Integer.parseInt(((RadioButton)gridSizes.getSelectedToggle()).getText()), p1, p2);
+            grid = new GameGrid(Integer.parseInt(((RadioButton)gridSizes.getSelectedToggle()).getText()));
             grid.setAlignment(Pos.CENTER);
             grid.setMinSize(400, 400); //edit and fix the bad ratioing that has appeared
             grid.setMaxSize(600, 600);
