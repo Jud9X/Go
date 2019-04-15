@@ -7,10 +7,10 @@ import javafx.scene.shape.Rectangle;
 
 public class GameGrid extends GridPane {
     
-    Tile[][] grid; //make private
+    private Tile[][] grid;
     
     public GameGrid(int k) {
-        this.grid = new Tile[k][k];
+        grid = new Tile[k][k];
         makeGrid(k);
     }
     
@@ -62,15 +62,15 @@ public class GameGrid extends GridPane {
     }
     
     public void updateGrid() {
-        for (int i = 0; i < Main.setupPage.g.getBoard().length; ++i) {
-            for (int j = 0; j < Main.setupPage.g.getBoard().length; ++j) {
-                if (Main.setupPage.g.getBoard()[i][j] == 1) {
+        for (int i = 0; i < GameContainer.getG().getBoard().length; ++i) {
+            for (int j = 0; j < GameContainer.getG().getBoard().length; ++j) {
+                if (GameContainer.getG().getBoard()[i][j] == 1) {
                     if (getGrid()[i][j].getHasWhite()) {
                         getGrid()[i][j].removeWhite();
                     }
                     getGrid()[i][j].addBlack();
                 }
-                else if (Main.setupPage.g.getBoard()[i][j] == 2) {
+                else if (GameContainer.getG().getBoard()[i][j] == 2) {
                     if (getGrid()[i][j].getHasBlack()) {
                         getGrid()[i][j].removeBlack();
                     }

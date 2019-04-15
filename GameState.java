@@ -209,7 +209,8 @@ public class GameState {
         if (passCount == 2) {
             currentPlayerTurn = "none (game is over)";
             currentPlayerTurnP.set(currentPlayerTurn);
-            s = new Score(board);
+            //s = new Score(board);
+            GameContainer.setS(board);
             ready.set(true);
 
             return;

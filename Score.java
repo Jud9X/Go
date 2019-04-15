@@ -101,8 +101,8 @@ public class Score {
             }
         }
         finalScores = new int[2]; //finalScores[0] is black's score and [1] is white's score
-        finalScores[0] += territorySums[0] - Main.setupPage.g.getCaptures()[1] - removeBlackCount;
-        finalScores[1] += territorySums[1] - Main.setupPage.g.getCaptures()[0] - removeWhiteCount;
+        finalScores[0] += territorySums[0] - GameContainer.getG().getCaptures()[1] - removeBlackCount;
+        finalScores[1] += territorySums[1] - GameContainer.getG().getCaptures()[0] - removeWhiteCount;
     }
     
     //need to reset the static variables before running?

@@ -1,6 +1,6 @@
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.*;
+import javafx.scene.control.*;//fix
 import javafx.scene.layout.VBox;
 import javafx.geometry.Pos;
 
@@ -11,8 +11,6 @@ public class SetupPage extends VBox {
     ToggleGroup gridSizes;
     RadioButton r1, r2;
     Button startGame;
-    GameState g;
-    GameGrid grid;
     
     public SetupPage() {
         label1 = new Label("Enter P1 username:");
@@ -40,11 +38,11 @@ public class SetupPage extends VBox {
         startGame.setOnAction(e -> {
             Player p1 = new Player(username1.getText(), fname1.getText(), lname1.getText());
             Player p2 = new Player(username2.getText(), fname2.getText(), lname2.getText());
-            g = new GameState(Integer.parseInt(((RadioButton)gridSizes.getSelectedToggle()).getText()), p1, p2);
-            grid = new GameGrid(Integer.parseInt(((RadioButton)gridSizes.getSelectedToggle()).getText()));
-            grid.setAlignment(Pos.CENTER);
-            grid.setMinSize(400, 400); //edit and fix the bad ratioing that has appeared
-            grid.setMaxSize(600, 600);
+            //g = new GameState(Integer.parseInt(((RadioButton)gridSizes.getSelectedToggle()).getText()), p1, p2);
+            //grid = new GameGrid(Integer.parseInt(((RadioButton)gridSizes.getSelectedToggle()).getText()));
+            //grid.setAlignment(Pos.CENTER);
+            //grid.setMinSize(400, 400); //edit and fix the bad ratioing that has appeared
+            //grid.setMaxSize(600, 600);
         });
     }
 }

@@ -20,29 +20,29 @@ public class Tile extends Pane {
     List<Node> nodes = new ArrayList<>();
     
     private void handleClick1() {
-        if (Main.setupPage.g.getCurrentPlayerTurn() == Main.setupPage.g.getBlack()) {
-            Main.setupPage.g.placePiece(Main.setupPage.grid.getRowIndex(this), Main.setupPage.grid.getColumnIndex(this));
-            if (Main.setupPage.g.getCurrentPlayerTurn() != Main.setupPage.g.getBlack()) {
-                for (int i = 0; i < Main.setupPage.g.getBoard().length; ++i) {
-                    for (int j = 0; j < Main.setupPage.g.getBoard().length; ++j) {
-                        if (Main.setupPage.g.getBoard()[i][j] == 1) {
-                            if (Main.setupPage.grid.getGrid()[i][j].getHasWhite()) {
-                                Main.setupPage.grid.getGrid()[i][j].removeWhite();
+        if (GameContainer.getG().getCurrentPlayerTurn() == GameContainer.getG().getBlack()) {
+            GameContainer.getG().placePiece(GameContainer.getGrid().getRowIndex(this), GameContainer.getGrid().getColumnIndex(this));
+            if (GameContainer.getG().getCurrentPlayerTurn() != GameContainer.getG().getBlack()) {
+                for (int i = 0; i < GameContainer.getG().getBoard().length; ++i) {
+                    for (int j = 0; j < GameContainer.getG().getBoard().length; ++j) {
+                        if (GameContainer.getG().getBoard()[i][j] == 1) {
+                            if (GameContainer.getGrid().getGrid()[i][j].getHasWhite()) {
+                                GameContainer.getGrid().getGrid()[i][j].removeWhite();
                             }
-                            Main.setupPage.grid.getGrid()[i][j].addBlack();
+                            GameContainer.getGrid().getGrid()[i][j].addBlack();
                         }
-                        else if (Main.setupPage.g.getBoard()[i][j] == 2) {
-                            if (Main.setupPage.grid.getGrid()[i][j].getHasBlack()) {
-                                Main.setupPage.grid.getGrid()[i][j].removeBlack();
+                        else if (GameContainer.getG().getBoard()[i][j] == 2) {
+                            if (GameContainer.getGrid().getGrid()[i][j].getHasBlack()) {
+                                GameContainer.getGrid().getGrid()[i][j].removeBlack();
                             }
-                            Main.setupPage.grid.getGrid()[i][j].addWhite();
+                            GameContainer.getGrid().getGrid()[i][j].addWhite();
                         }
                         else {
-                            if (Main.setupPage.grid.getGrid()[i][j].getHasBlack()) {
-                                Main.setupPage.grid.getGrid()[i][j].removeBlack();
+                            if (GameContainer.getGrid().getGrid()[i][j].getHasBlack()) {
+                                GameContainer.getGrid().getGrid()[i][j].removeBlack();
                             }
-                            if (Main.setupPage.grid.getGrid()[i][j].getHasWhite()) {
-                                Main.setupPage.grid.getGrid()[i][j].removeWhite();
+                            if (GameContainer.getGrid().getGrid()[i][j].getHasWhite()) {
+                                GameContainer.getGrid().getGrid()[i][j].removeWhite();
                             }
                         }
                     }
@@ -50,28 +50,28 @@ public class Tile extends Pane {
             }
         }
         else { //it's white's turn
-            Main.setupPage.g.placePiece(Main.setupPage.grid.getRowIndex(this), Main.setupPage.grid.getColumnIndex(this));
-            if (Main.setupPage.g.getCurrentPlayerTurn() != Main.setupPage.g.getWhite()) {
-                for (int i = 0; i < Main.setupPage.g.getBoard().length; ++i) {
-                    for (int j = 0; j < Main.setupPage.g.getBoard().length; ++j) {
-                        if (Main.setupPage.g.getBoard()[i][j] == 1) {
-                            if (Main.setupPage.grid.getGrid()[i][j].getHasWhite()) {
-                                Main.setupPage.grid.getGrid()[i][j].removeWhite();
+            GameContainer.getG().placePiece(GameContainer.getGrid().getRowIndex(this), GameContainer.getGrid().getColumnIndex(this));
+            if (GameContainer.getG().getCurrentPlayerTurn() != GameContainer.getG().getWhite()) {
+                for (int i = 0; i < GameContainer.getG().getBoard().length; ++i) {
+                    for (int j = 0; j < GameContainer.getG().getBoard().length; ++j) {
+                        if (GameContainer.getG().getBoard()[i][j] == 1) {
+                            if (GameContainer.getGrid().getGrid()[i][j].getHasWhite()) {
+                                GameContainer.getGrid().getGrid()[i][j].removeWhite();
                             }
-                            Main.setupPage.grid.getGrid()[i][j].addBlack();
+                            GameContainer.getGrid().getGrid()[i][j].addBlack();
                         }
-                        else if (Main.setupPage.g.getBoard()[i][j] == 2) {
-                            if (Main.setupPage.grid.getGrid()[i][j].getHasBlack()) {
-                                Main.setupPage.grid.getGrid()[i][j].removeBlack();
+                        else if (GameContainer.getG().getBoard()[i][j] == 2) {
+                            if (GameContainer.getGrid().getGrid()[i][j].getHasBlack()) {
+                                GameContainer.getGrid().getGrid()[i][j].removeBlack();
                             }
-                            Main.setupPage.grid.getGrid()[i][j].addWhite();
+                            GameContainer.getGrid().getGrid()[i][j].addWhite();
                         }
                         else {
-                            if (Main.setupPage.grid.getGrid()[i][j].getHasBlack()) {
-                                Main.setupPage.grid.getGrid()[i][j].removeBlack();
+                            if (GameContainer.getGrid().getGrid()[i][j].getHasBlack()) {
+                                GameContainer.getGrid().getGrid()[i][j].removeBlack();
                             }
-                            if (Main.setupPage.grid.getGrid()[i][j].getHasWhite()) {
-                                Main.setupPage.grid.getGrid()[i][j].removeWhite();
+                            if (GameContainer.getGrid().getGrid()[i][j].getHasWhite()) {
+                                GameContainer.getGrid().getGrid()[i][j].removeWhite();
                             }
                         }
                     }
@@ -82,18 +82,18 @@ public class Tile extends Pane {
     
     public void handleClick2() {
         //include confirmation before each removal?
-        int row = Main.setupPage.grid.getRowIndex(this);
-        int col = Main.setupPage.grid.getColumnIndex(this);
-        if (Main.setupPage.g.getBoard()[row][col] == 1) {
-            if (Main.setupPage.grid.getGrid()[row][col].getHasBlack()) {
-                Main.setupPage.grid.getGrid()[row][col].removeBlack();
-                Main.setupPage.g.s.markDeadStone(row, col, 1);
+        int row = GameContainer.getGrid().getRowIndex(this);
+        int col = GameContainer.getGrid().getColumnIndex(this);
+        if (GameContainer.getG().getBoard()[row][col] == 1) {
+            if (GameContainer.getGrid().getGrid()[row][col].getHasBlack()) {
+                GameContainer.getGrid().getGrid()[row][col].removeBlack();
+                GameContainer.getS().markDeadStone(row, col, 1);
             }
         }
-        else if (Main.setupPage.g.getBoard()[row][col] == 2) {
-            if (Main.setupPage.grid.getGrid()[row][col].getHasWhite()) {
-                Main.setupPage.grid.getGrid()[row][col].removeWhite();
-                Main.setupPage.g.s.markDeadStone(row, col, 2);
+        else if (GameContainer.getG().getBoard()[row][col] == 2) {
+            if (GameContainer.getGrid().getGrid()[row][col].getHasWhite()) {
+                GameContainer.getGrid().getGrid()[row][col].removeWhite();
+                GameContainer.getS().markDeadStone(row, col, 2);
             }
         }
     }
@@ -117,8 +117,8 @@ public class Tile extends Pane {
         getChildren().addAll(line1, line2);
         nodes.addAll(getChildren());
         this.setOnMouseClicked(e -> {
-            if (Main.setupPage.g.getPassCount() != 2) handleClick1();
-            else if (!Main.setupPage.g.isFinished()) handleClick2();
+            if (GameContainer.getG().getPassCount() != 2) handleClick1();
+            else if (!GameContainer.getG().isFinished()) handleClick2();
         });
     }
     
@@ -143,7 +143,7 @@ public class Tile extends Pane {
             getChildren().addAll(line1, line2);
             nodes.addAll(getChildren());
             this.setOnMouseClicked(e -> {
-                if (Main.setupPage.g.getPassCount() != 2) handleClick1();
+                if (GameContainer.getG().getPassCount() != 2) handleClick1();
                 else handleClick2();
             });
         }
@@ -162,7 +162,7 @@ public class Tile extends Pane {
             getChildren().addAll(line1, line2);
             nodes.addAll(getChildren());
             this.setOnMouseClicked(e -> {
-                if (Main.setupPage.g.getPassCount() != 2) handleClick1();
+                if (GameContainer.getG().getPassCount() != 2) handleClick1();
                 else handleClick2();
             });
         }
@@ -181,7 +181,7 @@ public class Tile extends Pane {
             getChildren().addAll(line1, line2);
             nodes.addAll(getChildren());
             this.setOnMouseClicked(e -> {
-                if (Main.setupPage.g.getPassCount() != 2) handleClick1();
+                if (GameContainer.getG().getPassCount() != 2) handleClick1();
                 else handleClick2();
             });
         }
@@ -199,7 +199,7 @@ public class Tile extends Pane {
             getChildren().addAll(line1, line2);
             nodes.addAll(getChildren());
             this.setOnMouseClicked(e -> {
-                if (Main.setupPage.g.getPassCount() != 2) handleClick1();
+                if (GameContainer.getG().getPassCount() != 2) handleClick1();
                 else handleClick2();
             });
         }
@@ -219,7 +219,7 @@ public class Tile extends Pane {
             getChildren().addAll(line1, line2);
             nodes.addAll(getChildren());
             this.setOnMouseClicked(e -> {
-                if (Main.setupPage.g.getPassCount() != 2) handleClick1();
+                if (GameContainer.getG().getPassCount() != 2) handleClick1();
                 else handleClick2();
             });
         }
@@ -238,7 +238,7 @@ public class Tile extends Pane {
             getChildren().addAll(line1, line2);
             nodes.addAll(getChildren());
             this.setOnMouseClicked(e -> {
-                if (Main.setupPage.g.getPassCount() != 2) handleClick1();
+                if (GameContainer.getG().getPassCount() != 2) handleClick1();
                 else handleClick2();
             });
         }
@@ -257,7 +257,7 @@ public class Tile extends Pane {
             getChildren().addAll(line1, line2);
             nodes.addAll(getChildren());
             this.setOnMouseClicked(e -> {
-                if (Main.setupPage.g.getPassCount() != 2) handleClick1();
+                if (GameContainer.getG().getPassCount() != 2) handleClick1();
                 else handleClick2();
             });
         }
@@ -275,7 +275,7 @@ public class Tile extends Pane {
             getChildren().addAll(line1, line2);
             nodes.addAll(getChildren());
             this.setOnMouseClicked(e -> {
-                if (Main.setupPage.g.getPassCount() != 2) handleClick1();
+                if (GameContainer.getG().getPassCount() != 2) handleClick1();
                 else handleClick2();
             });
         }
