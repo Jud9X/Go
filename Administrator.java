@@ -1,10 +1,17 @@
+import java.time.ZonedDateTime;
+
 public class Administrator extends User {
     private int adminID;
-    //TODO: join date
+    private ZonedDateTime joinDate;
     
     public Administrator(String username, String fname, String lname, int adminID) {
         super(username, fname, lname);
         this.adminID = adminID;
+        joinDate = ZonedDateTime.now();
+    }
+    
+    public ZonedDateTime getJoinDate() {
+        return joinDate;
     }
     
     public int getID() {
@@ -14,7 +21,7 @@ public class Administrator extends User {
     //join date get() method
     
     public String toString() {
-        return super.toString() + "\n" + "Admin ID number: " + adminID;
+        return super.toString() + " " + "Admin ID number: " + adminID + " " + joinDate.toString();
     }
     
     public static Player createPlayer(String username, String fname, String lname) {

@@ -1,9 +1,11 @@
+import java.time.ZonedDateTime;
+
 public class User {
     private String username;
     private String fname;
     private String lname;
     private double winRate;
-    //TODO: date and time of last login
+    private ZonedDateTime lastLoginTime;
     //TODO: profile image
     
     public User(String username, String fname, String lname) {
@@ -21,15 +23,29 @@ public class User {
         return winRate;
     }
     
-    public void updateWinRate(double newRate) {
+    public void setWinRate(double newRate) {
         winRate = newRate;
         return;
     }
     
+    public void setLastLoginTime(ZonedDateTime loginTime) {
+        this.lastLoginTime = ZonedDateTime.of(loginTime.toLocalDateTime(), loginTime.getZone());
+    }
+    
     public String toString() {
-        return "Username: " + username + "\n"
-            + "First name: " + fname + "\n"
-            + "Last name: " + lname + "\n"
-            + "Win rate: " + winRate;
+        if (lastLoginTime == null) {
+            return "Username: " + username + " "
+                + "First name: " + fname + " "
+                + "Last name: " + lname + " "
+                + "Win rate: " + winRate + " "
+                + "Last login: none";
+        }
+        else {
+            return "Username: " + username + " "
+                + "First name: " + fname + " "
+                + "Last name: " + lname + " "
+                + "Win rate: " + winRate + " " 
+                + "Last login: " + lastLoginTime.toString();
+        }
     }
 }

@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 public class Main extends Application {
     
     //Button startGame;
-    Scene gameSetupPage, gameScene, dashScene, loginScene;
+    Scene gameSetupPage, gameScene, dashScene, loginScene, createUserScene;
     static SetupPage setupPage;
     
     public static void main(final String[] args) {
@@ -205,17 +205,25 @@ public class Main extends Application {
         
         //user dashboard (including admin features if necessary) (outsource this to a new class?)
         BorderPane dashboard = new BorderPane();
+        VBox topPanel = new VBox();
         HBox topRow = new HBox();
         Label dashIntro = new Label("Welcome to the user dashboard!");
         Label lastLogin = new Label("Last login:");
         Label lastLoginDate = new Label(); //get date
+        topRow.getChildren().addAll(dashIntro, lastLogin, lastLoginDate);
+        HBox secondRow = new HBox();
         Button leaderboardButton = new Button("Show leaderboard");
         //add on action
         Button gameSetupButton = new Button("Setup new game");
         gameSetupButton.setOnAction(e -> primaryStage.setScene(gameSetupPage));
         Button logout = new Button("Logout");
         logout.setOnAction(e -> primaryStage.setScene(loginScene));
-        topRow.getChildren().addAll(dashIntro, lastLogin, lastLoginDate, leaderboardButton, gameSetupButton, logout);
+        secondRow.getChildren().addAll(leaderboardButton, gameSetupButton, logout);
+        HBox adminRow = new HBox();
+        Button createUser = new Button("Create new user...");
+        createUser.setOnAction(e -> primaryStage.setScene(createUserScene));
+        adminRow.getChildren().addAll(createUser);
+        topPanel.getChildren().addAll(topRow, secondRow, adminRow); //restrict adminRow to only appear for administrators somehow
         VBox information = new VBox();
         Label usernameLabel = new Label("Username:");
         Label usernameData = new Label(); //get username
@@ -240,7 +248,7 @@ public class Main extends Application {
         news.getChildren().addAll(leaderboardPrev, leaderboardPrevData, leaderboardCur, leaderboardCurData, newPlayers, newPlayersData, gamesSince, gamesSinceButton);
         TableView historyTable = new TableView();
         //implement this table
-        dashboard.setTop(topRow);
+        dashboard.setTop(topPanel);
         dashboard.setLeft(information);
         dashboard.setRight(news);
         dashboard.setCenter(historyTable);
@@ -279,9 +287,41 @@ public class Main extends Application {
         layout1.setBottom(bottomRow);
         gameSetupPage = new Scene(layout1, 600, 600);
         
-        //GameGrid grid = new GameGrid(Integer.parseInt(setupPage.gridSize.getText()));
-        //GameGrid grid = new GameGrid(13);//13 needs to come from somewhere
-        //grid.setAlignment(Pos.CENTER);
+        //create users page
+        VBox createUserLayout = new VBox();
+        ToggleGroup userTypes = new ToggleGroup();
+        RadioButton np = new RadioButton("Normal Player");
+        RadioButton admin = new RadioButton("Administrator");
+        np.setToggleGroup(userTypes);
+        admin.setToggleGroup(userTypes);
+        np.setSelected(true);
+        Label chooseUsername = new Label("Type username below:");
+        TextField newUsername = new TextField(); //set max size
+        Label chooseFName = new Label("Type first name below:");
+        TextField newFName = new TextField();
+        Label chooseLName = new Label("Type last name below:");
+        TextField newLName = new TextField();
+        Label chooseAdminID = new Label("Type new admin ID below:");
+        TextField newAdminID = new TextField(); //prevent this from being a duplicate of other admin IDs
+        chooseAdminID.setVisible(false);
+        newAdminID.setVisible(false);
+        admin.selectedProperty().addListener((observable, wasSelected, isSelected) -> {
+            if (isSelected) {
+                chooseAdminID.setVisible(true);
+                newAdminID.setVisible(true);
+            }
+            else {
+                chooseAdminID.setVisible(false);
+                newAdminID.setVisible(false);
+            }
+        });
+        Button createUserButton = new Button("Create user");
+        createUserButton.setOnAction(e -> {
+            //more stuff
+            primaryStage.setScene(dashScene);
+        });
+        createUserLayout.getChildren().addAll(np, admin, chooseUsername,  newUsername, chooseFName, newFName, chooseLName, newLName, chooseAdminID, newAdminID, createUserButton);
+        createUserScene = new Scene(createUserLayout, 600, 600);
         
         primaryStage.setScene(loginScene);
         primaryStage.centerOnScreen();
