@@ -14,12 +14,12 @@ java --module-path %PATH_TO_FX% --add-modules=javafx.controls Main
 
 Current big "to-do's":
 
-0. Big re-structuring coming on Monday
 1. Complete the required functionality (e.g. Record class, dates, profile pictures etc...)
 2. Make login page work, add user dashboard, add admin 'create users' page and improve GUI (including design and layout)
 3. Add exception handling if necessary (as part of improving GUI)
 4. Add saving and loading
-5. Add Javadoc
-6. Make the GUI look nice and add cool extra features (like highlighting where a piece will go when the mouse hovers over that area, different colour themes, optional confirmation boxes after each move, music...)
-7. Record demonstration video
-8. Optional: unit/integration testing
+5. Reduce the size of main by putting scenes in their own classes??
+6. Add Javadoc
+7. Optional: make the GUI look nice and add cool extra features (like highlighting where a piece will go when the mouse hovers over that area, different colour themes, optional confirmation boxes after each move, music...)
+8. Record demonstration video
+9. Optional: unit/integration testing
