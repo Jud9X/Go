@@ -18,8 +18,6 @@ public class Administrator extends User {
         return adminID;
     }
     
-    //join date get() method
-    
     public String toString() {
         return super.toString() + " " + "Admin ID number: " + adminID + " " + "Join date: " + joinDate.toString();
     }
