@@ -159,6 +159,9 @@ public class Main extends Application {
             catch (IOException ioe) {
                 System.out.println(ioe.getMessage());
             }
+            for (GameRecord game:GameContainer.getGamesPlayed()) {
+                System.out.println(game.getDateCompleted().toString()); //just for testing
+            }
         }
         BooleanProperty setupTime = new SimpleBooleanProperty(false);
         setupTime.addListener((observable, oV0, nV0) -> {
@@ -184,7 +187,8 @@ public class Main extends Application {
                 setupPage.getChildren().addAll(curUser, opponentInfo, userDropDownList, label7, r1, r2, startGame);
                 startGame.setOnAction(e -> { //tidy up this huge button click?
                     User p1 = loggedIn.get(0);
-                    User p2 = new Player("temp2", "temppass", "tempfname2", "templname2");
+                    User p2 = adminList.stream().filter(user -> userDropDownList.getValue().equals(user.getUsername())).findFirst().orElse(null);
+                    if (p2 == null) p2 = playerList.stream().filter(user -> userDropDownList.getValue().equals(user.getUsername())).findFirst().orElse(null);
                     GameContainer.setG(Integer.parseInt(((RadioButton)gridSizes.getSelectedToggle()).getText()), p1, p2);
                     GameContainer.setGrid(Integer.parseInt(((RadioButton)gridSizes.getSelectedToggle()).getText()));
                     GameContainer.getGrid().setAlignment(Pos.CENTER);

@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.time.ZonedDateTime;
 
-public class GameRecord {
+public class GameRecord implements Serializable {
     private ZonedDateTime dateCompleted;
     private User winner;
     private User loser;
