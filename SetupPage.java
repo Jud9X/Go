@@ -36,8 +36,8 @@ public class SetupPage extends VBox {
         getChildren().addAll(label1, username1, label2, fname1, label3, lname1, label4, username2, label5, fname2, label6, lname2, label7, r1, r2, startGame);
         
         startGame.setOnAction(e -> {
-            Player p1 = new Player(username1.getText(), fname1.getText(), lname1.getText());
-            Player p2 = new Player(username2.getText(), fname2.getText(), lname2.getText());
+            //Player p1 = new Player(username1.getText(), fname1.getText(), lname1.getText());
+            //Player p2 = new Player(username2.getText(), fname2.getText(), lname2.getText());
             //g = new GameState(Integer.parseInt(((RadioButton)gridSizes.getSelectedToggle()).getText()), p1, p2);
             //grid = new GameGrid(Integer.parseInt(((RadioButton)gridSizes.getSelectedToggle()).getText()));
             //grid.setAlignment(Pos.CENTER);

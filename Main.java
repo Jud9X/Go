@@ -7,6 +7,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import javafx.application.Application;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -99,7 +101,7 @@ public class Main extends Application {
             }
         }
         else {
-            Administrator defaultAdmin = new Administrator("admin", "Default", "Administrator", 1);
+            Administrator defaultAdmin = new Administrator("admin", "password", "Default", "Administrator", 1);
             try {
                 FileOutputStream fos = new FileOutputStream("userdata");
                 ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -132,8 +134,8 @@ public class Main extends Application {
         Button startGame = new Button("Start game");
         setupPage.getChildren().addAll(label1, username1, label2, fname1, label3, lname1, label4, username2, label5, fname2, label6, lname2, label7, r1, r2, startGame);
         startGame.setOnAction(e -> { //tidy up this huge button click?
-            Player p1 = new Player(username1.getText(), fname1.getText(), lname1.getText());
-            Player p2 = new Player(username2.getText(), fname2.getText(), lname2.getText());
+            Player p1 = new Player(username1.getText(), "temppass", fname1.getText(), lname1.getText());
+            Player p2 = new Player(username2.getText(), "temppass", fname2.getText(), lname2.getText());
             GameContainer.setG(Integer.parseInt(((RadioButton)gridSizes.getSelectedToggle()).getText()), p1, p2);
             GameContainer.setGrid(Integer.parseInt(((RadioButton)gridSizes.getSelectedToggle()).getText()));
             GameContainer.getGrid().setAlignment(Pos.CENTER);
@@ -312,8 +314,17 @@ public class Main extends Application {
         password.setMaxWidth(200);
         Button loginButton = new Button("Login");
         loginButton.requestFocus();
+        BooleanProperty authenticated = new SimpleBooleanProperty(false);
         loginButton.setOnAction(e -> {
-            primaryStage.setScene(dashScene);
+            for (User u:userList) {
+                if (username.getText().equals(u.getUsername()) && password.getText().equals(u.getPassword())) {
+                    authenticated.set(true);
+                    primaryStage.setScene(dashScene);
+                }
+            }
+            if (!authenticated.getValue()) {
+                InformationBox.display("Invalid login details", "The username and password combination was not recognised.");
+            }
         });
         login.getChildren().addAll(welcome, username, password, loginButton);
         loginScene = new Scene(login, 600, 600);
@@ -340,7 +351,9 @@ public class Main extends Application {
         admin.setToggleGroup(userTypes);
         np.setSelected(true);
         Label chooseUsername = new Label("Type username below:");
-        TextField newUsername = new TextField(); //set max size
+        TextField newUsername = new TextField(); //set max size and restrict this to have no spaces
+        Label choosePass = new Label("Type password below:");
+        TextField newPass = new TextField();
         Label chooseFName = new Label("Type first name below:");
         TextField newFName = new TextField();
         Label chooseLName = new Label("Type last name below:");
@@ -362,7 +375,7 @@ public class Main extends Application {
         Button createUserButton = new Button("Create user");
         createUserButton.setOnAction(e -> {
             if (admin.isSelected()) {
-                Administrator newAdmin = new Administrator(newUsername.getText(), newFName.getText(), newLName.getText(), Integer.parseInt(newAdminID.getText()));
+                Administrator newAdmin = new Administrator(newUsername.getText(), newPass.getText(), newFName.getText(), newLName.getText(), Integer.parseInt(newAdminID.getText()));
                 try {
                     FileOutputStream fos = new FileOutputStream("userdata", true);
                     AppendableObjectOutputStream oos = new AppendableObjectOutputStream(fos);
@@ -374,7 +387,7 @@ public class Main extends Application {
                 }
             }
             else {
-                Player newPlayer = new Player(newUsername.getText(), newFName.getText(), newLName.getText());
+                Player newPlayer = new Player(newUsername.getText(), newPass.getText(), newFName.getText(), newLName.getText());
                 try {
                     FileOutputStream fos = new FileOutputStream("userdata", true);
                     AppendableObjectOutputStream oos = new AppendableObjectOutputStream(fos);
@@ -387,7 +400,7 @@ public class Main extends Application {
             }
             primaryStage.setScene(dashScene);
         });
-        createUserLayout.getChildren().addAll(np, admin, chooseUsername,  newUsername, chooseFName, newFName, chooseLName, newLName, chooseAdminID, newAdminID, createUserButton);
+        createUserLayout.getChildren().addAll(np, admin, chooseUsername, newUsername, choosePass, newPass, chooseFName, newFName, chooseLName, newLName, chooseAdminID, newAdminID, createUserButton);
         createUserScene = new Scene(createUserLayout, 600, 600);
         
         primaryStage.setScene(loginScene);
