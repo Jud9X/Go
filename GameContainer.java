@@ -1,7 +1,10 @@
+import java.util.ArrayList;
+
 public class GameContainer {
     private static GameState g;
     private static GameGrid grid;
     private static Score s;
+    private static ArrayList<GameRecord> gamesPlayed = new ArrayList<>();
     
     public static GameState getG() {
         return g;
@@ -25,5 +28,9 @@ public class GameContainer {
     
     public static void setS(int[][] board) {
         s = new Score(board);
+    }
+    
+    public static ArrayList<GameRecord> getGamesPlayed() {
+        return gamesPlayed;
     }
 }

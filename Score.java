@@ -1,3 +1,4 @@
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -103,6 +104,12 @@ public class Score {
         finalScores = new int[2]; //finalScores[0] is black's score and [1] is white's score
         finalScores[0] += territorySums[0] - GameContainer.getG().getCaptures()[1] - removeBlackCount;
         finalScores[1] += territorySums[1] - GameContainer.getG().getCaptures()[0] - removeWhiteCount;
+        String winnerName = (finalScores[0] > finalScores[1]) ? GameContainer.getG().getBlack() : GameContainer.getG().getWhite();
+        String loserName = (finalScores[0] < finalScores[1]) ? GameContainer.getG().getBlack() : GameContainer.getG().getWhite();
+        User winner = (GameContainer.getG().getPlayer1().getUsername().equals(winnerName)) ? GameContainer.getG().getPlayer1() : GameContainer.getG().getPlayer2();
+        User loser = (GameContainer.getG().getPlayer1().getUsername().equals(loserName)) ? GameContainer.getG().getPlayer1() : GameContainer.getG().getPlayer2();
+        GameRecord result = new GameRecord(ZonedDateTime.now(), winner, loser);
+        GameContainer.getGamesPlayed().add(result);
     }
     
     //need to reset the static variables before running?

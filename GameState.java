@@ -139,6 +139,14 @@ public class GameState {
         return;
     }
     
+    public User getPlayer1() {
+        return player1;
+    }
+    
+    public User getPlayer2() {
+        return player2;
+    }
+    
     public BooleanProperty getUndoStateP() {
         return undoStateP;
     }
@@ -209,10 +217,8 @@ public class GameState {
         if (passCount == 2) {
             currentPlayerTurn = "none (game is over)";
             currentPlayerTurnP.set(currentPlayerTurn);
-            //s = new Score(board);
             GameContainer.setS(board);
             ready.set(true);
-
             return;
         }
         ++turnNo;

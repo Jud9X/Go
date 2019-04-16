@@ -129,6 +129,27 @@ public class Main extends Application {
                 System.out.println(p.toString()); //just for testing
             }
         }
+        EoF = false;
+        if (new File("gamedata").isFile()) {
+            try {
+                FileInputStream fis2 = new FileInputStream("gamedata");
+                ObjectInputStream ois2 = new ObjectInputStream(fis2);
+                while (!EoF) {
+                    try {
+                        GameRecord loaded = (GameRecord) ois2.readObject();
+                        GameContainer.getGamesPlayed().add(loaded);
+                    }
+                    catch (EOFException eof) {
+                        EoF = true;
+                    }
+                }
+                ois2.close();
+                fis2.close();
+            }
+            catch (IOException ioe) {
+                System.out.println(ioe.getMessage());
+            }
+        }
         BooleanProperty setupTime = new SimpleBooleanProperty(false);
         setupTime.addListener((observable, oV0, nV0) -> {
             if (nV0) {
@@ -320,6 +341,23 @@ public class Main extends Application {
                     catch (IOException ioe) {
                         System.out.println(ioe.getMessage());
                     }
+                    try {
+                        FileOutputStream fos3 = new FileOutputStream("gamedata");
+                        ObjectOutputStream oos3 = new ObjectOutputStream(fos3);
+                        for (GameRecord game:GameContainer.getGamesPlayed()) {
+                            try {
+                                oos3.writeObject(game);
+                            }
+                            catch (IOException ioe) {
+                                System.out.println(ioe.getMessage());
+                            }
+                        }
+                        oos3.close();
+                        fos3.close();
+                    }
+                    catch (IOException ioe) {
+                        System.out.println(ioe.getMessage());
+                    }
                     primaryStage.setScene(loginScene);
                 });
                 secondRow.getChildren().addAll(leaderboardButton, gameSetupButton, logout);
@@ -469,9 +507,24 @@ public class Main extends Application {
                 }
             }
             else {
-                Player newPlayer = new Player(newUsername.getText(), newPass.getText(), newFName.getText(), newLName.getText());
-                playerList.add(newPlayer);
-                InformationBox.display("Created new player", "New player successfully created");
+                notTaken.set(true);
+                for (Administrator a:adminList) {
+                    if (newUsername.getText().equals(a.getUsername())) {
+                        notTaken.set(false);
+                        InformationBox.display("Username already taken", "The chosen username is already taken, please choose another.");
+                    }
+                }
+                for (Player p:playerList) {
+                    if (newUsername.getText().equals(p.getUsername())) {
+                        notTaken.set(false);
+                        InformationBox.display("Username already taken", "The chosen username is already taken, please choose another.");
+                    }
+                }
+                if (notTaken.getValue()) {
+                    Player newPlayer = new Player(newUsername.getText(), newPass.getText(), newFName.getText(), newLName.getText());
+                    playerList.add(newPlayer);
+                    InformationBox.display("Created new player", "New player successfully created");
+                }
             }
         });
         Button leaveCreateUser = new Button("Return to user dashboard");
@@ -501,6 +554,23 @@ public class Main extends Application {
                 }
                 oos2.close();
                 fos2.close();
+            }
+            catch (IOException ioe) {
+                System.out.println(ioe.getMessage());
+            }
+            try {
+                FileOutputStream fos3 = new FileOutputStream("gamedata");
+                ObjectOutputStream oos3 = new ObjectOutputStream(fos3);
+                for (GameRecord game:GameContainer.getGamesPlayed()) {
+                    try {
+                        oos3.writeObject(game);
+                    }
+                    catch (IOException ioe) {
+                        System.out.println(ioe.getMessage());
+                    }
+                }
+                oos3.close();
+                fos3.close();
             }
             catch (IOException ioe) {
                 System.out.println(ioe.getMessage());
