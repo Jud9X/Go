@@ -28,6 +28,7 @@ public class Main extends Application {
     Scene gameSetupPage, gameScene, dashScene, loginScene, createUserScene;
     static SetupPage setupPage;
     private ArrayList<User> loggedIn;
+    private BooleanProperty authenticated;
     
     public static void main(final String[] args) {
         launch(args);
@@ -111,7 +112,7 @@ public class Main extends Application {
                 ioe.printStackTrace();
             }
             for (User u:userList) {
-                System.out.println(u.toString());
+                System.out.println(u.toString()); //just for testing
             }
         }
         BooleanProperty setupTime = new SimpleBooleanProperty(false);
@@ -251,61 +252,81 @@ public class Main extends Application {
         });
         
         //user dashboard (including admin features if necessary) (outsource this to a new class?)
-        BorderPane dashboard = new BorderPane();
-        VBox topPanel = new VBox();
-        HBox topRow = new HBox();
-        Label dashIntro = new Label("Welcome to the user dashboard!");
-        Label lastLogin = new Label("Last login:");
-        Label lastLoginDate = new Label(); //get date
-        topRow.getChildren().addAll(dashIntro, lastLogin, lastLoginDate);
-        HBox secondRow = new HBox();
-        Button leaderboardButton = new Button("Show leaderboard");
-        //add on action
-        Button gameSetupButton = new Button("Setup new game");
-        gameSetupButton.setOnAction(e -> {
-            setupTime.set(true);
-            primaryStage.setScene(gameSetupPage);
+        BooleanProperty makeDash = new SimpleBooleanProperty(false);
+        makeDash.addListener((observable, oV0, nV0) -> {
+            if (nV0) {
+                BorderPane dashboard = new BorderPane();
+                VBox topPanel = new VBox();
+                HBox topRow = new HBox();
+                Label dashIntro = new Label("Welcome to the user dashboard!");
+                Label lastLogin = new Label("Previous login:");
+                Label lastLoginDate = new Label(loggedIn.get(0).getPreviousLastLoginTime().toString()); //get date
+                topRow.getChildren().addAll(dashIntro, lastLogin, lastLoginDate);
+                HBox secondRow = new HBox();
+                Button leaderboardButton = new Button("Show leaderboard");
+                //add on action
+                Button gameSetupButton = new Button("Setup new game");
+                gameSetupButton.setOnAction(e -> {
+                    setupTime.set(true);
+                    primaryStage.setScene(gameSetupPage);
+                });
+                Button logout = new Button("Logout");
+                logout.setOnAction(e -> {
+                    authenticated.set(false);
+                    setupTime.set(false);
+                    makeDash.set(false);
+                    loggedIn.clear();
+                    setupPage.getChildren().clear();
+                    for (User u:userList) {
+                        try {
+                            FileOutputStream fos = new FileOutputStream("userdata");
+                            ObjectOutputStream oos = new ObjectOutputStream(fos);
+                            oos.writeObject(u);
+                            oos.close();
+                        }
+                        catch  (IOException ioe) {
+                            System.out.println(ioe.getMessage());
+                        }
+                    }
+                    primaryStage.setScene(loginScene);
+                });
+                secondRow.getChildren().addAll(leaderboardButton, gameSetupButton, logout);
+                HBox adminRow = new HBox();
+                Button createUser = new Button("Create new user...");
+                createUser.setOnAction(e -> primaryStage.setScene(createUserScene));
+                adminRow.getChildren().addAll(createUser);
+                topPanel.getChildren().addAll(topRow, secondRow, adminRow); //restrict adminRow to only appear for administrators somehow
+                VBox information = new VBox();
+                Label usernameLabel = new Label("Username:");
+                Label usernameData = new Label(loggedIn.get(0).getUsername());
+                Label firstName = new Label("First name:");
+                Label firstNameData = new Label(loggedIn.get(0).getFname());
+                Label secondName = new Label("Second name:");
+                Label secondNameData = new Label(loggedIn.get(0).getLname());
+                Label winRate = new Label("Win rate (%):");
+                Label winRateData = new Label(""+(int)loggedIn.get(0).getWinRate());
+                Label profilePic = new Label("Profile picture:");
+                //somehow put the profile picture here
+                information.getChildren().addAll(usernameLabel, usernameData, firstName, firstNameData, secondName, secondNameData, winRate, winRateData, profilePic); //all the profile pic obj here
+                VBox news = new VBox();
+                Label leaderboardPrev = new Label("Leaderboard position on last logout:");
+                Label leaderboardPrevData = new Label(); //get old leaderboard position (from file presumably)
+                Label leaderboardCur = new Label("Current leaderboard position:");
+                Label leaderboardCurData = new Label(); //get leaderboard position
+                Label newPlayers = new Label("New players since last logout:");
+                Label newPlayersData = new Label(); //get new players
+                Label gamesSince = new Label("Click for list of games completed since last login");
+                Button gamesSinceButton = new Button("Games Completed"); //make this link to a tableview of games completed since last login
+                news.getChildren().addAll(leaderboardPrev, leaderboardPrevData, leaderboardCur, leaderboardCurData, newPlayers, newPlayersData, gamesSince, gamesSinceButton);
+                TableView historyTable = new TableView();
+                //implement this table
+                dashboard.setTop(topPanel);
+                dashboard.setLeft(information);
+                dashboard.setRight(news);
+                dashboard.setCenter(historyTable);
+                dashScene = new Scene(dashboard, 600, 600);
+            }
         });
-        Button logout = new Button("Logout");
-        logout.setOnAction(e -> {
-            //need to reset a bunch of values...
-            primaryStage.setScene(loginScene)
-        });
-        secondRow.getChildren().addAll(leaderboardButton, gameSetupButton, logout);
-        HBox adminRow = new HBox();
-        Button createUser = new Button("Create new user...");
-        createUser.setOnAction(e -> primaryStage.setScene(createUserScene));
-        adminRow.getChildren().addAll(createUser);
-        topPanel.getChildren().addAll(topRow, secondRow, adminRow); //restrict adminRow to only appear for administrators somehow
-        VBox information = new VBox();
-        Label usernameLabel = new Label("Username:");
-        Label usernameData = new Label(); //get username
-        Label firstName = new Label("First name:");
-        Label firstNameData = new Label(); //get first name
-        Label secondName = new Label("Second name:");
-        Label secondNameData = new Label(); //get second name
-        Label winRate = new Label("Win rate (%):");
-        Label winRateData = new Label(); //get winrate
-        Label profilePic = new Label("Profile picture:");
-        //somehow put the profile picture here
-        information.getChildren().addAll(usernameLabel, usernameData, firstName, firstNameData, secondName, secondNameData, winRate, winRateData, profilePic); //all the profile pic obj here
-        VBox news = new VBox();
-        Label leaderboardPrev = new Label("Leaderboard position on last logout:");
-        Label leaderboardPrevData = new Label(); //get old leaderboard position (from file presumably)
-        Label leaderboardCur = new Label("Current leaderboard position:");
-        Label leaderboardCurData = new Label(); //get leaderboard position
-        Label newPlayers = new Label("New players since last logout:");
-        Label newPlayersData = new Label(); //get new players
-        Label gamesSince = new Label("Click for list of games completed since last login");
-        Button gamesSinceButton = new Button("Games Completed"); //make this link to a tableview of games completed since last login
-        news.getChildren().addAll(leaderboardPrev, leaderboardPrevData, leaderboardCur, leaderboardCurData, newPlayers, newPlayersData, gamesSince, gamesSinceButton);
-        TableView historyTable = new TableView();
-        //implement this table
-        dashboard.setTop(topPanel);
-        dashboard.setLeft(information);
-        dashboard.setRight(news);
-        dashboard.setCenter(historyTable);
-        Scene dashScene = new Scene(dashboard, 600, 600);
         
         //login page
         VBox login = new VBox(10);
@@ -321,13 +342,14 @@ public class Main extends Application {
         password.setMaxWidth(200);
         Button loginButton = new Button("Login");
         loginButton.requestFocus();
-        BooleanProperty authenticated = new SimpleBooleanProperty(false);
+        authenticated = new SimpleBooleanProperty(false);
         loggedIn = new ArrayList<>();
         loginButton.setOnAction(e -> {
             for (User u:userList) {
                 if (username.getText().equals(u.getUsername()) && password.getText().equals(u.getPassword())) {
                     u.setLastLoginTime(ZonedDateTime.now());
                     loggedIn.add(u);
+                    makeDash.set(true);
                     authenticated.set(true);
                     primaryStage.setScene(dashScene);
                 }
@@ -386,27 +408,11 @@ public class Main extends Application {
         createUserButton.setOnAction(e -> {
             if (admin.isSelected()) {
                 Administrator newAdmin = new Administrator(newUsername.getText(), newPass.getText(), newFName.getText(), newLName.getText(), Integer.parseInt(newAdminID.getText()));
-                try {
-                    FileOutputStream fos = new FileOutputStream("userdata", true);
-                    AppendableObjectOutputStream oos = new AppendableObjectOutputStream(fos);
-                    oos.writeObject(newAdmin);
-                    oos.close();
-                }
-                catch (IOException ioe) {
-                    System.out.println(ioe.getMessage());
-                }
+                userList.add(newAdmin);
             }
             else {
                 Player newPlayer = new Player(newUsername.getText(), newPass.getText(), newFName.getText(), newLName.getText());
-                try {
-                    FileOutputStream fos = new FileOutputStream("userdata", true);
-                    AppendableObjectOutputStream oos = new AppendableObjectOutputStream(fos);
-                    oos.writeObject(newPlayer);
-                    oos.close();
-                }
-                catch  (IOException ioe) {
-                    System.out.println(ioe.getMessage());
-                }
+                userList.add(newPlayer);
             }
             InformationBox.display("Created new user", "New user successfully created");
             primaryStage.setScene(dashScene);

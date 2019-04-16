@@ -9,7 +9,8 @@ public class User implements Serializable {
     private String fname;
     private String lname;
     private double winRate;
-    private ZonedDateTime lastLoginTime;
+    private ZonedDateTime previousLastLoginTime;
+    private ZonedDateTime lastLoginTime; //is actually the time for "this session"
     //TODO: profile image
     
     public User(String username, String password, String fname, String lname) {
@@ -17,7 +18,7 @@ public class User implements Serializable {
         this.password = password;
         this.fname = fname;
         this.lname = lname;
-        winRate = 0; //?
+        winRate = 0; //start at 0? THIS NEEDS TO BE GIVEN AS A %, e.g. 54 instead of 0.54
     }
     
     public String getUsername() {
@@ -26,6 +27,14 @@ public class User implements Serializable {
     
     public String getPassword() {
         return password;
+    }
+    
+    public String getFname() {
+        return fname;
+    }
+    
+    public String getLname() {
+        return lname;
     }
     
     public double getWinRate() {
@@ -38,7 +47,14 @@ public class User implements Serializable {
     }
     
     public void setLastLoginTime(ZonedDateTime loginTime) {
-        this.lastLoginTime = ZonedDateTime.of(loginTime.toLocalDateTime(), loginTime.getZone());
+        if (lastLoginTime == null) previousLastLoginTime = loginTime;
+        else previousLastLoginTime = lastLoginTime;
+        lastLoginTime = ZonedDateTime.of(loginTime.toLocalDateTime(), loginTime.getZone());
+    }
+    
+    public ZonedDateTime getPreviousLastLoginTime() {
+        if (previousLastLoginTime == null) return lastLoginTime;
+        else return previousLastLoginTime;
     }
     
     public String toString() {
