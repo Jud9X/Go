@@ -5,6 +5,7 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
@@ -26,6 +27,7 @@ public class Main extends Application {
     //Button startGame;
     Scene gameSetupPage, gameScene, dashScene, loginScene, createUserScene;
     static SetupPage setupPage;
+    private ArrayList<User> loggedIn;
     
     public static void main(final String[] args) {
         launch(args);
@@ -77,6 +79,18 @@ public class Main extends Application {
         //setupPage = new SetupPage();
         VBox setupPage = new VBox();
         ArrayList<User> userList = new ArrayList<>();
+        if (!(new File("userdata").isFile())) {
+            Administrator defaultAdmin = new Administrator("admin", "password", "Default", "Administrator", 1);
+            try {
+                FileOutputStream fos = new FileOutputStream("userdata");
+                ObjectOutputStream oos = new ObjectOutputStream(fos);
+                oos.writeObject(defaultAdmin);
+                oos.close();
+            }
+            catch (IOException ioe) {
+                System.out.println(ioe.getMessage());
+            }
+        }
         boolean EoF = false;
         if (new File("userdata").isFile()) {
             try {
@@ -100,153 +114,139 @@ public class Main extends Application {
                 System.out.println(u.toString());
             }
         }
-        else {
-            Administrator defaultAdmin = new Administrator("admin", "password", "Default", "Administrator", 1);
-            try {
-                FileOutputStream fos = new FileOutputStream("userdata");
-                ObjectOutputStream oos = new ObjectOutputStream(fos);
-                oos.writeObject(defaultAdmin);
-                oos.close();
-            }
-            catch (IOException ioe) {
-                System.out.println(ioe.getMessage());
-            }
-        }
-        Label label1 = new Label("Enter P1 username:");
-        Label label2 = new Label("Enter P1 first name:");
-        Label label3 = new Label("Enter P1 last name:");
-        Label label4 = new Label("Enter P2 username:");
-        Label label5 = new Label("Enter P2 first name:");
-        Label label6 = new Label("Enter P2 last name:");
-        Label label7 = new Label("Enter grid size:");
-        TextField username1 = new TextField();
-        TextField fname1 = new TextField();
-        TextField lname1 = new TextField();
-        TextField username2 = new TextField();
-        TextField fname2 = new TextField();
-        TextField lname2 = new TextField();
-        ToggleGroup gridSizes = new ToggleGroup();
-        RadioButton r1 = new RadioButton("9");
-        RadioButton r2 = new RadioButton("13");
-        r1.setToggleGroup(gridSizes);
-        r2.setToggleGroup(gridSizes);
-        r2.setSelected(true);
-        Button startGame = new Button("Start game");
-        setupPage.getChildren().addAll(label1, username1, label2, fname1, label3, lname1, label4, username2, label5, fname2, label6, lname2, label7, r1, r2, startGame);
-        startGame.setOnAction(e -> { //tidy up this huge button click?
-            Player p1 = new Player(username1.getText(), "temppass", fname1.getText(), lname1.getText());
-            Player p2 = new Player(username2.getText(), "temppass", fname2.getText(), lname2.getText());
-            GameContainer.setG(Integer.parseInt(((RadioButton)gridSizes.getSelectedToggle()).getText()), p1, p2);
-            GameContainer.setGrid(Integer.parseInt(((RadioButton)gridSizes.getSelectedToggle()).getText()));
-            GameContainer.getGrid().setAlignment(Pos.CENTER);
-            GameContainer.getGrid().setMinSize(400, 400); //edit and fix the bad ratioing that has appeared
-            GameContainer.getGrid().setMaxSize(600, 600);
-            //layout of page 2
-            BorderPane layout2 = new BorderPane();
-            layout2.setCenter(GameContainer.getGrid());
-            VBox gameInfo = new VBox();
-            Label black = new Label("Black: " + GameContainer.getG().getBlack());
-            Label white = new Label("White: " + GameContainer.getG().getWhite());
-            Label tn = new Label("Turns played: ");
-            Label tnLive = new Label();
-            tnLive.textProperty().bind(GameContainer.getG().getTurnNoP());
-            Label capsB = new Label("Captures by black: ");
-            Label capsBLive = new Label();
-            capsBLive.textProperty().bind(GameContainer.getG().getCapsBP());
-            Label capsW = new Label("Captures by white: ");
-            Label capsWLive = new Label();
-            capsWLive.textProperty().bind(GameContainer.getG().getCapsWP());
-            Label pc = new Label("Pass count: ");
-            Label pcLive = new Label();
-            pcLive.textProperty().bind(GameContainer.getG().getPassCountP());
-            Label CPT = new Label("Current player's turn: ");
-            Label CPTLive = new Label();
-            CPTLive.textProperty().bind(GameContainer.getG().getCurrentPlayerTurnP());
-            gameInfo.getChildren().addAll(black, white, tn, tnLive, capsB, capsBLive, capsW, capsWLive, pc, pcLive, CPT, CPTLive);
-            layout2.setRight(gameInfo);
-            VBox gameControl = new VBox();
-            Label passInfo = new Label("Click the button below to pass your turn:");
-            passInfo.setMaxWidth(100);
-            passInfo.setWrapText(true);
-            Button pass = new Button("Pass");
-            pass.setOnAction(e2 -> GameContainer.getG().pass());
-            Label undoInfo = new Label("Click the button below to undo the previous move (unless that move was passed):");
-            undoInfo.setMaxWidth(100);
-            undoInfo.setWrapText(true);
-            Button undo = new Button("Undo");
-            undo.setDisable(true);
-            undo.setOnAction(e3 -> {
-                GameContainer.getG().undoLastMove();
-                GameContainer.getGrid().updateGrid();
-            });
-            GameContainer.getG().getUndoStateP().addListener((o, oV, nV) -> {
-                if (nV == true) undo.setDisable(true);
-                else undo.setDisable(false);
-            });
-            Label undoMarkInfo = new Label("Click the button below to undo the previous dead stone marking:");
-            undoMarkInfo.setMaxWidth(100);
-            undoMarkInfo.setWrapText(true);
-            undoMarkInfo.setVisible(false);
-            Button undoMark = new Button("Undo mark");
-            undoMark.setDisable(true);
-            undoMark.setVisible(false);
-            undoMark.setOnAction(e4 -> {
-                GameContainer.getS().undoMarkDeadStone();
-                GameContainer.getGrid().updateGrid(GameContainer.getS());
-            });
-            Button done = new Button("Finished marking");
-            done.setVisible(false);
-            Label instructions = new Label("Game is over. Click on stones to mark them as dead, then click 'Finished marking' when done.");
-            instructions.setMaxWidth(100);
-            instructions.setWrapText(true);
-            instructions.setVisible(false);
-            GameContainer.getG().getPassCountP().addListener((o, oV, nV) -> {
-                if (nV.equals("2")) {
-                    passInfo.setVisible(false);
-                    pass.setVisible(false);
-                    undoInfo.setVisible(false);
-                    undo.setVisible(false);
-                    instructions.setVisible(true);
-                    undoMarkInfo.setVisible(true);
-                    undoMark.setVisible(true);
-                    done.setVisible(true);
+        BooleanProperty setupTime = new SimpleBooleanProperty(false);
+        setupTime.addListener((observable, oV0, nV0) -> {
+            if (nV0) {
+                Label curUser = new Label("Your username: " + loggedIn.get(0).getUsername());
+                ChoiceBox<String> userDropDownList = new ChoiceBox<>();
+                for (User u:userList) {
+                    userDropDownList.getItems().addAll(u.getUsername());
                 }
-            });
-            GameContainer.getG().getReady().addListener((o, oV, nV) -> {
-                if (nV) {
-                    GameContainer.getS().getUndoP().addListener((o2, oV2, nV2) -> {
-                        if (nV2 == true) undoMark.setDisable(true);
-                        else undoMark.setDisable(false);
+                Label label7 = new Label("Enter grid size:");
+                ToggleGroup gridSizes = new ToggleGroup();
+                RadioButton r1 = new RadioButton("9");
+                RadioButton r2 = new RadioButton("13");
+                r1.setToggleGroup(gridSizes);
+                r2.setToggleGroup(gridSizes);
+                r2.setSelected(true);
+                Button startGame = new Button("Start game");
+                setupPage.getChildren().addAll(curUser, userDropDownList, label7, r1, r2, startGame);
+                startGame.setOnAction(e -> { //tidy up this huge button click?
+                    Player p1 = new Player("temp1", "temppass", "tempfname1", "templname1");
+                    Player p2 = new Player("temp2", "temppass", "tempfname2", "templname2");
+                    GameContainer.setG(Integer.parseInt(((RadioButton)gridSizes.getSelectedToggle()).getText()), p1, p2);
+                    GameContainer.setGrid(Integer.parseInt(((RadioButton)gridSizes.getSelectedToggle()).getText()));
+                    GameContainer.getGrid().setAlignment(Pos.CENTER);
+                    GameContainer.getGrid().setMinSize(400, 400); //edit and fix the bad ratioing that has appeared
+                    GameContainer.getGrid().setMaxSize(600, 600);
+                    //layout of page 2
+                    BorderPane layout2 = new BorderPane();
+                    layout2.setCenter(GameContainer.getGrid());
+                    VBox gameInfo = new VBox();
+                    Label black = new Label("Black: " + GameContainer.getG().getBlack());
+                    Label white = new Label("White: " + GameContainer.getG().getWhite());
+                    Label tn = new Label("Turns played: ");
+                    Label tnLive = new Label();
+                    tnLive.textProperty().bind(GameContainer.getG().getTurnNoP());
+                    Label capsB = new Label("Captures by black: ");
+                    Label capsBLive = new Label();
+                    capsBLive.textProperty().bind(GameContainer.getG().getCapsBP());
+                    Label capsW = new Label("Captures by white: ");
+                    Label capsWLive = new Label();
+                    capsWLive.textProperty().bind(GameContainer.getG().getCapsWP());
+                    Label pc = new Label("Pass count: ");
+                    Label pcLive = new Label();
+                    pcLive.textProperty().bind(GameContainer.getG().getPassCountP());
+                    Label CPT = new Label("Current player's turn: ");
+                    Label CPTLive = new Label();
+                    CPTLive.textProperty().bind(GameContainer.getG().getCurrentPlayerTurnP());
+                    gameInfo.getChildren().addAll(black, white, tn, tnLive, capsB, capsBLive, capsW, capsWLive, pc, pcLive, CPT, CPTLive);
+                    layout2.setRight(gameInfo);
+                    VBox gameControl = new VBox();
+                    Label passInfo = new Label("Click the button below to pass your turn:");
+                    passInfo.setMaxWidth(100);
+                    passInfo.setWrapText(true);
+                    Button pass = new Button("Pass");
+                    pass.setOnAction(e2 -> GameContainer.getG().pass());
+                    Label undoInfo = new Label("Click the button below to undo the previous move (unless that move was passed):");
+                    undoInfo.setMaxWidth(100);
+                    undoInfo.setWrapText(true);
+                    Button undo = new Button("Undo");
+                    undo.setDisable(true);
+                    undo.setOnAction(e3 -> {
+                        GameContainer.getG().undoLastMove();
+                        GameContainer.getGrid().updateGrid();
                     });
-                }
-                if (true) { //sort this out
-                    Label deadBlacks = new Label("Dead black stones:");
-                    Label deadBlacksLive = new Label();
-                    deadBlacksLive.textProperty().bind(GameContainer.getS().getDbP());
-                    Label deadWhites = new Label("Dead white stones:");
-                    Label deadWhitesLive = new Label();
-                    deadWhitesLive.textProperty().bind(GameContainer.getS().getDwP());
-                    gameInfo.getChildren().addAll(deadBlacks, deadBlacksLive, deadWhites, deadWhitesLive);
-                }
-            });
-            done.setOnAction(e5 -> {
-                instructions.setVisible(false);
-                done.setVisible(false);
-                undoMarkInfo.setVisible(false);
-                undoMark.setVisible(false);
-                GameContainer.getG().setFinished();
-                GameContainer.getS().calculateFinalScores();
-                InformationBox.display("Game Complete", "Final scores:\n" + GameContainer.getG().getBlack() + ": " 
-                                           + GameContainer.getS().getFinalScores()[0] + "\n" + GameContainer.getG().getWhite() 
-                                           + ": " + GameContainer.getS().getFinalScores()[1]); //add new win%s?
-                primaryStage.setScene(gameSetupPage);
-                primaryStage.centerOnScreen();
-            });
-            gameControl.getChildren().addAll(passInfo, pass, undoInfo, undo, instructions, done, undoMarkInfo, undoMark);
-            layout2.setLeft(gameControl);
-            gameScene = new Scene(layout2, 802, 702); //fix these random screen size values, maybe using: https://stackoverflow.com/questions/38216268/how-to-listen-resize-event-of-stage-in-javafx
-            primaryStage.setScene(gameScene);
-            primaryStage.centerOnScreen();
+                    GameContainer.getG().getUndoStateP().addListener((o, oV, nV) -> {
+                        if (nV == true) undo.setDisable(true);
+                        else undo.setDisable(false);
+                    });
+                    Label undoMarkInfo = new Label("Click the button below to undo the previous dead stone marking:");
+                    undoMarkInfo.setMaxWidth(100);
+                    undoMarkInfo.setWrapText(true);
+                    undoMarkInfo.setVisible(false);
+                    Button undoMark = new Button("Undo mark");
+                    undoMark.setDisable(true);
+                    undoMark.setVisible(false);
+                    undoMark.setOnAction(e4 -> {
+                        GameContainer.getS().undoMarkDeadStone();
+                        GameContainer.getGrid().updateGrid(GameContainer.getS());
+                    });
+                    Button done = new Button("Finished marking");
+                    done.setVisible(false);
+                    Label instructions = new Label("Game is over. Click on stones to mark them as dead, then click 'Finished marking' when done.");
+                    instructions.setMaxWidth(100);
+                    instructions.setWrapText(true);
+                    instructions.setVisible(false);
+                    GameContainer.getG().getPassCountP().addListener((o, oV, nV) -> {
+                        if (nV.equals("2")) {
+                            passInfo.setVisible(false);
+                            pass.setVisible(false);
+                            undoInfo.setVisible(false);
+                            undo.setVisible(false);
+                            instructions.setVisible(true);
+                            undoMarkInfo.setVisible(true);
+                            undoMark.setVisible(true);
+                            done.setVisible(true);
+                        }
+                    });
+                    GameContainer.getG().getReady().addListener((o, oV, nV) -> {
+                        if (nV) {
+                            GameContainer.getS().getUndoP().addListener((o2, oV2, nV2) -> {
+                                if (nV2 == true) undoMark.setDisable(true);
+                                else undoMark.setDisable(false);
+                            });
+                        }
+                        if (true) { //sort this out
+                            Label deadBlacks = new Label("Dead black stones:");
+                            Label deadBlacksLive = new Label();
+                            deadBlacksLive.textProperty().bind(GameContainer.getS().getDbP());
+                            Label deadWhites = new Label("Dead white stones:");
+                            Label deadWhitesLive = new Label();
+                            deadWhitesLive.textProperty().bind(GameContainer.getS().getDwP());
+                            gameInfo.getChildren().addAll(deadBlacks, deadBlacksLive, deadWhites, deadWhitesLive);
+                        }
+                    });
+                    done.setOnAction(e5 -> {
+                        instructions.setVisible(false);
+                        done.setVisible(false);
+                        undoMarkInfo.setVisible(false);
+                        undoMark.setVisible(false);
+                        GameContainer.getG().setFinished();
+                        GameContainer.getS().calculateFinalScores();
+                        InformationBox.display("Game Complete", "Final scores:\n" + GameContainer.getG().getBlack() + ": " 
+                                                   + GameContainer.getS().getFinalScores()[0] + "\n" + GameContainer.getG().getWhite() 
+                                                   + ": " + GameContainer.getS().getFinalScores()[1]); //add new win%s?
+                        primaryStage.setScene(gameSetupPage);
+                        primaryStage.centerOnScreen();
+                    });
+                    gameControl.getChildren().addAll(passInfo, pass, undoInfo, undo, instructions, done, undoMarkInfo, undoMark);
+                    layout2.setLeft(gameControl);
+                    gameScene = new Scene(layout2, 802, 702); //fix these random screen size values, maybe using: https://stackoverflow.com/questions/38216268/how-to-listen-resize-event-of-stage-in-javafx
+                    primaryStage.setScene(gameScene);
+                    primaryStage.centerOnScreen();
+                });
+            }
         });
         
         //user dashboard (including admin features if necessary) (outsource this to a new class?)
@@ -261,7 +261,10 @@ public class Main extends Application {
         Button leaderboardButton = new Button("Show leaderboard");
         //add on action
         Button gameSetupButton = new Button("Setup new game");
-        gameSetupButton.setOnAction(e -> primaryStage.setScene(gameSetupPage));
+        gameSetupButton.setOnAction(e -> {
+            setupTime.set(true);
+            primaryStage.setScene(gameSetupPage);
+        });
         Button logout = new Button("Logout");
         logout.setOnAction(e -> primaryStage.setScene(loginScene));
         secondRow.getChildren().addAll(leaderboardButton, gameSetupButton, logout);
@@ -315,9 +318,12 @@ public class Main extends Application {
         Button loginButton = new Button("Login");
         loginButton.requestFocus();
         BooleanProperty authenticated = new SimpleBooleanProperty(false);
+        loggedIn = new ArrayList<>();
         loginButton.setOnAction(e -> {
             for (User u:userList) {
                 if (username.getText().equals(u.getUsername()) && password.getText().equals(u.getPassword())) {
+                    u.setLastLoginTime(ZonedDateTime.now());
+                    loggedIn.add(u);
                     authenticated.set(true);
                     primaryStage.setScene(dashScene);
                 }
@@ -398,6 +404,7 @@ public class Main extends Application {
                     System.out.println(ioe.getMessage());
                 }
             }
+            InformationBox.display("Created new user", "New user successfully created");
             primaryStage.setScene(dashScene);
         });
         createUserLayout.getChildren().addAll(np, admin, chooseUsername, newUsername, choosePass, newPass, chooseFName, newFName, chooseLName, newLName, chooseAdminID, newAdminID, createUserButton);
