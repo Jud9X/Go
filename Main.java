@@ -87,6 +87,7 @@ public class Main extends Application {
                 ObjectOutputStream oos = new ObjectOutputStream(fos);
                 oos.writeObject(defaultAdmin);
                 oos.close();
+                fos.close();
             }
             catch (IOException ioe) {
                 System.out.println(ioe.getMessage());
@@ -107,6 +108,7 @@ public class Main extends Application {
                     }
                 }
                 ois.close();
+                fis.close();
             }
             catch (IOException ioe) {
                 ioe.printStackTrace();
@@ -120,6 +122,7 @@ public class Main extends Application {
             if (nV0) {
                 Label curUser = new Label("Your username: " + loggedIn.get(0).getUsername());
                 Label opponentInfo = new Label("Players you can play against are listed in the drop-down list below. If the list is empty, you first need to create a new user.");
+                opponentInfo.setWrapText(true);
                 ChoiceBox<String> userDropDownList = new ChoiceBox<>();
                 for (User u:userList) {
                     if (!u.getUsername().equals(loggedIn.get(0).getUsername())) userDropDownList.getItems().addAll(u.getUsername());
@@ -277,16 +280,22 @@ public class Main extends Application {
                     makeDash.set(false);
                     loggedIn.clear();
                     setupPage.getChildren().clear();
-                    for (User u:userList) {
-                        try {
-                            FileOutputStream fos = new FileOutputStream("userdata");
-                            ObjectOutputStream oos = new ObjectOutputStream(fos);
-                            oos.writeObject(u);
-                            oos.close();
+                    try {
+                        FileOutputStream fos2 = new FileOutputStream("userdata");
+                        ObjectOutputStream oos2 = new ObjectOutputStream(fos2);
+                        for (User u:userList) {
+                            try {
+                                oos2.writeObject(u);
+                            }
+                            catch  (IOException ioe) {
+                                System.out.println(ioe.getMessage());
+                            }
                         }
-                        catch  (IOException ioe) {
-                            System.out.println(ioe.getMessage());
-                        }
+                        oos2.close();
+                        fos2.close();
+                    }
+                    catch (IOException ioe) {
+                        System.out.println(ioe.getMessage());
                     }
                     primaryStage.setScene(loginScene);
                 });
