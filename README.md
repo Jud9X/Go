@@ -2,7 +2,7 @@
 
 Notes:
 
-The GUI is almost complete in terms of functionality (but not in terms of design!). Now in order to login you need to run the program once, close it, then run it again and use the default username "admin" with default password "password". I'll fix the need to login twice soon.
+The GUI is almost complete in terms of functionality (but not in terms of design!). Now in order to login you need to use the default username "admin" with default password "password".
 In order to compile the files on Windows without an IDE, use this command in the directory where the .java files are:
 
 javac --module-path %PATH_TO_FX% --add-modules=javafx.controls *.java
