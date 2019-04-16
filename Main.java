@@ -342,7 +342,7 @@ public class Main extends Application {
                 Label winRateData = new Label(""+(int)loggedIn.get(0).getWinRate());
                 Label profilePic = new Label("Profile picture:");
                 //somehow put the profile picture here
-                information.getChildren().addAll(usernameLabel, usernameData, firstName, firstNameData, secondName, secondNameData, winRate, winRateData, profilePic); //all the profile pic obj here
+                information.getChildren().addAll(usernameLabel, usernameData, firstName, firstNameData, secondName, secondNameData, winRate, winRateData, profilePic); //add the profile pic obj here
                 VBox news = new VBox();
                 Label leaderboardPrev = new Label("Leaderboard position on last logout:");
                 Label leaderboardPrevData = new Label(); //get old leaderboard position (from file presumably)
@@ -352,6 +352,9 @@ public class Main extends Application {
                 Label newPlayersData = new Label(); //get new players
                 Label gamesSince = new Label("Click for list of games completed since last login");
                 Button gamesSinceButton = new Button("Games Completed"); //make this link to a tableview of games completed since last login
+                gamesSinceButton.setOnAction(e -> {
+                    //implement this
+                });
                 news.getChildren().addAll(leaderboardPrev, leaderboardPrevData, leaderboardCur, leaderboardCurData, newPlayers, newPlayersData, gamesSince, gamesSinceButton);
                 TableView historyTable = new TableView();
                 //implement this table
@@ -435,7 +438,7 @@ public class Main extends Application {
         Label chooseLName = new Label("Type last name below:");
         TextField newLName = new TextField();
         Label chooseAdminID = new Label("Type new admin ID below:");
-        TextField newAdminID = new TextField(); //prevent this from being a duplicate of other admin IDs
+        TextField newAdminID = new TextField();
         chooseAdminID.setVisible(false);
         newAdminID.setVisible(false);
         admin.selectedProperty().addListener((observable, wasSelected, isSelected) -> {
