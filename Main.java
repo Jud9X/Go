@@ -5,6 +5,7 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.ClassCastException;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import javafx.application.Application;
@@ -79,7 +80,8 @@ public class Main extends Application {
         
         //setupPage = new SetupPage();
         VBox setupPage = new VBox();
-        ArrayList<User> userList = new ArrayList<>();
+        ArrayList<Administrator> adminList = new ArrayList<>();
+        ArrayList<Player> playerList = new ArrayList<>();
         if (!(new File("userdata").isFile())) {
             Administrator defaultAdmin = new Administrator("admin", "password", "Default", "Administrator", 1);
             try {
@@ -101,7 +103,14 @@ public class Main extends Application {
                 while (!EoF) {
                     try {
                         User userLoaded = (User) ois.readObject();
-                        if (userLoaded != null) userList.add(userLoaded);
+                        try {
+                            Administrator a = (Administrator) userLoaded;
+                            adminList.add(a);
+                        }
+                        catch (ClassCastException cc) {
+                            Player p = (Player) userLoaded;
+                            playerList.add(p);
+                        }
                     }
                     catch (EOFException eof) {
                         EoF = true;
@@ -113,8 +122,11 @@ public class Main extends Application {
             catch (IOException ioe) {
                 ioe.printStackTrace();
             }
-            for (User u:userList) {
-                System.out.println(u.toString()); //just for testing
+            for (Administrator a:adminList) {
+                System.out.println(a.toString()); //just for testing
+            }
+            for (Player p:playerList) {
+                System.out.println(p.toString()); //just for testing
             }
         }
         BooleanProperty setupTime = new SimpleBooleanProperty(false);
@@ -124,8 +136,11 @@ public class Main extends Application {
                 Label opponentInfo = new Label("Players you can play against are listed in the drop-down list below. If the list is empty, you first need to create a new user.");
                 opponentInfo.setWrapText(true);
                 ChoiceBox<String> userDropDownList = new ChoiceBox<>();
-                for (User u:userList) {
-                    if (!u.getUsername().equals(loggedIn.get(0).getUsername())) userDropDownList.getItems().addAll(u.getUsername());
+                for (Administrator a:adminList) {
+                    if (!a.getUsername().equals(loggedIn.get(0).getUsername())) userDropDownList.getItems().addAll(a.getUsername());
+                }
+                for (Player p:playerList) {
+                    if (!p.getUsername().equals(loggedIn.get(0).getUsername())) userDropDownList.getItems().addAll(p.getUsername());
                 }
                 Label label7 = new Label("Select grid size:");
                 ToggleGroup gridSizes = new ToggleGroup();
@@ -283,9 +298,17 @@ public class Main extends Application {
                     try {
                         FileOutputStream fos2 = new FileOutputStream("userdata");
                         ObjectOutputStream oos2 = new ObjectOutputStream(fos2);
-                        for (User u:userList) {
+                        for (Administrator a:adminList) {
                             try {
-                                oos2.writeObject(u);
+                                oos2.writeObject(a);
+                            }
+                            catch  (IOException ioe) {
+                                System.out.println(ioe.getMessage());
+                            }
+                        }
+                        for (Player p:playerList) {
+                            try {
+                                oos2.writeObject(p);
                             }
                             catch  (IOException ioe) {
                                 System.out.println(ioe.getMessage());
@@ -351,16 +374,25 @@ public class Main extends Application {
         username.setMaxWidth(200);
         TextField password = new TextField();
         password.setPromptText("Password");
-        password.setMaxWidth(200);
+        password.setMaxWidth(200); //hide the password text
         Button loginButton = new Button("Login");
         loginButton.requestFocus();
         authenticated = new SimpleBooleanProperty(false);
         loggedIn = new ArrayList<>();
         loginButton.setOnAction(e -> {
-            for (User u:userList) {
-                if (username.getText().equals(u.getUsername()) && password.getText().equals(u.getPassword())) {
-                    u.setLastLoginTime(ZonedDateTime.now());
-                    loggedIn.add(u);
+            for (Administrator a:adminList) {
+                if (username.getText().equals(a.getUsername()) && password.getText().equals(a.getPassword())) {
+                    a.setLastLoginTime(ZonedDateTime.now());
+                    loggedIn.add(a);
+                    makeDash.set(true);
+                    authenticated.set(true);
+                    primaryStage.setScene(dashScene);
+                }
+            }
+            for (Player p:playerList) {
+                if (username.getText().equals(p.getUsername()) && password.getText().equals(p.getPassword())) {
+                    p.setLastLoginTime(ZonedDateTime.now());
+                    loggedIn.add(p);
                     makeDash.set(true);
                     authenticated.set(true);
                     primaryStage.setScene(dashScene);
@@ -416,22 +448,62 @@ public class Main extends Application {
                 newAdminID.setVisible(false);
             }
         });
+        BooleanProperty notTaken = new SimpleBooleanProperty(true);
         Button createUserButton = new Button("Create user");
         createUserButton.setOnAction(e -> {
             if (admin.isSelected()) {
-                Administrator newAdmin = new Administrator(newUsername.getText(), newPass.getText(), newFName.getText(), newLName.getText(), Integer.parseInt(newAdminID.getText()));
-                userList.add(newAdmin);
+                notTaken.set(true);
+                for (Administrator a:adminList) {
+                    if (newAdminID.getText().equals(""+a.getAdminID())) {
+                        notTaken.set(false);
+                        InformationBox.display("Admin ID already taken", "The chosen admin ID is already taken, please choose another.");
+                    }
+                }
+                if (notTaken.getValue()) {
+                    Administrator newAdmin = new Administrator(newUsername.getText(), newPass.getText(), newFName.getText(), newLName.getText(), Integer.parseInt(newAdminID.getText()));
+                    adminList.add(newAdmin);
+                    InformationBox.display("Created new administrator", "New administrator successfully created");
+                }
             }
             else {
                 Player newPlayer = new Player(newUsername.getText(), newPass.getText(), newFName.getText(), newLName.getText());
-                userList.add(newPlayer);
+                playerList.add(newPlayer);
+                InformationBox.display("Created new player", "New player successfully created");
             }
-            InformationBox.display("Created new user", "New user successfully created");
-            primaryStage.setScene(dashScene);
         });
-        createUserLayout.getChildren().addAll(np, admin, chooseUsername, newUsername, choosePass, newPass, chooseFName, newFName, chooseLName, newLName, chooseAdminID, newAdminID, createUserButton);
+        Button leaveCreateUser = new Button("Return to user dashboard");
+        leaveCreateUser.setOnAction(e -> primaryStage.setScene(dashScene));
+        createUserLayout.getChildren().addAll(np, admin, chooseUsername, newUsername, choosePass, newPass, chooseFName, newFName, chooseLName, newLName, chooseAdminID, newAdminID, createUserButton, leaveCreateUser);
         createUserScene = new Scene(createUserLayout, 600, 600);
         
+        primaryStage.setOnCloseRequest(e -> {
+            try {
+                FileOutputStream fos2 = new FileOutputStream("userdata");
+                ObjectOutputStream oos2 = new ObjectOutputStream(fos2);
+                for (Administrator a:adminList) {
+                    try {
+                        oos2.writeObject(a);
+                    }
+                    catch  (IOException ioe) {
+                        System.out.println(ioe.getMessage());
+                    }
+                }
+                for (Player p:playerList) {
+                    try {
+                        oos2.writeObject(p);
+                    }
+                    catch  (IOException ioe) {
+                        System.out.println(ioe.getMessage());
+                    }
+                }
+                oos2.close();
+                fos2.close();
+            }
+            catch (IOException ioe) {
+                System.out.println(ioe.getMessage());
+            }
+            primaryStage.close();
+        });
         primaryStage.setScene(loginScene);
         primaryStage.centerOnScreen();
         primaryStage.show();

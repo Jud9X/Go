@@ -14,7 +14,7 @@ public class Administrator extends User {
         return joinDate;
     }
     
-    public int getID() {
+    public int getAdminID() {
         return adminID;
     }
     
