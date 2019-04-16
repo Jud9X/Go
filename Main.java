@@ -1,7 +1,7 @@
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -15,12 +15,22 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.*;//fix
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;//
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class Main extends Application {
