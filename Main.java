@@ -304,7 +304,10 @@ public class Main extends Application {
                 Button createUser = new Button("Create new user...");
                 createUser.setOnAction(e -> primaryStage.setScene(createUserScene));
                 adminRow.getChildren().addAll(createUser);
-                topPanel.getChildren().addAll(topRow, secondRow, adminRow); //restrict adminRow to only appear for administrators somehow
+                if (loggedIn.get(0).getClass().getName().equals("Player")) {
+                    topPanel.getChildren().addAll(topRow, secondRow);
+                }
+                else topPanel.getChildren().addAll(topRow, secondRow, adminRow);
                 VBox information = new VBox();
                 Label usernameLabel = new Label("Username:");
                 Label usernameData = new Label(loggedIn.get(0).getUsername());
