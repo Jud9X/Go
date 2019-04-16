@@ -1,3 +1,11 @@
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -66,6 +74,42 @@ public class Main extends Application {
         
         //setupPage = new SetupPage();
         VBox setupPage = new VBox();
+        ArrayList<User> userList = new ArrayList<>();
+        boolean EoF = false;
+        if (new File("userdata").isFile()) {
+            try {
+                FileInputStream fis = new FileInputStream("userdata");
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                while (!EoF) {
+                    try {
+                        User userLoaded = (User) ois.readObject();
+                        if (userLoaded != null) userList.add(userLoaded);
+                    }
+                    catch (EOFException eof) {
+                        EoF = true;
+                    }
+                }
+                ois.close();
+            }
+            catch (IOException ioe) {
+                ioe.printStackTrace();
+            }
+            for (User u:userList) {
+                System.out.println(u.toString());
+            }
+        }
+        else {
+            Administrator defaultAdmin = new Administrator("admin", "Default", "Administrator", 1);
+            try {
+                FileOutputStream fos = new FileOutputStream("userdata");
+                ObjectOutputStream oos = new ObjectOutputStream(fos);
+                oos.writeObject(defaultAdmin);
+                oos.close();
+            }
+            catch (IOException ioe) {
+                System.out.println(ioe.getMessage());
+            }
+        }
         Label label1 = new Label("Enter P1 username:");
         Label label2 = new Label("Enter P1 first name:");
         Label label3 = new Label("Enter P1 last name:");
@@ -317,7 +361,30 @@ public class Main extends Application {
         });
         Button createUserButton = new Button("Create user");
         createUserButton.setOnAction(e -> {
-            //more stuff
+            if (admin.isSelected()) {
+                Administrator newAdmin = new Administrator(newUsername.getText(), newFName.getText(), newLName.getText(), Integer.parseInt(newAdminID.getText()));
+                try {
+                    FileOutputStream fos = new FileOutputStream("userdata", true);
+                    AppendableObjectOutputStream oos = new AppendableObjectOutputStream(fos);
+                    oos.writeObject(newAdmin);
+                    oos.close();
+                }
+                catch (IOException ioe) {
+                    System.out.println(ioe.getMessage());
+                }
+            }
+            else {
+                Player newPlayer = new Player(newUsername.getText(), newFName.getText(), newLName.getText());
+                try {
+                    FileOutputStream fos = new FileOutputStream("userdata", true);
+                    AppendableObjectOutputStream oos = new AppendableObjectOutputStream(fos);
+                    oos.writeObject(newPlayer);
+                    oos.close();
+                }
+                catch  (IOException ioe) {
+                    System.out.println(ioe.getMessage());
+                }
+            }
             primaryStage.setScene(dashScene);
         });
         createUserLayout.getChildren().addAll(np, admin, chooseUsername,  newUsername, chooseFName, newFName, chooseLName, newLName, chooseAdminID, newAdminID, createUserButton);

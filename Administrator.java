@@ -21,7 +21,7 @@ public class Administrator extends User {
     //join date get() method
     
     public String toString() {
-        return super.toString() + " " + "Admin ID number: " + adminID + " " + joinDate.toString();
+        return super.toString() + " " + "Admin ID number: " + adminID + " " + "Join date: " + joinDate.toString();
     }
     
     public static Player createPlayer(String username, String fname, String lname) {
