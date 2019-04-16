@@ -118,11 +118,12 @@ public class Main extends Application {
         setupTime.addListener((observable, oV0, nV0) -> {
             if (nV0) {
                 Label curUser = new Label("Your username: " + loggedIn.get(0).getUsername());
+                Label opponentInfo = new Label("Players you can play against are listed in the drop-down list below. If the list is empty, you first need to create a new user.");
                 ChoiceBox<String> userDropDownList = new ChoiceBox<>();
                 for (User u:userList) {
-                    userDropDownList.getItems().addAll(u.getUsername());
+                    if (!u.getUsername().equals(loggedIn.get(0).getUsername())) userDropDownList.getItems().addAll(u.getUsername());
                 }
-                Label label7 = new Label("Enter grid size:");
+                Label label7 = new Label("Select grid size:");
                 ToggleGroup gridSizes = new ToggleGroup();
                 RadioButton r1 = new RadioButton("9");
                 RadioButton r2 = new RadioButton("13");
@@ -130,10 +131,10 @@ public class Main extends Application {
                 r2.setToggleGroup(gridSizes);
                 r2.setSelected(true);
                 Button startGame = new Button("Start game");
-                setupPage.getChildren().addAll(curUser, userDropDownList, label7, r1, r2, startGame);
+                setupPage.getChildren().addAll(curUser, opponentInfo, userDropDownList, label7, r1, r2, startGame);
                 startGame.setOnAction(e -> { //tidy up this huge button click?
-                    Player p1 = new Player("temp1", "temppass", "tempfname1", "templname1");
-                    Player p2 = new Player("temp2", "temppass", "tempfname2", "templname2");
+                    User p1 = loggedIn.get(0);
+                    User p2 = new Player("temp2", "temppass", "tempfname2", "templname2");
                     GameContainer.setG(Integer.parseInt(((RadioButton)gridSizes.getSelectedToggle()).getText()), p1, p2);
                     GameContainer.setGrid(Integer.parseInt(((RadioButton)gridSizes.getSelectedToggle()).getText()));
                     GameContainer.getGrid().setAlignment(Pos.CENTER);
@@ -266,7 +267,10 @@ public class Main extends Application {
             primaryStage.setScene(gameSetupPage);
         });
         Button logout = new Button("Logout");
-        logout.setOnAction(e -> primaryStage.setScene(loginScene));
+        logout.setOnAction(e -> {
+            //need to reset a bunch of values...
+            primaryStage.setScene(loginScene)
+        });
         secondRow.getChildren().addAll(leaderboardButton, gameSetupButton, logout);
         HBox adminRow = new HBox();
         Button createUser = new Button("Create new user...");
