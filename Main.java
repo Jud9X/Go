@@ -212,7 +212,7 @@ public class Main extends Application {
                 startGame.setOnAction(e -> { //tidy up this huge button click?
                     User p1 = loggedIn.get(0);
                     //code on next line adapted from https://stackoverflow.com/questions/17526608/how-to-find-an-object-in-an-arraylist-by-property
-                    User p2 = adminList.stream().filter(user -> userDropDownList.getValue().equals(user.getUsername())).findFirst().orElse(null);
+                    User p2 = adminList.stream().filter(user -> userDropDownList.getValue().equals(user.getUsername())).findFirst().orElse(null); //make sure that a value in userdropdownlist is selected first
                     if (p2 == null) {
                         p2 = playerList.stream().filter(user -> userDropDownList.getValue().equals(user.getUsername())).findFirst().orElse(null);
                     }
@@ -297,13 +297,15 @@ public class Main extends Application {
                         }
                     });
                     GameContainer.getG().getReady().addListener((o, oV, nV) -> {
-                        if (nV) {
+                        if (nV == true) {
                             GameContainer.getS().getUndoP().addListener((o2, oV2, nV2) -> {
-                                if (nV2 == true) undoMark.setDisable(true);
-                                else undoMark.setDisable(false);
+                                if (nV2 == true) {
+                                    undoMark.setDisable(true);
+                                }
+                                else {
+                                    undoMark.setDisable(false);
+                                }
                             });
-                        }
-                        if (true) { //sort this out
                             Label deadBlacks = new Label("Dead black stones:");
                             Label deadBlacksLive = new Label();
                             deadBlacksLive.textProperty().bind(GameContainer.getS().getDbP());
@@ -505,6 +507,8 @@ public class Main extends Application {
                     makeDash.set(true);
                     authenticated.set(true);
                     primaryStage.setScene(dashScene);
+                    password.clear();
+                    username.clear();
                 }
             }
             for (Player p:playerList) {
@@ -514,6 +518,8 @@ public class Main extends Application {
                     makeDash.set(true);
                     authenticated.set(true);
                     primaryStage.setScene(dashScene);
+                    password.clear();
+                    username.clear();
                 }
             }
             if (!authenticated.getValue()) {
@@ -556,7 +562,7 @@ public class Main extends Application {
         Label chooseLName = new Label("Type last name below:");
         TextField newLName = new TextField();
         Label chooseAdminID = new Label("Type new admin ID below:");
-        TextField newAdminID = new TextField();
+        TextField newAdminID = new TextField(); //enforce this to be an integer
         chooseAdminID.setVisible(false);
         newAdminID.setVisible(false);
         admin.selectedProperty().addListener((observable, wasSelected, isSelected) -> {
@@ -572,7 +578,7 @@ public class Main extends Application {
         BooleanProperty notTaken = new SimpleBooleanProperty(true);
         BooleanProperty usernameNotTaken = new SimpleBooleanProperty(true);
         Button createUserButton = new Button("Create user");
-        createUserButton.setOnAction(e -> {
+        createUserButton.setOnAction(e -> { //check all fields first?
             if (admin.isSelected()) {
                 notTaken.set(true);
                 usernameNotTaken.set(true);
