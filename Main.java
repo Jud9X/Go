@@ -167,6 +167,7 @@ public class Main extends Application {
                 System.out.println(game.getDateCompleted().toString()); //just for testing
             }
         }
+        BooleanProperty makeDash = new SimpleBooleanProperty(false);
         BooleanProperty setupTime = new SimpleBooleanProperty(false);
         setupTime.addListener((observable, oV0, nV0) -> {
             if (nV0) {
@@ -298,6 +299,7 @@ public class Main extends Application {
                                                    + GameContainer.getS().getFinalScores()[0] + "\n" + GameContainer.getG().getWhite() 
                                                    + ": " + GameContainer.getS().getFinalScores()[1]); //add new win%s?
                         primaryStage.setScene(gameSetupPage);
+                        makeDash.set(false);
                         primaryStage.centerOnScreen();
                     });
                     gameControl.getChildren().addAll(passInfo, pass, undoInfo, undo, instructions, done, undoMarkInfo, undoMark);
@@ -310,7 +312,6 @@ public class Main extends Application {
         });
         
         //user dashboard (outsource this to a new class?)
-        BooleanProperty makeDash = new SimpleBooleanProperty(false);
         makeDash.addListener((observable, oV0, nV0) -> {
             if (nV0) {
                 BorderPane dashboard = new BorderPane();
@@ -414,10 +415,10 @@ public class Main extends Application {
                     //implement this
                 });
                 news.getChildren().addAll(leaderboardPrev, leaderboardPrevData, leaderboardCur, leaderboardCurData, newPlayers, newPlayersData, gamesSince, gamesSinceButton);
-                ObservableList<GameRecord> gameRecords = FXCollections.observableArrayList();
+                ObservableList<GameRecord> myGameRecords = FXCollections.observableArrayList();
                 for (GameRecord game:GameContainer.getGamesPlayed()) {
                     if (game.getWinner().getUsername().equals(loggedIn.get(0).getUsername()) || game.getLoser().getUsername().equals(loggedIn.get(0).getUsername())) {
-                        gameRecords.add(game);
+                        myGameRecords.add(game);
                     }
                 }
                 TableView<GameRecord> myHistoryTable = new TableView<>();
@@ -426,11 +427,11 @@ public class Main extends Application {
                 dateCol.setCellValueFactory(new PropertyValueFactory<>("dateCompleted"));
                 TableColumn<GameRecord, String> winnerCol = new TableColumn<>("Winner");
                 winnerCol.setMinWidth(100);
-                winnerCol.setCellValueFactory(new PropertyValueFactory<>("winner"));
+                winnerCol.setCellValueFactory(new PropertyValueFactory<>("winnerUsername"));
                 TableColumn<GameRecord, String> loserCol = new TableColumn<>("Loser");
                 loserCol.setMinWidth(100);
-                loserCol.setCellValueFactory(new PropertyValueFactory<>("loser"));
-                myHistoryTable.setItems(gameRecords);
+                loserCol.setCellValueFactory(new PropertyValueFactory<>("loserUsername"));
+                myHistoryTable.setItems(myGameRecords);
                 myHistoryTable.getColumns().add(dateCol);
                 myHistoryTable.getColumns().add(winnerCol);
                 myHistoryTable.getColumns().add(loserCol);
@@ -489,7 +490,10 @@ public class Main extends Application {
         bottomRow.setPadding(new Insets(10,10,10,10));
         bottomRow.setSpacing(10);
         Button backToDash = new Button("Return to dashboard");
-        backToDash.setOnAction(e -> primaryStage.setScene(dashScene));
+        backToDash.setOnAction(e -> {
+            makeDash.set(true);
+            primaryStage.setScene(dashScene);
+        });
         bottomRow.getChildren().addAll(backToDash);
         BorderPane layout1 = new BorderPane();
         layout1.setCenter(setupPage);
