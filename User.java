@@ -53,7 +53,7 @@ public class User implements Serializable {
     
     public void setLastLoginTime(ZonedDateTime loginTime) {
         if (lastLoginTime == null) {
-            previousLastLoginTime = loginTime;
+            previousLastLoginTime = null;
         }
         else {
             previousLastLoginTime = lastLoginTime;
@@ -62,7 +62,7 @@ public class User implements Serializable {
     }
     
     public ZonedDateTime getPreviousLastLoginTime() {
-        if (previousLastLoginTime == null) return lastLoginTime;
+        if (previousLastLoginTime == null) return null;
         else return previousLastLoginTime;
     }
     

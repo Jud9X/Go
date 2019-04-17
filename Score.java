@@ -30,6 +30,8 @@ public class Score {
     private BooleanProperty undoP;
     private StringProperty dbP;
     private StringProperty dwP;
+    private String winnerName;
+    private String loserName;
     
     public Score(int[][] board) {
         possibleTerritory = new HashSet<List<Integer>>();
@@ -63,6 +65,14 @@ public class Score {
     
     public StringProperty getDwP() {
         return dwP;
+    }
+    
+    public String getWinnerName() {
+        return winnerName;
+    }
+    
+    public String getLoserName() {
+        return loserName;
     }
     
     public void markDeadStone(int y, int x, int oldValue) {
@@ -118,8 +128,8 @@ public class Score {
         finalScores[0] += territorySums[0] - GameContainer.getG().getCaptures()[1] - removeBlackCount;
         finalScores[1] += territorySums[1] - GameContainer.getG().getCaptures()[0] - removeWhiteCount;
         //the logic of the 2 lines below means that if they get the same score, white is declared winner (as they start second)
-        String winnerName = (finalScores[0] > finalScores[1]) ? GameContainer.getG().getBlack() : GameContainer.getG().getWhite();
-        String loserName = (finalScores[0] <= finalScores[1]) ? GameContainer.getG().getBlack() : GameContainer.getG().getWhite();
+        winnerName = (finalScores[0] > finalScores[1]) ? GameContainer.getG().getBlack() : GameContainer.getG().getWhite();
+        loserName = (finalScores[0] <= finalScores[1]) ? GameContainer.getG().getBlack() : GameContainer.getG().getWhite();
         User winner = (GameContainer.getG().getPlayer1().getUsername().equals(winnerName)) ? GameContainer.getG().getPlayer1() : GameContainer.getG().getPlayer2();
         User loser = (GameContainer.getG().getPlayer1().getUsername().equals(loserName)) ? GameContainer.getG().getPlayer1() : GameContainer.getG().getPlayer2();
         GameRecord result = new GameRecord(ZonedDateTime.now(), winner, loser);

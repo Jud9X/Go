@@ -320,9 +320,14 @@ public class Main extends Application {
                         undoMark.setVisible(false);
                         GameContainer.getG().setFinished();
                         GameContainer.getS().calculateFinalScores();
-                        InformationBox.display("Game Complete", "Final scores:\n" + GameContainer.getG().getBlack() + ": " 
-                                                   + GameContainer.getS().getFinalScores()[0] + "\n" + GameContainer.getG().getWhite() 
-                                                   + ": " + GameContainer.getS().getFinalScores()[1]); //add new win%s?
+                        InformationBox.display("Game Complete", "Final scores:\n" 
+                            + GameContainer.getG().getBlack() + ": " 
+                            + GameContainer.getS().getFinalScores()[0] + "\n" 
+                            + GameContainer.getG().getWhite() + ": " 
+                            + GameContainer.getS().getFinalScores()[1] + "\nWinner: " 
+                            + GameContainer.getS().getWinnerName() 
+                            + "\nNote that if the scores are the same then white "
+                            + "is declared winner due to starting second."); //add new win%s?
                         primaryStage.setScene(gameSetupPage);
                         makeDash.set(false);
                         primaryStage.centerOnScreen();
@@ -344,7 +349,13 @@ public class Main extends Application {
                 HBox topRow = new HBox();
                 Label dashIntro = new Label("Welcome to the user dashboard!");
                 Label lastLogin = new Label("Previous login:");
-                Label lastLoginDate = new Label(loggedIn.get(0).getPreviousLastLoginTime().toString());
+                Label lastLoginDate;
+                if (loggedIn.get(0).getPreviousLastLoginTime() == null) {
+                    lastLoginDate = new Label("This is your first time logging in");
+                }
+                else {
+                    lastLoginDate = new Label(loggedIn.get(0).getPreviousLastLoginTime().toString());
+                }
                 topRow.getChildren().addAll(dashIntro, lastLogin, lastLoginDate);
                 HBox secondRow = new HBox();
                 Button leaderboardButton = new Button("Show leaderboard");
@@ -559,37 +570,49 @@ public class Main extends Application {
             }
         });
         BooleanProperty notTaken = new SimpleBooleanProperty(true);
+        BooleanProperty usernameNotTaken = new SimpleBooleanProperty(true);
         Button createUserButton = new Button("Create user");
         createUserButton.setOnAction(e -> {
             if (admin.isSelected()) {
                 notTaken.set(true);
+                usernameNotTaken.set(true);
                 for (Administrator a:adminList) {
                     if (newAdminID.getText().equals("" + a.getAdminID())) {
                         notTaken.set(false);
                         InformationBox.display("Admin ID already taken", "The chosen admin ID is already taken, please choose another.");
                     }
+                    if (newUsername.getText().equals("" + a.getUsername())) {
+                        usernameNotTaken.set(false);
+                        InformationBox.display("Username already taken", "The chosen username is already taken, please choose another.");
+                    }
                 }
-                if (notTaken.getValue()) {
+                for (Player p:playerList) {
+                    if (newUsername.getText().equals("" + p.getUsername())) {
+                        usernameNotTaken.set(false);
+                        InformationBox.display("Username already taken", "The chosen username is already taken, please choose another.");
+                    }
+                }
+                if (notTaken.getValue() && usernameNotTaken.getValue()) {
                     Administrator newAdmin = new Administrator(newUsername.getText(), newPass.getText(), newFName.getText(), newLName.getText(), Integer.parseInt(newAdminID.getText()));
                     adminList.add(newAdmin);
                     InformationBox.display("Created new administrator", "New administrator successfully created");
                 }
             }
             else {
-                notTaken.set(true);
+                usernameNotTaken.set(true);
                 for (Administrator a:adminList) {
                     if (newUsername.getText().equals(a.getUsername())) {
-                        notTaken.set(false);
+                        usernameNotTaken.set(false);
                         InformationBox.display("Username already taken", "The chosen username is already taken, please choose another.");
                     }
                 }
                 for (Player p:playerList) {
                     if (newUsername.getText().equals(p.getUsername())) {
-                        notTaken.set(false);
+                        usernameNotTaken.set(false);
                         InformationBox.display("Username already taken", "The chosen username is already taken, please choose another.");
                     }
                 }
-                if (notTaken.getValue()) {
+                if (usernameNotTaken.getValue()) {
                     Player newPlayer = new Player(newUsername.getText(), newPass.getText(), newFName.getText(), newLName.getText());
                     playerList.add(newPlayer);
                     InformationBox.display("Created new player", "New player successfully created");
