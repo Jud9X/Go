@@ -3,7 +3,15 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.property.SimpleStringProperty;
 
+/**
+ * Contains the current state of the game.
+ * @author Oliver
+ * @version 1.14
+ * */
 public class GameState {
+    public final int BLACK = 1;
+    public final int WHITE = 2;
+    public final int PASS_LIMIT = 2;
     private int[][] board; //e.g. 9x9 2D array
     private String white;
     private String black;
@@ -48,8 +56,8 @@ public class GameState {
         previousBoard2 = new int[k][k];
         captures = new int[2];
         finished = false;
-        passCountP = new SimpleStringProperty(""+passCount);
-        turnNoP = new SimpleStringProperty(""+turnNo);
+        passCountP = new SimpleStringProperty("" + passCount);
+        turnNoP = new SimpleStringProperty("" + turnNo);
         currentPlayerTurnP = new SimpleStringProperty(currentPlayerTurn);
         capsBP = new SimpleStringProperty("0");
         capsWP = new SimpleStringProperty("0");
@@ -59,11 +67,13 @@ public class GameState {
     
     //y is the first index, x is the second index, starting from (0,0) in the top left corner to (k-1, k-1)
     public void placePiece(int y, int x) {
-        int currentPlayerColour = (currentPlayerTurn == white) ? 2 : 1;
-        int otherPlayerColour = (currentPlayerColour == 1) ? 2 : 1;
-        if (GameLogic.moveIsIllegal(previousBoard, board, y, x, currentPlayerColour)) return;
+        int currentPlayerColour = (currentPlayerTurn == white) ? WHITE : BLACK;
+        int otherPlayerColour = (currentPlayerColour == BLACK) ? WHITE : BLACK;
+        if (GameLogic.moveIsIllegal(previousBoard, board, y, x, currentPlayerColour)) {
+            return;
+        }
         passCount = 0;
-        passCountP.set(""+passCount);
+        passCountP.set("" + passCount);
         for (int i = 0; i < board.length; ++i) {
             for (int j = 0; j < board.length; ++j) {
                 previousBoard2[i][j] = previousBoard[i][j];
@@ -74,53 +84,71 @@ public class GameState {
                 previousBoard[i][j] = board[i][j];
             }
         }
-        if (currentPlayerTurn == white) board[y][x] = 2; //2 is white
-        else board[y][x] = 1; //1 is black
+        if (currentPlayerTurn == white) {
+            board[y][x] = WHITE;
+        }
+        else {
+            board[y][x] = BLACK;
+        }
         board = GameLogic.updateBoard(board, y, x, currentPlayerColour);
         int otherPlayerCountPrevious = 0;
         for (int i = 0; i < board.length; ++i) {
             for (int j = 0; j < board.length; ++j) {
-                if (previousBoard[i][j] == otherPlayerColour) ++otherPlayerCountPrevious;
+                if (previousBoard[i][j] == otherPlayerColour) {
+                    ++otherPlayerCountPrevious;
+                }
             }
         }
         int otherPlayerCountNew = 0;
         for (int i = 0; i < board.length; ++i) {
             for (int j = 0; j < board.length; ++j) {
-                if (board[i][j] == otherPlayerColour) ++otherPlayerCountNew;
+                if (board[i][j] == otherPlayerColour) {
+                    ++otherPlayerCountNew;
+                }
             }
         }
-        captures[currentPlayerColour-1] += otherPlayerCountPrevious - otherPlayerCountNew;
-        capsBP.set(""+captures[0]);
-        capsWP.set(""+captures[1]);
+        captures[currentPlayerColour - 1] += otherPlayerCountPrevious - otherPlayerCountNew;
+        capsBP.set("" + captures[0]);
+        capsWP.set("" + captures[1]);
         ++turnNo;
-        turnNoP.set(""+turnNo);
-        if (turnNo % 2 == 0) currentPlayerTurn = black;
-        else currentPlayerTurn = white;
+        turnNoP.set("" + turnNo);
+        if (turnNo % 2 == 0) {
+            currentPlayerTurn = black;
+        }
+        else {
+            currentPlayerTurn = white;
+        }
         currentPlayerTurnP.set(currentPlayerTurn);
         undoStateP.set(false);
         return;
     }
     
     public void undoLastMove() {
-        if (passCount > 0) return;
+        if (passCount > 0) {
+            return;
+        }
         undoStateP.set(true);
-        int newCurrentPlayerColour = (currentPlayerTurn == white) ? 1 : 2;
-        int newOtherPlayerColour = (newCurrentPlayerColour == 1) ? 2 : 1;
+        int newCurrentPlayerColour = (currentPlayerTurn == white) ? BLACK : WHITE;
+        int newOtherPlayerColour = (newCurrentPlayerColour == GameContainer.getG().BLACK) ? WHITE : BLACK;
         int newOtherPlayerCountPrevious = 0;
         for (int i = 0; i < board.length; ++i) {
             for (int j = 0; j < board.length; ++j) {
-                if (previousBoard[i][j] == newOtherPlayerColour) ++newOtherPlayerCountPrevious;
+                if (previousBoard[i][j] == newOtherPlayerColour) {
+                    ++newOtherPlayerCountPrevious;
+                }
             }
         }
         int newOtherPlayerCountNew = 0;
         for (int i = 0; i < board.length; ++i) {
             for (int j = 0; j < board.length; ++j) {
-                if (board[i][j] == newOtherPlayerColour) ++newOtherPlayerCountNew;
+                if (board[i][j] == newOtherPlayerColour) {
+                    ++newOtherPlayerCountNew;
+                }
             }
         }
-        captures[newCurrentPlayerColour-1] -= newOtherPlayerCountPrevious - newOtherPlayerCountNew;
-        capsBP.set(""+captures[0]);
-        capsWP.set(""+captures[1]);
+        captures[newCurrentPlayerColour - 1] -= newOtherPlayerCountPrevious - newOtherPlayerCountNew;
+        capsBP.set("" + captures[0]);
+        capsWP.set("" + captures[1]);
         for (int i = 0; i < board.length; ++i) {
             for (int j = 0; j < board.length; ++j) {
                 board[i][j] = previousBoard[i][j];
@@ -132,9 +160,13 @@ public class GameState {
             }
         }
         --turnNo;
-        turnNoP.set(""+turnNo);
-        if (turnNo % 2 == 0) currentPlayerTurn = black;
-        else currentPlayerTurn = white;
+        turnNoP.set("" + turnNo);
+        if (turnNo % 2 == 0) {
+            currentPlayerTurn = black;
+        }
+        else {
+            currentPlayerTurn = white;
+        }
         currentPlayerTurnP.set(currentPlayerTurn);
         return;
     }
@@ -213,8 +245,8 @@ public class GameState {
     
     public void pass() {
         ++passCount;
-        passCountP.set(""+passCount);
-        if (passCount == 2) {
+        passCountP.set("" + passCount);
+        if (passCount == PASS_LIMIT) {
             currentPlayerTurn = "none (game is over)";
             currentPlayerTurnP.set(currentPlayerTurn);
             GameContainer.setS(board);
@@ -222,9 +254,13 @@ public class GameState {
             return;
         }
         ++turnNo;
-        turnNoP.set(""+turnNo);
-        if (turnNo % 2 == 0) currentPlayerTurn = black;
-        else currentPlayerTurn = white;
+        turnNoP.set("" + turnNo);
+        if (turnNo % 2 == 0) {
+            currentPlayerTurn = black;
+        }
+        else {
+            currentPlayerTurn = white;
+        }
         currentPlayerTurnP.set(currentPlayerTurn);
         return;
     }

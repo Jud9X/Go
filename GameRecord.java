@@ -1,6 +1,11 @@
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 
+/**
+ * Records the details that need to be saved after a game is completed.
+ * @author Oliver
+ * @version 1.1
+ * */
 public class GameRecord implements Serializable {
     private ZonedDateTime dateCompleted;
     private User winner;

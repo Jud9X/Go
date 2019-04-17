@@ -7,6 +7,11 @@ import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+/**
+ * Generic popup box that displays a title and information that are supplied as arguments.
+ * @author Oliver
+ * @version 1.0
+ * */
 public class InformationBox {
     public static void display(String title, String info) {
         Stage window = new Stage();

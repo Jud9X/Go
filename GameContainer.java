@@ -1,5 +1,10 @@
 import java.util.ArrayList;
 
+/**
+ * Player class that is a child of the User class.
+ * @author Oliver
+ * @version 1.2
+ * */
 public class GameContainer {
     private static GameState g;
     private static GameGrid grid;

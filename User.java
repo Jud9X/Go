@@ -1,6 +1,11 @@
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 
+/**
+ * Parent class of the Player and Administrator classes.
+ * @author Oliver
+ * @version 1.2
+ * */
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
     
@@ -47,8 +52,12 @@ public class User implements Serializable {
     }
     
     public void setLastLoginTime(ZonedDateTime loginTime) {
-        if (lastLoginTime == null) previousLastLoginTime = loginTime;
-        else previousLastLoginTime = lastLoginTime;
+        if (lastLoginTime == null) {
+            previousLastLoginTime = loginTime;
+        }
+        else {
+            previousLastLoginTime = lastLoginTime;
+        }
         lastLoginTime = ZonedDateTime.of(loginTime.toLocalDateTime(), loginTime.getZone());
     }
     

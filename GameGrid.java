@@ -4,6 +4,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 
+/**
+ * Grid that holds all of the Tiles that make up the game board.
+ * @author Oliver
+ * @version 1.5
+ * */
 public class GameGrid extends GridPane {
     
     private Tile[][] grid;
@@ -20,15 +25,15 @@ public class GameGrid extends GridPane {
                     grid[i][j] = new Tile("top left corner");
                     add(grid[i][j], j, i);
                 }
-                else if (i == 0 && j == k-1) {
+                else if (i == 0 && j == k - 1) {
                     grid[i][j] = new Tile("top right corner");
                     add(grid[i][j], j, i);
                 }
-                else if (i == k-1 && j == 0) {
+                else if (i == k - 1 && j == 0) {
                     grid[i][j] = new Tile("bottom left corner");
                     add(grid[i][j], j, i);
                 }
-                else if (i == k-1 && j == k-1) {
+                else if (i == k - 1 && j == k - 1) {
                     grid[i][j] = new Tile("bottom right corner");
                     add(grid[i][j], j, i);
                 }
@@ -36,7 +41,7 @@ public class GameGrid extends GridPane {
                     grid[i][j] = new Tile("top edge");
                     add(grid[i][j], j, i);
                 }
-                else if (i == k-1) {
+                else if (i == k - 1) {
                     grid[i][j] = new Tile("bottom edge");
                     add(grid[i][j], j, i);
                 }
@@ -44,7 +49,7 @@ public class GameGrid extends GridPane {
                     grid[i][j] = new Tile("left edge");
                     add(grid[i][j], j, i);
                 }
-                else if (j == k-1) {
+                else if (j == k - 1) {
                     grid[i][j] = new Tile("right edge");
                     add(grid[i][j], j, i);
                 }
@@ -63,13 +68,13 @@ public class GameGrid extends GridPane {
     public void updateGrid() {
         for (int i = 0; i < GameContainer.getG().getBoard().length; ++i) {
             for (int j = 0; j < GameContainer.getG().getBoard().length; ++j) {
-                if (GameContainer.getG().getBoard()[i][j] == 1) {
+                if (GameContainer.getG().getBoard()[i][j] == GameContainer.getG().BLACK) {
                     if (getGrid()[i][j].getHasWhite()) {
                         getGrid()[i][j].removeWhite();
                     }
                     getGrid()[i][j].addBlack();
                 }
-                else if (GameContainer.getG().getBoard()[i][j] == 2) {
+                else if (GameContainer.getG().getBoard()[i][j] == GameContainer.getG().WHITE) {
                     if (getGrid()[i][j].getHasBlack()) {
                         getGrid()[i][j].removeBlack();
                     }
@@ -90,13 +95,13 @@ public class GameGrid extends GridPane {
     public void updateGrid(Score score) {
         for (int i = 0; i < score.getEndingBoard().length; ++i) {
             for (int j = 0; j < score.getEndingBoard().length; ++j) {
-                if (score.getEndingBoard()[i][j] == 1) {
+                if (score.getEndingBoard()[i][j] == GameContainer.getG().BLACK) {
                     if (getGrid()[i][j].getHasWhite()) {
                         getGrid()[i][j].removeWhite();
                     }
                     getGrid()[i][j].addBlack();
                 }
-                else if (score.getEndingBoard()[i][j] == 2) {
+                else if (score.getEndingBoard()[i][j] == GameContainer.getG().WHITE) {
                     if (getGrid()[i][j].getHasBlack()) {
                         getGrid()[i][j].removeBlack();
                     }

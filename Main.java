@@ -37,11 +37,22 @@ import javafx.scene.layout.VBox;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * Holds the stage, all of the scenes and almost all of the GUI controls.
+ * @author Oliver
+ * @version 2.5
+ * */
 public class Main extends Application {
     
+    public final String GRID_SIZE_OPTION_1 = "9";
+    public final String GRID_SIZE_OPTION_2 = "13";
     //Button startGame;
-    Scene gameSetupPage, gameScene, dashScene, loginScene, createUserScene;
-    static SetupPage setupPage;
+    Scene gameSetupPage;
+    Scene gameScene;
+    Scene dashScene; //make private
+    Scene loginScene;
+    Scene createUserScene;
+    //static SetupPage setupPage;
     private ArrayList<User> loggedIn;
     private BooleanProperty authenticated;
     
@@ -84,8 +95,12 @@ public class Main extends Application {
         CheckMenuItem binaryOption = new CheckMenuItem("Option that can be on or off");
         binaryOption.setSelected(true);
         binaryOption.setOnAction(e -> {
-            if (binaryOption.isSelected()) System.out.println("option is selected");
-            else System.out.println("Option is turned off");
+            if (binaryOption.isSelected()) {
+                System.out.println("option is selected");
+            }
+            else {
+                System.out.println("Option is turned off");
+            }
         });
         otherMenu.getItems().add(binaryOption);
         
@@ -176,15 +191,19 @@ public class Main extends Application {
                 opponentInfo.setWrapText(true);
                 ChoiceBox<String> userDropDownList = new ChoiceBox<>();
                 for (Administrator a:adminList) {
-                    if (!a.getUsername().equals(loggedIn.get(0).getUsername())) userDropDownList.getItems().addAll(a.getUsername());
+                    if (!a.getUsername().equals(loggedIn.get(0).getUsername())) {
+                        userDropDownList.getItems().addAll(a.getUsername());
+                    }
                 }
                 for (Player p:playerList) {
-                    if (!p.getUsername().equals(loggedIn.get(0).getUsername())) userDropDownList.getItems().addAll(p.getUsername());
+                    if (!p.getUsername().equals(loggedIn.get(0).getUsername())) {
+                        userDropDownList.getItems().addAll(p.getUsername());
+                    }
                 }
                 Label label7 = new Label("Select grid size:");
                 ToggleGroup gridSizes = new ToggleGroup();
-                RadioButton r1 = new RadioButton("9");
-                RadioButton r2 = new RadioButton("13");
+                RadioButton r1 = new RadioButton(GRID_SIZE_OPTION_1);
+                RadioButton r2 = new RadioButton(GRID_SIZE_OPTION_2);
                 r1.setToggleGroup(gridSizes);
                 r2.setToggleGroup(gridSizes);
                 r2.setSelected(true);
@@ -194,7 +213,9 @@ public class Main extends Application {
                     User p1 = loggedIn.get(0);
                     //code on next line adapted from https://stackoverflow.com/questions/17526608/how-to-find-an-object-in-an-arraylist-by-property
                     User p2 = adminList.stream().filter(user -> userDropDownList.getValue().equals(user.getUsername())).findFirst().orElse(null);
-                    if (p2 == null) p2 = playerList.stream().filter(user -> userDropDownList.getValue().equals(user.getUsername())).findFirst().orElse(null);
+                    if (p2 == null) {
+                        p2 = playerList.stream().filter(user -> userDropDownList.getValue().equals(user.getUsername())).findFirst().orElse(null);
+                    }
                     GameContainer.setG(Integer.parseInt(((RadioButton)gridSizes.getSelectedToggle()).getText()), p1, p2);
                     GameContainer.setGrid(Integer.parseInt(((RadioButton)gridSizes.getSelectedToggle()).getText()));
                     GameContainer.getGrid().setAlignment(Pos.CENTER);
@@ -239,8 +260,12 @@ public class Main extends Application {
                         GameContainer.getGrid().updateGrid();
                     });
                     GameContainer.getG().getUndoStateP().addListener((o, oV, nV) -> {
-                        if (nV == true) undo.setDisable(true);
-                        else undo.setDisable(false);
+                        if (nV == true) {
+                            undo.setDisable(true);
+                        }
+                        else {
+                            undo.setDisable(false);
+                        }
                     });
                     Label undoMarkInfo = new Label("Click the button below to undo the previous dead stone marking:");
                     undoMarkInfo.setMaxWidth(100);
@@ -260,7 +285,7 @@ public class Main extends Application {
                     instructions.setWrapText(true);
                     instructions.setVisible(false);
                     GameContainer.getG().getPassCountP().addListener((o, oV, nV) -> {
-                        if (nV.equals("2")) {
+                        if (nV.equals("" + GameContainer.getG().PASS_LIMIT)) {
                             passInfo.setVisible(false);
                             pass.setVisible(false);
                             undoInfo.setVisible(false);
@@ -388,7 +413,9 @@ public class Main extends Application {
                 if (loggedIn.get(0).getClass().getName().equals("Player")) {
                     topPanel.getChildren().addAll(topRow, secondRow);
                 }
-                else topPanel.getChildren().addAll(topRow, secondRow, adminRow);
+                else {
+                    topPanel.getChildren().addAll(topRow, secondRow, adminRow);
+                }
                 VBox information = new VBox();
                 Label usernameLabel = new Label("Username:");
                 Label usernameData = new Label(loggedIn.get(0).getUsername());
@@ -397,7 +424,7 @@ public class Main extends Application {
                 Label secondName = new Label("Second name:");
                 Label secondNameData = new Label(loggedIn.get(0).getLname());
                 Label winRate = new Label("Win rate (%):");
-                Label winRateData = new Label(""+(int)loggedIn.get(0).getWinRate());
+                Label winRateData = new Label("" + (int) loggedIn.get(0).getWinRate());
                 Label profilePic = new Label("Profile picture:");
                 //somehow put the profile picture here
                 information.getChildren().addAll(usernameLabel, usernameData, firstName, firstNameData, secondName, secondNameData, winRate, winRateData, profilePic); //add the profile pic obj here
@@ -537,7 +564,7 @@ public class Main extends Application {
             if (admin.isSelected()) {
                 notTaken.set(true);
                 for (Administrator a:adminList) {
-                    if (newAdminID.getText().equals(""+a.getAdminID())) {
+                    if (newAdminID.getText().equals("" + a.getAdminID())) {
                         notTaken.set(false);
                         InformationBox.display("Admin ID already taken", "The chosen admin ID is already taken, please choose another.");
                     }

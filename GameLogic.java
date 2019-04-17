@@ -3,8 +3,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Only contains static variables and functions that contain the logic of the game. Cannot be instantiated.
+ * @author Oliver
+ * @version 1.6
+ * */
 public class GameLogic {
     static Set<List<Integer>> visited = new HashSet<List<Integer>>();
+    
+    private GameLogic() {
+    }
     
     public static boolean moveIsIllegal(int[][] previousBoard, int[][] board, int y, int x, int currentPlayerColour) {
         //check move is legal: place is free?
@@ -19,8 +27,8 @@ public class GameLogic {
                 initialProposedBoard[i][j] = board[i][j];
             }
         }
-        if (currentPlayerColour == 2) initialProposedBoard[y][x] = 2;
-        else initialProposedBoard[y][x] = 1;
+        if (currentPlayerColour == GameContainer.getG().WHITE) initialProposedBoard[y][x] = GameContainer.getG().WHITE;
+        else initialProposedBoard[y][x] = GameContainer.getG().BLACK;
         int[][] finalProposedBoard = updateBoard(initialProposedBoard, y, x, currentPlayerColour);
         //check move is legal: non-suicidal
         visited.clear();
@@ -37,19 +45,23 @@ public class GameLogic {
         boolean Same = true;
         for (int i = 0; i < board.length; ++i) {
             for (int j = 0; j < board.length; ++j) {
-                if (finalProposedBoard[i][j] != previousBoard[i][j]) Same = false;
+                if (finalProposedBoard[i][j] != previousBoard[i][j]) {
+                    Same = false;
+                }
             }
         }
-        if (Same) InformationBox.display("Illegal Move", "Repeat board states are forbidden (ko), please choose a different intersection or click 'Pass'.");
+        if (Same) {
+            InformationBox.display("Illegal Move", "Repeat board states are forbidden (ko), please choose a different intersection or click 'Pass'.");
+        }
         return Same;
     }
     
     public static int[][] updateBoard(int[][] board, int y, int x, int currentPlayerColour) { //updates board as a result of current player placing a piece at (x, y)
         int[] adjacentCoordinates = getAdjacentCoordinates(y, x, board.length);
         for (int i = 0; i < adjacentCoordinates.length-1; i += 2) {
-            if (board[adjacentCoordinates[i]][adjacentCoordinates[i+1]] == 2 && currentPlayerColour != 2) {
+            if (board[adjacentCoordinates[i]][adjacentCoordinates[i + 1]] == GameContainer.getG().WHITE && currentPlayerColour != GameContainer.getG().WHITE) {
                 visited.clear();
-                boolean capturing = willBeCaptured(board, adjacentCoordinates[i], adjacentCoordinates[i+1], 2);
+                boolean capturing = willBeCaptured(board, adjacentCoordinates[i], adjacentCoordinates[i + 1], GameContainer.getG().WHITE);
                 if (capturing) {
                     while (visited.size() != 0) {
                         List<Integer> point = visited.iterator().next();
@@ -60,9 +72,9 @@ public class GameLogic {
                     }
                 }
             }
-            else if (board[adjacentCoordinates[i]][adjacentCoordinates[i+1]] == 1 && currentPlayerColour == 2) {
+            else if (board[adjacentCoordinates[i]][adjacentCoordinates[i + 1]] == GameContainer.getG().BLACK && currentPlayerColour == GameContainer.getG().WHITE) {
                 visited.clear();
-                boolean capturing = willBeCaptured(board, adjacentCoordinates[i], adjacentCoordinates[i+1], 1);
+                boolean capturing = willBeCaptured(board, adjacentCoordinates[i], adjacentCoordinates[i + 1], GameContainer.getG().BLACK);
                 if (capturing) {
                     while (visited.size() != 0) {
                         List<Integer> point = visited.iterator().next();
@@ -80,12 +92,14 @@ public class GameLogic {
     //need to empty the hashset before each use...?
     private static boolean willBeCaptured(int[][] board, int y, int x, int colour) {
         visited.add(Arrays.asList(y, x));
-        if (getLiberties(y, x, board).length != 0) return false;
+        if (getLiberties(y, x, board).length != 0) {
+            return false;
+        }
         int[] adjs = getAdjacentCoordinates(y, x, board.length);
         boolean willBeCaptured = true;
         for (int i = 0; i < adjs.length-1; i += 2) {
-            if (board[adjs[i]][adjs[i+1]] == colour && !(visited.contains(Arrays.asList(adjs[i], adjs[i+1])))) {
-                willBeCaptured = willBeCaptured(board, adjs[i], adjs[i+1], colour);
+            if (board[adjs[i]][adjs[i + 1]] == colour && !(visited.contains(Arrays.asList(adjs[i], adjs[i + 1])))) {
+                willBeCaptured = willBeCaptured(board, adjs[i], adjs[i + 1], colour);
             }
         }
         return willBeCaptured;
@@ -97,64 +111,64 @@ public class GameLogic {
         //1. interior point case
         if (x > 0 && x < height-1 && y > 0 && y < height-1) {
             int[] t = new int[8];
-            t[0] = y+1; t[1] = x;
-            t[2] = y;   t[3] = x+1;
-            t[4] = y-1; t[5] = x;
-            t[6] = y;   t[7] = x-1;
+            t[0] = y + 1; t[1] = x;
+            t[2] = y;     t[3] = x + 1;
+            t[4] = y - 1; t[5] = x;
+            t[6] = y;     t[7] = x - 1;
             return t;
         }
         //2. corner point cases
         else if (x == 0 && y == 0) {
             int[] t = new int[4];
-            t[0] = y;   t[1] = x+1;
-            t[2] = y+1; t[3] = x;
+            t[0] = y;     t[1] = x + 1;
+            t[2] = y + 1; t[3] = x;
             return t;
         }
         else if (x == 0 && y == height-1) {
             int[] t = new int[4];
-            t[0] = y-1; t[1] = x;
-            t[2] = y;   t[3] = x+1;
+            t[0] = y - 1; t[1] = x;
+            t[2] = y;     t[3] = x + 1;
             return t;
         }
         else if (x == height-1 && y == 0) {
             int[] t = new int[4];
-            t[0] = y+1; t[1] = x;
-            t[2] = y;   t[3] = x-1;
+            t[0] = y + 1; t[1] = x;
+            t[2] = y;     t[3] = x - 1;
             return t;
         }
         else if (x == height-1 && y == height-1) {
             int[] t = new int[4];
-            t[0] = y;   t[1] = x-1;
-            t[2] = y-1; t[3] = x;
+            t[0] = y;     t[1] = x - 1;
+            t[2] = y - 1; t[3] = x;
             return t;
         }
         //3. edge point cases
         else if (x == 0) {
             int[] t = new int[6];
-            t[0] = y+1; t[1] = x;
-            t[2] = y;   t[3] = x+1;
-            t[4] = y-1; t[5] = x;
+            t[0] = y + 1; t[1] = x;
+            t[2] = y;     t[3] = x + 1;
+            t[4] = y - 1; t[5] = x;
             return t;
         }
         else if (x == height-1) {
             int[] t = new int[6];
-            t[0] = y+1; t[1] = x;
-            t[2] = y-1; t[3] = x;
-            t[4] = y;   t[5] = x-1;
+            t[0] = y + 1; t[1] = x;
+            t[2] = y - 1; t[3] = x;
+            t[4] = y;     t[5] = x - 1;
             return t;
         }
         else if (y == 0) {
             int[] t = new int[6];
-            t[0] = y;   t[1] = x+1;
-            t[2] = y+1; t[3] = x;
-            t[4] = y;   t[5] = x-1;
+            t[0] = y;     t[1] = x + 1;
+            t[2] = y + 1; t[3] = x;
+            t[4] = y;     t[5] = x - 1;
             return t;
         }
         else { //y == height-1
             int[] t = new int[6];
-            t[0] = y-1; t[1] = x;
-            t[2] = y;   t[3] = x+1;
-            t[4] = y;   t[5] = x-1;
+            t[0] = y - 1; t[1] = x;
+            t[2] = y;     t[3] = x + 1;
+            t[4] = y;     t[5] = x - 1;
             return t;
         }
     }
@@ -164,16 +178,18 @@ public class GameLogic {
     private static int[] getLiberties(int y, int x, int[][] board) {
         int[] adjacents = getAdjacentCoordinates(y, x, board.length);
         int libertyCount = 0;
-        for (int i = 0; i < adjacents.length-1; i += 2) {
-            if (board[adjacents[i]][adjacents[i+1]] == 0) ++libertyCount;
+        for (int i = 0; i < adjacents.length - 1; i += 2) {
+            if (board[adjacents[i]][adjacents[i + 1]] == 0) {
+                ++libertyCount;
+            }
         }
         int[] liberties = new int[2*libertyCount];
         int libertyIndex = 0;
         for (int i = 0; i < adjacents.length-1; i += 2) {
-            if (board[adjacents[i]][adjacents[i+1]] == 0) {
+            if (board[adjacents[i]][adjacents[i + 1]] == 0) {
                 liberties[libertyIndex] = adjacents[i];
                 ++libertyIndex;
-                liberties[libertyIndex] = adjacents[i+1];
+                liberties[libertyIndex] = adjacents[i + 1];
                 ++libertyIndex;
             }
         }

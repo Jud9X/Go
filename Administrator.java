@@ -1,5 +1,12 @@
 import java.time.ZonedDateTime;
 
+/**
+ * Administrator class that is a child of the User class, inheriting its constructor and methods.
+ * It also adds the admin ID and join date as required by the specification.
+ * It includes two functions for creating new users: one for players and one for administrators.
+ * @author Oliver
+ * @version 1.1
+ * */
 public class Administrator extends User {
     private int adminID;
     private ZonedDateTime joinDate;
