@@ -11,13 +11,13 @@ import javafx.scene.Node;
 
 public class Tile extends Pane {
     
-    boolean hasBlack; //make all these private, add getters if necessary
-    boolean hasWhite;
-    Line line1;
-    Line line2;
-    Circle circle1;
-    Circle circle2;
-    List<Node> nodes = new ArrayList<>();
+    private boolean hasBlack; //make all these private, add getters if necessary
+    private boolean hasWhite;
+    private Line line1;
+    private Line line2;
+    private Circle circle1;
+    private Circle circle2;
+    private List<Node> nodes = new ArrayList<>();
     
     private void handleClick1() {
         if (GameContainer.getG().getCurrentPlayerTurn() == GameContainer.getG().getBlack()) {

@@ -1,5 +1,4 @@
 import javafx.beans.value.ChangeListener;
-import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;

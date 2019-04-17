@@ -11,11 +11,14 @@ import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -24,6 +27,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
@@ -187,6 +191,7 @@ public class Main extends Application {
                 setupPage.getChildren().addAll(curUser, opponentInfo, userDropDownList, label7, r1, r2, startGame);
                 startGame.setOnAction(e -> { //tidy up this huge button click?
                     User p1 = loggedIn.get(0);
+                    //code on next line adapted from https://stackoverflow.com/questions/17526608/how-to-find-an-object-in-an-arraylist-by-property
                     User p2 = adminList.stream().filter(user -> userDropDownList.getValue().equals(user.getUsername())).findFirst().orElse(null);
                     if (p2 == null) p2 = playerList.stream().filter(user -> userDropDownList.getValue().equals(user.getUsername())).findFirst().orElse(null);
                     GameContainer.setG(Integer.parseInt(((RadioButton)gridSizes.getSelectedToggle()).getText()), p1, p2);
@@ -304,7 +309,7 @@ public class Main extends Application {
             }
         });
         
-        //user dashboard (including admin features if necessary) (outsource this to a new class?)
+        //user dashboard (outsource this to a new class?)
         BooleanProperty makeDash = new SimpleBooleanProperty(false);
         makeDash.addListener((observable, oV0, nV0) -> {
             if (nV0) {
@@ -313,7 +318,7 @@ public class Main extends Application {
                 HBox topRow = new HBox();
                 Label dashIntro = new Label("Welcome to the user dashboard!");
                 Label lastLogin = new Label("Previous login:");
-                Label lastLoginDate = new Label(loggedIn.get(0).getPreviousLastLoginTime().toString()); //get date
+                Label lastLoginDate = new Label(loggedIn.get(0).getPreviousLastLoginTime().toString());
                 topRow.getChildren().addAll(dashIntro, lastLogin, lastLoginDate);
                 HBox secondRow = new HBox();
                 Button leaderboardButton = new Button("Show leaderboard");
@@ -403,17 +408,36 @@ public class Main extends Application {
                 Label newPlayers = new Label("New players since last logout:");
                 Label newPlayersData = new Label(); //get new players
                 Label gamesSince = new Label("Click for list of games completed since last login");
+                gamesSince.setWrapText(true);
                 Button gamesSinceButton = new Button("Games Completed"); //make this link to a tableview of games completed since last login
                 gamesSinceButton.setOnAction(e -> {
                     //implement this
                 });
                 news.getChildren().addAll(leaderboardPrev, leaderboardPrevData, leaderboardCur, leaderboardCurData, newPlayers, newPlayersData, gamesSince, gamesSinceButton);
-                TableView historyTable = new TableView();
-                //implement this table
+                ObservableList<GameRecord> gameRecords = FXCollections.observableArrayList();
+                for (GameRecord game:GameContainer.getGamesPlayed()) {
+                    if (game.getWinner().getUsername().equals(loggedIn.get(0).getUsername()) || game.getLoser().getUsername().equals(loggedIn.get(0).getUsername())) {
+                        gameRecords.add(game);
+                    }
+                }
+                TableView<GameRecord> myHistoryTable = new TableView<>();
+                TableColumn<GameRecord, String> dateCol = new TableColumn<>("Date Completed");
+                dateCol.setMinWidth(100);
+                dateCol.setCellValueFactory(new PropertyValueFactory<>("dateCompleted"));
+                TableColumn<GameRecord, String> winnerCol = new TableColumn<>("Winner");
+                winnerCol.setMinWidth(100);
+                winnerCol.setCellValueFactory(new PropertyValueFactory<>("winner"));
+                TableColumn<GameRecord, String> loserCol = new TableColumn<>("Loser");
+                loserCol.setMinWidth(100);
+                loserCol.setCellValueFactory(new PropertyValueFactory<>("loser"));
+                myHistoryTable.setItems(gameRecords);
+                myHistoryTable.getColumns().add(dateCol);
+                myHistoryTable.getColumns().add(winnerCol);
+                myHistoryTable.getColumns().add(loserCol);
                 dashboard.setTop(topPanel);
                 dashboard.setLeft(information);
                 dashboard.setRight(news);
-                dashboard.setCenter(historyTable);
+                dashboard.setCenter(myHistoryTable);
                 dashScene = new Scene(dashboard, 600, 600);
             }
         });
@@ -460,7 +484,7 @@ public class Main extends Application {
         login.getChildren().addAll(welcome, username, password, loginButton);
         loginScene = new Scene(login, 600, 600);
         
-        //game setup page (change this to provide a list of user opponents)
+        //game setup page
         HBox bottomRow = new HBox();
         bottomRow.setPadding(new Insets(10,10,10,10));
         bottomRow.setSpacing(10);

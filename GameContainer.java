@@ -6,6 +6,9 @@ public class GameContainer {
     private static Score s;
     private static ArrayList<GameRecord> gamesPlayed = new ArrayList<>();
     
+    private GameContainer() {
+    }
+    
     public static GameState getG() {
         return g;
     }
