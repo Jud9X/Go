@@ -471,10 +471,12 @@ public class Main extends Application {
                 TableColumn<GameRecord, String> loserCol = new TableColumn<>("Loser");
                 loserCol.setMinWidth(100);
                 loserCol.setCellValueFactory(new PropertyValueFactory<>("loserUsername"));
+                dateCol.setSortType(TableColumn.SortType.DESCENDING);
                 myHistoryTable.setItems(myGameRecords);
                 myHistoryTable.getColumns().add(dateCol);
                 myHistoryTable.getColumns().add(winnerCol);
                 myHistoryTable.getColumns().add(loserCol);
+                myHistoryTable.getSortOrder().add(dateCol);
                 dashboard.setTop(topPanel);
                 dashboard.setLeft(information);
                 dashboard.setRight(news);
