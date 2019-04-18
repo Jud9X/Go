@@ -352,11 +352,11 @@ public class Main extends Application {
                 Label dashIntro = new Label("Welcome to the user dashboard!");
                 Label lastLogin = new Label("Previous login:");
                 Label lastLoginDate;
-                if (loggedIn.get(0).getPreviousLastLoginTime() == null) {
+                if (loggedIn.get(0).getPreviousLoginTime() == null) {
                     lastLoginDate = new Label("This is your first time logging in");
                 }
                 else {
-                    lastLoginDate = new Label(loggedIn.get(0).getPreviousLastLoginTime().toString());
+                    lastLoginDate = new Label(loggedIn.get(0).getPreviousLoginTime().toString());
                 }
                 topRow.getChildren().addAll(dashIntro, lastLogin, lastLoginDate);
                 HBox secondRow = new HBox();
@@ -504,7 +504,7 @@ public class Main extends Application {
         loginButton.setOnAction(e -> {
             for (Administrator a:adminList) {
                 if (username.getText().equals(a.getUsername()) && password.getText().equals(a.getPassword())) {
-                    a.setLastLoginTime(ZonedDateTime.now());
+                    a.setThisLoginTime(ZonedDateTime.now());
                     loggedIn.add(a);
                     makeDash.set(true);
                     authenticated.set(true);
@@ -515,7 +515,7 @@ public class Main extends Application {
             }
             for (Player p:playerList) {
                 if (username.getText().equals(p.getUsername()) && password.getText().equals(p.getPassword())) {
-                    p.setLastLoginTime(ZonedDateTime.now());
+                    p.setThisLoginTime(ZonedDateTime.now());
                     loggedIn.add(p);
                     makeDash.set(true);
                     authenticated.set(true);

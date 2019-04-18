@@ -13,9 +13,11 @@ public class User implements Serializable {
     private String password;
     private String fname;
     private String lname;
+    private ZonedDateTime previousLoginTime;
+    private ZonedDateTime thisLoginTime;
+    private int gameCount;
+    private int winCount;
     private double winRate;
-    private ZonedDateTime previousLastLoginTime;
-    private ZonedDateTime lastLoginTime; //is actually the time for "this session"
     //TODO: profile image
     
     public User(String username, String password, String fname, String lname) {
@@ -23,7 +25,9 @@ public class User implements Serializable {
         this.password = password;
         this.fname = fname;
         this.lname = lname;
-        winRate = 0; //start at 0? THIS NEEDS TO BE GIVEN AS A %, e.g. 54 instead of 0.54
+        gameCount = 0;
+        winCount = 0;
+        winRate = 0; //start at 0?
     }
     
     public String getUsername() {
@@ -46,28 +50,34 @@ public class User implements Serializable {
         return winRate;
     }
     
-    public void setWinRate(double newRate) {
-        winRate = newRate;
+    public void incrementWinCount() {
+        ++winCount;
         return;
     }
     
-    public void setLastLoginTime(ZonedDateTime loginTime) {
-        if (lastLoginTime == null) {
-            previousLastLoginTime = null;
+    public void incrementGameCount() {
+        ++gameCount;
+        winRate = ((double) winCount / gameCount) * 100;
+        return;
+    }
+    
+    public void setThisLoginTime(ZonedDateTime loginTime) {
+        if (thisLoginTime == null) {
+            previousLoginTime = null;
         }
         else {
-            previousLastLoginTime = lastLoginTime;
+            previousLoginTime = thisLoginTime;
         }
-        lastLoginTime = ZonedDateTime.of(loginTime.toLocalDateTime(), loginTime.getZone());
+        thisLoginTime = ZonedDateTime.of(loginTime.toLocalDateTime(), loginTime.getZone());
     }
     
-    public ZonedDateTime getPreviousLastLoginTime() {
-        if (previousLastLoginTime == null) return null;
-        else return previousLastLoginTime;
+    public ZonedDateTime getPreviousLoginTime() {
+        if (previousLoginTime == null) return null;
+        else return previousLoginTime;
     }
     
-    public String toString() {
-        if (lastLoginTime == null) {
+    public String toString() { //necessary?
+        if (previousLoginTime == null) {
             return "Username: " + username + " "
                 + "Password: " + password + " " //should be present?
                 + "First name: " + fname + " "
@@ -81,7 +91,7 @@ public class User implements Serializable {
                 + "First name: " + fname + " "
                 + "Last name: " + lname + " "
                 + "Win rate: " + winRate + " " 
-                + "Last login: " + lastLoginTime.toString();
+                + "Last login: " + previousLoginTime.toString();
         }
     }
 }

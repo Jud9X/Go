@@ -132,6 +132,9 @@ public class Score {
         loserName = (finalScores[0] <= finalScores[1]) ? GameContainer.getG().getBlack() : GameContainer.getG().getWhite();
         User winner = (GameContainer.getG().getPlayer1().getUsername().equals(winnerName)) ? GameContainer.getG().getPlayer1() : GameContainer.getG().getPlayer2();
         User loser = (GameContainer.getG().getPlayer1().getUsername().equals(loserName)) ? GameContainer.getG().getPlayer1() : GameContainer.getG().getPlayer2();
+        winner.incrementWinCount();
+        winner.incrementGameCount();
+        loser.incrementGameCount();
         GameRecord result = new GameRecord(ZonedDateTime.now(), winner, loser);
         GameContainer.getGamesPlayed().add(result);
     }

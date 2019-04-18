@@ -9,8 +9,8 @@ import java.util.Set;
  * @version 1.6
  * */
 public class GameLogic {
-    static Set<List<Integer>> visited = new HashSet<List<Integer>>();
-    static boolean willBeCaptured = true;
+    private static Set<List<Integer>> visited = new HashSet<List<Integer>>();
+    private static boolean willBeCaptured = true;
     
     private GameLogic() {
     }
@@ -114,9 +114,9 @@ public class GameLogic {
         //1. interior point case
         if (x > 0 && x < height - 1 && y > 0 && y < height - 1) {
             int[] t = new int[8];
-            t[0] = y + 1; t[1] = x; //this is actually south...
+            t[0] = y - 1; t[1] = x;
             t[2] = y;     t[3] = x + 1;
-            t[4] = y - 1; t[5] = x;
+            t[4] = y + 1; t[5] = x;
             t[6] = y;     t[7] = x - 1;
             return t;
         }
@@ -148,15 +148,15 @@ public class GameLogic {
         //3. edge point cases
         else if (x == 0) {
             int[] t = new int[6];
-            t[0] = y + 1; t[1] = x;
+            t[0] = y - 1; t[1] = x;
             t[2] = y;     t[3] = x + 1;
-            t[4] = y - 1; t[5] = x;
+            t[4] = y + 1; t[5] = x;
             return t;
         }
         else if (x == height - 1) {
             int[] t = new int[6];
-            t[0] = y + 1; t[1] = x;
-            t[2] = y - 1; t[3] = x;
+            t[0] = y - 1; t[1] = x;
+            t[2] = y + 1; t[3] = x;
             t[4] = y;     t[5] = x - 1;
             return t;
         }
