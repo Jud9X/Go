@@ -14,11 +14,13 @@ java --module-path %PATH_TO_FX% --add-modules=javafx.controls Main
 
 Current big "to-do's":
 
-1. Complete the required functionality (e.g. leaderboard+winrates, user dashboard news, profile pictures etc...)
-2. Improve and finish user dashboard and improve GUI (including design and layout)
-3. Add exception handling if necessary (as part of improving GUI)
-4. Reduce the size of main by putting scenes in their own classes??
-5. Add Javadoc
+0. Post the minutes for review.
+1. Complete the required functionality (user dashboard news [new users and new games completed] and profile pictures)
+2. Improve the GUI (including both design and layout)
+3. Add exception handling if necessary
+4. Add Javadoc (following the lecture guidlines)
+5. Check coding conventions (following the lecture guidelines)
 6. Optional: make the GUI look nice and add cool extra features (like highlighting where a piece will go when the mouse hovers over that area, different colour themes, optional confirmation boxes after each move, music...)
-7. Record demonstration video
-8. Optional: unit/integration testing
+7. Record the demonstration videos
+8. Optional: reduce the size of main by putting scenes in their own classes?
+9. Optional: unit/integration testing
