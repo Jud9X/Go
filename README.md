@@ -15,7 +15,7 @@ java --module-path %PATH_TO_FX% --add-modules=javafx.controls Main
 Current big "to-do's":
 
 0. Post the meeting minutes for review.
-1. Complete the required functionality (user dashboard news [new users (line 473 of Main) and new games completed (line 478 of Main)] and profile pictures (line 454 of Main))
+1. Complete the required functionality (user dashboard news [new users (line 473 of Main: maybe this one could be achieved by adding a join date for all users instead of just Administrators like the specification says, and then just searching through the user list for all of the users created since the last login?) and new games completed (line 478 of Main)] and profile pictures (line 454 of Main))
 2. Improve the GUI (including both design and layout)
 3. Add exception handling if necessary
 4. Add Javadoc (following the lecture guidelines)
