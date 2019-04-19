@@ -469,15 +469,15 @@ public class Main extends Application {
                 else {
                     leaderboardCurData = new Label("" + loggedIn.get(0).getLeaderboardPosition());
                 }
-                Label newPlayers = new Label("New players since last logout:");
-                Label newPlayersData = new Label(); //get new players
+                Label newUsers = new Label("New players since last logout:");
+                Label newUsersData = new Label(); //get new users who were added since "loggedIn's" last logout - make this a drop down box ("choicebox") instead of a label
                 Label gamesSince = new Label("Click for list of games completed since last login");
                 gamesSince.setWrapText(true);
-                Button gamesSinceButton = new Button("Games Completed"); //make this link to a tableview of games completed since last login
+                Button gamesSinceButton = new Button("Games Completed"); //make this link to a tableview of games completed since the logged in player's last login
                 gamesSinceButton.setOnAction(e -> {
                     //implement this
                 });
-                news.getChildren().addAll(leaderboardPrev, leaderboardPrevData, leaderboardCur, leaderboardCurData, newPlayers, newPlayersData, gamesSince, gamesSinceButton);
+                news.getChildren().addAll(leaderboardPrev, leaderboardPrevData, leaderboardCur, leaderboardCurData, newUsers, newUsersData, gamesSince, gamesSinceButton);
                 ObservableList<GameRecord> myGameRecords = FXCollections.observableArrayList();
                 for (GameRecord game:GameContainer.getGamesPlayed()) {
                     if (game.getWinner().getUsername().equals(loggedIn.get(0).getUsername()) || game.getLoser().getUsername().equals(loggedIn.get(0).getUsername())) {
