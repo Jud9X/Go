@@ -281,7 +281,7 @@ public class Main extends Application {
                             + GameContainer.getS().getFinalScores()[1] + "\nWinner: " 
                             + GameContainer.getS().getWinnerName() 
                             + "\nNote that if the scores are the same then white "
-                            + "is declared winner due to starting second."); //add new win%s?
+                            + "is declared winner due to starting second.");
                         primaryStage.setScene(gameSetupPage);
                         primaryStage.centerOnScreen();
                         ArrayList<User> tempAllUsers = new ArrayList<>();
