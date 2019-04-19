@@ -12,7 +12,7 @@ public class GameState {
     public final int BLACK = 1;
     public final int WHITE = 2;
     public final int PASS_LIMIT = 2;
-    private int[][] board; //e.g. 9x9 2D array
+    private int[][] board;
     private String white;
     private String black;
     private User player1;
@@ -31,7 +31,6 @@ public class GameState {
     private boolean finished;
     private BooleanProperty undoStateP;
     private BooleanProperty ready;
-    Score s; //make private
     
     public GameState(int k, User player1, User player2) { //k is board size (e.g. height), player1 is a user object
         board = new int[k][k]; //0 in the array will mean empty, 1 will mean black and 2 will mean white
@@ -47,11 +46,11 @@ public class GameState {
         }
         else {
             white = player1.getUsername();
-            black = player2.getUsername(); //can randomise this later
+            black = player2.getUsername(); //can randomise this later if time/desired
         }
         passCount = 0;
         turnNo = 0;
-        currentPlayerTurn = black; //or directly enter username
+        currentPlayerTurn = black;
         previousBoard = new int[k][k];
         previousBoard2 = new int[k][k];
         captures = new int[2];
@@ -265,7 +264,7 @@ public class GameState {
         return;
     }
     
-    public void forfeitAndQuit() {
+    public void forfeitAndQuit() { //optional method that I didn't have time to implement
         //stuff
         return;
     }

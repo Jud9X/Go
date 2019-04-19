@@ -19,6 +19,7 @@ public class Score {
     private Set<List<Integer>> confirmedTerritory;
     private boolean touchesBlack;
     private boolean touchesWhite;
+    private boolean isTerritory;
     private int[][] endingBoard;
     private int[] deads;
     private int deadsIndex;
@@ -38,6 +39,7 @@ public class Score {
         confirmedTerritory = new HashSet<List<Integer>>();
         touchesBlack = false;
         touchesWhite = false;
+        isTerritory = true;
         endingBoard = board;
         removeBlackCount = 0;
         removeWhiteCount = 0;
@@ -112,6 +114,7 @@ public class Score {
                     possibleTerritory.clear();
                     touchesBlack = false;
                     touchesWhite = false;
+                    isTerritory = true;
                     if (isTerritory(endingBoard, i, j)) {
                         confirmedTerritory.addAll(possibleTerritory);
                         if (touchesBlack) {
@@ -154,7 +157,6 @@ public class Score {
         if (touchesBlack && touchesWhite) {
             return false;
         }
-        boolean isTerritory = true;
         for (int i = 0; i < adjs.length - 1; i += 2) {
             if (board[adjs[i]][adjs[i + 1]] == 0 && !(possibleTerritory.contains(Arrays.asList(adjs[i], adjs[i + 1])))) {
                 isTerritory = isTerritory(board, adjs[i], adjs[i + 1]);

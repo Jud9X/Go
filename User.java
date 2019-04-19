@@ -18,6 +18,8 @@ public class User implements Serializable {
     private int gameCount;
     private int winCount;
     private double winRate;
+    private int previousLeaderboardPosition;
+    private int leaderboardPosition;
     //TODO: profile image
     
     public User(String username, String password, String fname, String lname) {
@@ -27,7 +29,9 @@ public class User implements Serializable {
         this.lname = lname;
         gameCount = 0;
         winCount = 0;
-        winRate = 0; //start at 0?
+        winRate = 0;
+        previousLeaderboardPosition = 0;
+        leaderboardPosition = 0;
     }
     
     public String getUsername() {
@@ -46,8 +50,12 @@ public class User implements Serializable {
         return lname;
     }
     
-    public double getWinRate() {
-        return winRate;
+    public int getGameCount() {
+        return gameCount;
+    }
+    
+    public int getWinRate() {
+        return (int) winRate;
     }
     
     public void incrementWinCount() {
@@ -74,6 +82,22 @@ public class User implements Serializable {
     public ZonedDateTime getPreviousLoginTime() {
         if (previousLoginTime == null) return null;
         else return previousLoginTime;
+    }
+    
+    public int getPreviousLeaderboardPosition() {
+        return previousLeaderboardPosition;
+    }
+    
+    public void setPreviousLeaderboardPosition(int pos) {
+        previousLeaderboardPosition = pos;
+    }
+    
+    public int getLeaderboardPosition() {
+        return leaderboardPosition;
+    }
+    
+    public void setLeaderboardPosition(int pos) {
+        leaderboardPosition = pos;
     }
     
     public String toString() { //necessary?

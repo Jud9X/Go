@@ -19,14 +19,9 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
-import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -46,15 +41,15 @@ public class Main extends Application {
     
     public final String GRID_SIZE_OPTION_1 = "9";
     public final String GRID_SIZE_OPTION_2 = "13";
-    //Button startGame;
-    Scene gameSetupPage;
-    Scene gameScene;
-    Scene dashScene; //make private
-    Scene loginScene;
-    Scene createUserScene;
-    //static SetupPage setupPage;
+    private Scene gameSetupPage;
+    private Scene gameScene;
+    private Scene dashScene;
+    private Scene loginScene;
+    private Scene createUserScene;
     private ArrayList<User> loggedIn;
     private BooleanProperty authenticated;
+    private VBox news;
+    private Label leaderboardCurData;
     
     public static void main(final String[] args) {
         launch(args);
@@ -63,49 +58,6 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Play Go!");
-        
-        Menu fileMenu = new Menu("_File");
-        Menu editMenu = new Menu("_Edit");
-        Menu otherMenu = new Menu("_Other");
-        
-        MenuItem newFile = new MenuItem("_New...");
-        newFile.setOnAction(e -> System.out.println("testing, new file"));
-        fileMenu.getItems().add(newFile);
-        MenuItem openFile = new MenuItem("_Open...");
-        newFile.setOnAction(e -> System.out.println("testing, open file"));
-        fileMenu.getItems().add(openFile);
-        MenuItem somethingElse = new MenuItem("Do something else...");
-        newFile.setOnAction(e -> System.out.println("testing, something else"));
-        fileMenu.getItems().add(somethingElse);
-        fileMenu.getItems().add(new SeparatorMenuItem());
-        MenuItem exit = new MenuItem("Exit");
-        newFile.setOnAction(e -> System.out.println("exits"));
-        fileMenu.getItems().add(exit);
-        
-        MenuItem copy = new MenuItem("_Copy");
-        copy.setOnAction(e -> System.out.println("copied"));
-        editMenu.getItems().add(copy);
-        MenuItem somethingElse2 = new MenuItem("Do another thing");
-        somethingElse2.setOnAction(e -> System.out.println("the other thing"));
-        editMenu.getItems().add(somethingElse2);
-        
-        MenuItem otherThing = new MenuItem("Other thing");
-        otherThing.setOnAction(e -> System.out.println("some other thing is done"));
-        otherMenu.getItems().add(otherThing);
-        CheckMenuItem binaryOption = new CheckMenuItem("Option that can be on or off");
-        binaryOption.setSelected(true);
-        binaryOption.setOnAction(e -> {
-            if (binaryOption.isSelected()) {
-                System.out.println("option is selected");
-            }
-            else {
-                System.out.println("Option is turned off");
-            }
-        });
-        otherMenu.getItems().add(binaryOption);
-        
-        MenuBar menuBar = new MenuBar();
-        menuBar.getMenus().addAll(fileMenu, editMenu, otherMenu);
         
         //setupPage = new SetupPage();
         VBox setupPage = new VBox();
@@ -331,8 +283,27 @@ public class Main extends Application {
                             + "\nNote that if the scores are the same then white "
                             + "is declared winner due to starting second."); //add new win%s?
                         primaryStage.setScene(gameSetupPage);
-                        makeDash.set(false);
                         primaryStage.centerOnScreen();
+                        ArrayList<User> tempAllUsers = new ArrayList<>();
+                        for (Administrator a:adminList) {
+                            tempAllUsers.add(a);
+                        }
+                        for (Player p:playerList) {
+                            tempAllUsers.add(p);
+                        }
+                        for (int i = 0; i < tempAllUsers.size() - 1; ++i) {
+                            for (int j = 0; j < tempAllUsers.size() - i - 1; ++j) {
+                                if (tempAllUsers.get(j).getWinRate() > tempAllUsers.get(j + 1).getWinRate()) {
+                                    User t = tempAllUsers.get(j);
+                                    tempAllUsers.set(j, tempAllUsers.get(j + 1));
+                                    tempAllUsers.set(j + 1, t);
+                                }
+                            }
+                        }
+                        for (int i = tempAllUsers.size(); i > 0; --i) {
+                            tempAllUsers.get(i - 1).setLeaderboardPosition(tempAllUsers.size() - i + 1);
+                        }
+                        makeDash.set(false);
                     });
                     gameControl.getChildren().addAll(passInfo, pass, undoInfo, undo, instructions, done, undoMarkInfo, undoMark);
                     layout2.setLeft(gameControl);
@@ -361,7 +332,43 @@ public class Main extends Application {
                 topRow.getChildren().addAll(dashIntro, lastLogin, lastLoginDate);
                 HBox secondRow = new HBox();
                 Button leaderboardButton = new Button("Show leaderboard");
-                //add on action
+                leaderboardButton.setOnAction(e -> {
+                    VBox leaderboardLayout = new VBox();
+                    ObservableList<User> leaderboardRecords = FXCollections.observableArrayList();
+                    for (Administrator a:adminList) {
+                        leaderboardRecords.add(a);
+                    }
+                    for (Player p:playerList) {
+                        leaderboardRecords.add(p);
+                    }
+                    TableView<User> leaderboardTable = new TableView<>();
+                    TableColumn<User, Integer> leaderboardPositionCol = new TableColumn<>("Rank");
+                    leaderboardPositionCol.setMinWidth(100);
+                    leaderboardPositionCol.setCellValueFactory(new PropertyValueFactory<>("leaderboardPosition"));
+                    leaderboardPositionCol.setSortType(TableColumn.SortType.ASCENDING);
+                    TableColumn<User, String> usernameCol = new TableColumn<>("Username");
+                    usernameCol.setMinWidth(100);
+                    usernameCol.setCellValueFactory(new PropertyValueFactory<>("username"));
+                    TableColumn<User, Integer> gameCountCol = new TableColumn<>("Games Played");
+                    gameCountCol.setMinWidth(100);
+                    gameCountCol.setCellValueFactory(new PropertyValueFactory<>("gameCount"));
+                    TableColumn<User, Integer> winRateCol = new TableColumn<>("Win Rate (%)");
+                    winRateCol.setMinWidth(100);
+                    winRateCol.setCellValueFactory(new PropertyValueFactory<>("winRate"));
+                    leaderboardTable.setItems(leaderboardRecords);
+                    leaderboardTable.getColumns().add(leaderboardPositionCol);
+                    leaderboardTable.getColumns().add(usernameCol);
+                    leaderboardTable.getColumns().add(gameCountCol);
+                    leaderboardTable.getColumns().add(winRateCol);
+                    leaderboardTable.getSortOrder().add(leaderboardPositionCol);
+                    Button leaveLeaderboard = new Button("Return to dashboard");
+                    leaveLeaderboard.setOnAction(e2 -> {
+                        primaryStage.setScene(dashScene);
+                    });
+                    leaderboardLayout.getChildren().addAll(leaderboardTable, leaveLeaderboard);
+                    Scene leaderboardScene = new Scene(leaderboardLayout, 600, 600);
+                    primaryStage.setScene(leaderboardScene);
+                });
                 Button gameSetupButton = new Button("Setup new game");
                 gameSetupButton.setOnAction(e -> {
                     setupTime.set(true);
@@ -369,6 +376,7 @@ public class Main extends Application {
                 });
                 Button logout = new Button("Logout");
                 logout.setOnAction(e -> {
+                    loggedIn.get(0).setPreviousLeaderboardPosition(loggedIn.get(0).getLeaderboardPosition());
                     authenticated.set(false);
                     setupTime.set(false);
                     makeDash.set(false);
@@ -421,7 +429,11 @@ public class Main extends Application {
                 secondRow.getChildren().addAll(leaderboardButton, gameSetupButton, logout);
                 HBox adminRow = new HBox();
                 Button createUser = new Button("Create new user...");
-                createUser.setOnAction(e -> primaryStage.setScene(createUserScene));
+                createUser.setOnAction(e -> {
+                    primaryStage.setScene(createUserScene);
+                    setupTime.set(false);
+                    setupPage.getChildren().clear();
+                });
                 adminRow.getChildren().addAll(createUser);
                 if (loggedIn.get(0).getClass().getName().equals("Player")) {
                     topPanel.getChildren().addAll(topRow, secondRow);
@@ -437,15 +449,26 @@ public class Main extends Application {
                 Label secondName = new Label("Second name:");
                 Label secondNameData = new Label(loggedIn.get(0).getLname());
                 Label winRate = new Label("Win rate (%):");
-                Label winRateData = new Label("" + (int) loggedIn.get(0).getWinRate());
+                Label winRateData = new Label("" + loggedIn.get(0).getWinRate());
                 Label profilePic = new Label("Profile picture:");
                 //somehow put the profile picture here
                 information.getChildren().addAll(usernameLabel, usernameData, firstName, firstNameData, secondName, secondNameData, winRate, winRateData, profilePic); //add the profile pic obj here
-                VBox news = new VBox();
+                news = new VBox();
                 Label leaderboardPrev = new Label("Leaderboard position on last logout:");
-                Label leaderboardPrevData = new Label(); //get old leaderboard position (from file presumably)
+                Label leaderboardPrevData;
+                if (loggedIn.get(0).getPreviousLoginTime() == null) {
+                    leaderboardPrevData = new Label("This is your first login");
+                }
+                else {
+                    leaderboardPrevData = new Label("" + loggedIn.get(0).getPreviousLeaderboardPosition());
+                }
                 Label leaderboardCur = new Label("Current leaderboard position:");
-                Label leaderboardCurData = new Label(); //get leaderboard position
+                if (loggedIn.get(0).getLeaderboardPosition() == 0) {
+                    leaderboardCurData = new Label("" + (adminList.size() + playerList.size()));
+                }
+                else {
+                    leaderboardCurData = new Label("" + loggedIn.get(0).getLeaderboardPosition());
+                }
                 Label newPlayers = new Label("New players since last logout:");
                 Label newPlayersData = new Label(); //get new players
                 Label gamesSince = new Label("Click for list of games completed since last login");
@@ -506,8 +529,27 @@ public class Main extends Application {
                 if (username.getText().equals(a.getUsername()) && password.getText().equals(a.getPassword())) {
                     a.setThisLoginTime(ZonedDateTime.now());
                     loggedIn.add(a);
-                    makeDash.set(true);
                     authenticated.set(true);
+                    ArrayList<User> tempAllUsers = new ArrayList<>();
+                    for (Administrator ad:adminList) {
+                        tempAllUsers.add(ad);
+                    }
+                    for (Player pl:playerList) {
+                        tempAllUsers.add(pl);
+                    }
+                    for (int i = 0; i < tempAllUsers.size() - 1; ++i) {
+                        for (int j = 0; j < tempAllUsers.size() - i - 1; ++j) {
+                            if (tempAllUsers.get(j).getWinRate() > tempAllUsers.get(j + 1).getWinRate()) {
+                                User t = tempAllUsers.get(j);
+                                tempAllUsers.set(j, tempAllUsers.get(j + 1));
+                                tempAllUsers.set(j + 1, t);
+                            }
+                        }
+                    }
+                    for (int i = tempAllUsers.size(); i > 0; --i) {
+                        tempAllUsers.get(i - 1).setLeaderboardPosition(tempAllUsers.size() - i + 1);
+                    }
+                    makeDash.set(true);
                     primaryStage.setScene(dashScene);
                     password.clear();
                     username.clear();
@@ -519,6 +561,27 @@ public class Main extends Application {
                     loggedIn.add(p);
                     makeDash.set(true);
                     authenticated.set(true);
+                    ArrayList<User> tempAllUsers = new ArrayList<>();
+                    for (Administrator a:adminList) {
+                        tempAllUsers.add(a);
+                    }
+                    for (Player pl:playerList) {
+                        tempAllUsers.add(pl);
+                    }
+                    for (int i = 0; i < tempAllUsers.size() - 1; ++i) {
+                        for (int j = 0; j < tempAllUsers.size() - i - 1; ++j) {
+                            if (tempAllUsers.get(j).getWinRate() > tempAllUsers.get(j + 1).getWinRate()) {
+                                User t = tempAllUsers.get(j);
+                                tempAllUsers.set(j, tempAllUsers.get(j + 1));
+                                tempAllUsers.set(j + 1, t);
+                            }
+                        }
+                    }
+                    for (int i = tempAllUsers.size(); i > 0; --i) {
+                        tempAllUsers.get(i - 1).setLeaderboardPosition(tempAllUsers.size() - i + 1);
+                    }
+                    makeDash.set(false);
+                    makeDash.set(true);
                     primaryStage.setScene(dashScene);
                     password.clear();
                     username.clear();
@@ -543,7 +606,6 @@ public class Main extends Application {
         bottomRow.getChildren().addAll(backToDash);
         BorderPane layout1 = new BorderPane();
         layout1.setCenter(setupPage);
-        layout1.setTop(menuBar);
         layout1.setBottom(bottomRow);
         gameSetupPage = new Scene(layout1, 600, 600);
         
@@ -604,6 +666,26 @@ public class Main extends Application {
                     Administrator newAdmin = new Administrator(newUsername.getText(), newPass.getText(), newFName.getText(), newLName.getText(), Integer.parseInt(newAdminID.getText()));
                     adminList.add(newAdmin);
                     InformationBox.display("Created new administrator", "New administrator successfully created");
+                    ArrayList<User> tempAllUsers = new ArrayList<>();
+                    for (Administrator a:adminList) {
+                        tempAllUsers.add(a);
+                    }
+                    for (Player p:playerList) {
+                        tempAllUsers.add(p);
+                    }
+                    for (int i = 0; i < tempAllUsers.size() - 1; ++i) {
+                        for (int j = 0; j < tempAllUsers.size() - i - 1; ++j) {
+                            if (tempAllUsers.get(j).getWinRate() > tempAllUsers.get(j + 1).getWinRate()) {
+                                User t = tempAllUsers.get(j);
+                                tempAllUsers.set(j, tempAllUsers.get(j + 1));
+                                tempAllUsers.set(j + 1, t);
+                            }
+                        }
+                    }
+                    for (int i = tempAllUsers.size(); i > 0; --i) {
+                        tempAllUsers.get(i - 1).setLeaderboardPosition(tempAllUsers.size() - i + 1);
+                    }
+                    makeDash.set(false);
                 }
             }
             else {
@@ -624,11 +706,39 @@ public class Main extends Application {
                     Player newPlayer = new Player(newUsername.getText(), newPass.getText(), newFName.getText(), newLName.getText());
                     playerList.add(newPlayer);
                     InformationBox.display("Created new player", "New player successfully created");
+                    ArrayList<User> tempAllUsers = new ArrayList<>();
+                    for (Administrator a:adminList) {
+                        tempAllUsers.add(a);
+                    }
+                    for (Player p:playerList) {
+                        tempAllUsers.add(p);
+                    }
+                    for (int i = 0; i < tempAllUsers.size() - 1; ++i) {
+                        for (int j = 0; j < tempAllUsers.size() - i - 1; ++j) {
+                            if (tempAllUsers.get(j).getWinRate() > tempAllUsers.get(j + 1).getWinRate()) {
+                                User t = tempAllUsers.get(j);
+                                tempAllUsers.set(j, tempAllUsers.get(j + 1));
+                                tempAllUsers.set(j + 1, t);
+                            }
+                        }
+                    }
+                    for (int i = tempAllUsers.size(); i > 0; --i) {
+                        tempAllUsers.get(i - 1).setLeaderboardPosition(tempAllUsers.size() - i + 1);
+                    }
+                    makeDash.set(false);
                 }
             }
         });
         Button leaveCreateUser = new Button("Return to user dashboard");
-        leaveCreateUser.setOnAction(e -> primaryStage.setScene(dashScene));
+        leaveCreateUser.setOnAction(e -> {
+            makeDash.set(true);
+            primaryStage.setScene(dashScene);
+            newUsername.clear();
+            newPass.clear();
+            newFName.clear();
+            newLName.clear();
+            newAdminID.clear();
+        });
         createUserLayout.getChildren().addAll(np, admin, chooseUsername, newUsername, choosePass, newPass, chooseFName, newFName, chooseLName, newLName, chooseAdminID, newAdminID, createUserButton, leaveCreateUser);
         createUserScene = new Scene(createUserLayout, 600, 600);
         

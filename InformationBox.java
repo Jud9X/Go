@@ -16,7 +16,7 @@ public class InformationBox {
     public static void display(String title, String info) {
         Stage window = new Stage();
         window.setWidth(500);
-        window.setHeight(150); //edit
+        window.setHeight(200); //edit?
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle(title);
         

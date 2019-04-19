@@ -1,5 +1,4 @@
 import javafx.geometry.Pos;
-import javafx.scene.control.*;//fix
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -17,7 +16,7 @@ import javafx.scene.Node;
  * */
 public class Tile extends Pane {
     
-    private boolean hasBlack; //make all these private, add getters if necessary
+    private boolean hasBlack;
     private boolean hasWhite;
     private Line line1;
     private Line line2;
