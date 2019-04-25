@@ -469,11 +469,23 @@ public class Main extends Application {
                 else {
                     leaderboardCurData = new Label("" + loggedIn.get(0).getLeaderboardPosition());
                 }
-                Label newUsers = new Label("New players since last logout:");
-                Label newUsersData = new Label(); //get new users who were added since "loggedIn's" last logout - make this a drop down box ("choicebox") instead of a label
-                Label gamesSince = new Label("Click for list of games completed since last login");
+                Label newUsers = new Label("Click the drop down list to see all new users added since last login:");
+                ChoiceBox<String> newUserDropDownList = new ChoiceBox<>();
+                if (loggedIn.get(0).getPreviousLoginTime() != null) {
+                    for (Administrator a:adminList) {
+                        if (a.getJoinDate().until(ZonedDateTime.now(), ChronoUnit.SECONDS) < loggedIn.get(0).getPreviousLoginTime().until(ZonedDateTime.now(), ChronoUnit.SECONDS)) {
+                            newUserDropDownList.getItems().addAll(a.getUsername());
+                        }
+                    }
+                    for (Player p:playerList) {
+                        if (p.getJoinDate().until(ZonedDateTime.now(), ChronoUnit.SECONDS) < loggedIn.get(0).getPreviousLoginTime().until(ZonedDateTime.now(), ChronoUnit.SECONDS)) {
+                            newUserDropDownList.getItems().addAll(p.getUsername());
+                        }
+                    }
+                }
+                Label gamesSince = new Label("Click the button for list of games completed since last login.");
                 gamesSince.setWrapText(true);
-                Button gamesSinceButton = new Button("Games Completed"); //make this link to a tableview of games completed since the logged in player's last login
+                Button gamesSinceButton = new Button("Games Completed");
                 gamesSinceButton.setOnAction(e -> {
                     VBox gamesSinceLayout = new VBox();
                     ObservableList<GameRecord> newGameRecords = FXCollections.observableArrayList();
@@ -508,7 +520,7 @@ public class Main extends Application {
                     Scene newGamesScene = new Scene(gamesSinceLayout, 600, 600);
                     primaryStage.setScene(newGamesScene);
                 });
-                news.getChildren().addAll(leaderboardPrev, leaderboardPrevData, leaderboardCur, leaderboardCurData, newUsers, newUsersData, gamesSince, gamesSinceButton);
+                news.getChildren().addAll(leaderboardPrev, leaderboardPrevData, leaderboardCur, leaderboardCurData, newUsers, newUserDropDownList, gamesSince, gamesSinceButton);
                 ObservableList<GameRecord> myGameRecords = FXCollections.observableArrayList();
                 for (GameRecord game:GameContainer.getGamesPlayed()) {
                     if (game.getWinner().getUsername().equals(loggedIn.get(0).getUsername()) || game.getLoser().getUsername().equals(loggedIn.get(0).getUsername())) {

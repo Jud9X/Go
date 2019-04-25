@@ -20,6 +20,7 @@ public class User implements Serializable {
     private double winRate;
     private int previousLeaderboardPosition;
     private int leaderboardPosition;
+    private ZonedDateTime joinDate;
     //TODO: profile image
     
     public User(String username, String password, String fname, String lname) {
@@ -32,6 +33,7 @@ public class User implements Serializable {
         winRate = 0;
         previousLeaderboardPosition = 0;
         leaderboardPosition = 0;
+        joinDate = ZonedDateTime.now();
     }
     
     public String getUsername() {
@@ -84,6 +86,10 @@ public class User implements Serializable {
         else return previousLoginTime;
     }
     
+    public ZonedDateTime getJoinDate() {
+        return joinDate;
+    }
+    
     public int getPreviousLeaderboardPosition() {
         return previousLeaderboardPosition;
     }
@@ -106,7 +112,8 @@ public class User implements Serializable {
                 + "Password: " + password + " " //should be present?
                 + "First name: " + fname + " "
                 + "Last name: " + lname + " "
-                + "Win rate: " + winRate + " "
+                + "Win rate: " + winRate + " " 
+                + "Join date: " + joinDate.toString() + " " 
                 + "Last login: none";
         }
         else {
@@ -115,6 +122,7 @@ public class User implements Serializable {
                 + "First name: " + fname + " "
                 + "Last name: " + lname + " "
                 + "Win rate: " + winRate + " " 
+                + "Join date: " + joinDate.toString() + " " 
                 + "Last login: " + previousLoginTime.toString();
         }
     }
