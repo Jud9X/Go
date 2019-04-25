@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.ClassCastException;
+import java.time.temporal.ChronoUnit;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import javafx.application.Application;
@@ -59,7 +60,6 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Play Go!");
         
-        //setupPage = new SetupPage();
         VBox setupPage = new VBox();
         ArrayList<Administrator> adminList = new ArrayList<>();
         ArrayList<Player> playerList = new ArrayList<>();
@@ -314,7 +314,7 @@ public class Main extends Application {
             }
         });
         
-        //user dashboard (outsource this to a new class?)
+        //user dashboard
         makeDash.addListener((observable, oV0, nV0) -> {
             if (nV0) {
                 BorderPane dashboard = new BorderPane();
@@ -475,7 +475,38 @@ public class Main extends Application {
                 gamesSince.setWrapText(true);
                 Button gamesSinceButton = new Button("Games Completed"); //make this link to a tableview of games completed since the logged in player's last login
                 gamesSinceButton.setOnAction(e -> {
-                    //implement this
+                    VBox gamesSinceLayout = new VBox();
+                    ObservableList<GameRecord> newGameRecords = FXCollections.observableArrayList();
+                    if (loggedIn.get(0).getPreviousLoginTime() != null) {
+                        for (GameRecord game:GameContainer.getGamesPlayed()) {
+                            if (game.getDateCompleted().until(ZonedDateTime.now(), ChronoUnit.SECONDS) < loggedIn.get(0).getPreviousLoginTime().until(ZonedDateTime.now(), ChronoUnit.SECONDS)) {
+                                newGameRecords.add(game);
+                            }
+                        }
+                    }
+                    TableView<GameRecord> gamesSinceTable = new TableView<>();
+                    TableColumn<GameRecord, String> dateCol = new TableColumn<>("Date Completed");
+                    dateCol.setMinWidth(100);
+                    dateCol.setCellValueFactory(new PropertyValueFactory<>("dateCompleted"));
+                    TableColumn<GameRecord, String> winnerCol = new TableColumn<>("Winner");
+                    winnerCol.setMinWidth(100);
+                    winnerCol.setCellValueFactory(new PropertyValueFactory<>("winnerUsername"));
+                    TableColumn<GameRecord, String> loserCol = new TableColumn<>("Loser");
+                    loserCol.setMinWidth(100);
+                    loserCol.setCellValueFactory(new PropertyValueFactory<>("loserUsername"));
+                    dateCol.setSortType(TableColumn.SortType.DESCENDING);
+                    gamesSinceTable.setItems(newGameRecords);
+                    gamesSinceTable.getColumns().add(dateCol);
+                    gamesSinceTable.getColumns().add(winnerCol);
+                    gamesSinceTable.getColumns().add(loserCol);
+                    gamesSinceTable.getSortOrder().add(dateCol);
+                    Button leaveGamesSince = new Button("Return to dashboard");
+                    leaveGamesSince.setOnAction(e2 -> {
+                        primaryStage.setScene(dashScene);
+                    });
+                    gamesSinceLayout.getChildren().addAll(gamesSinceTable, leaveGamesSince);
+                    Scene newGamesScene = new Scene(gamesSinceLayout, 600, 600);
+                    primaryStage.setScene(newGamesScene);
                 });
                 news.getChildren().addAll(leaderboardPrev, leaderboardPrevData, leaderboardCur, leaderboardCurData, newUsers, newUsersData, gamesSince, gamesSinceButton);
                 ObservableList<GameRecord> myGameRecords = FXCollections.observableArrayList();
