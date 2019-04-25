@@ -14,8 +14,7 @@ java --module-path %PATH_TO_FX% --add-modules=javafx.controls Main
 
 Current big "to-do's":
 
-0. Review meeting minutes.
-1. Complete the required functionality (profile pictures (line 454 of Main))
+1. Review meeting minutes.
 2. Improve the GUI (including both design and layout)
 3. Add exception handling if necessary
 4. Add Javadoc (following the lecture guidelines)
