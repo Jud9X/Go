@@ -27,6 +27,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -451,8 +453,92 @@ public class Main extends Application {
                 Label winRate = new Label("Win rate (%):");
                 Label winRateData = new Label("" + loggedIn.get(0).getWinRate());
                 Label profilePic = new Label("Profile picture:");
-                //somehow put the profile picture here
-                information.getChildren().addAll(usernameLabel, usernameData, firstName, firstNameData, secondName, secondNameData, winRate, winRateData, profilePic); //add the profile pic obj here
+                ImageView iv;
+                if (loggedIn.get(0).getProfileImg() == 1) {
+                    Image profileImage = new Image("icons8-anonymous-mask-64.png");
+                    iv = new ImageView();
+                    iv.setImage(profileImage);
+                }
+                else if (loggedIn.get(0).getProfileImg() == 2) {
+                    Image profileImage = new Image("icons8-cat-profile-64.png");
+                    iv = new ImageView();
+                    iv.setImage(profileImage);
+                }
+                else if (loggedIn.get(0).getProfileImg() == 3) {
+                    Image profileImage = new Image("icons8-contacts-64.png");
+                    iv = new ImageView();
+                    iv.setImage(profileImage);
+                }
+                else if (loggedIn.get(0).getProfileImg() == 4) {
+                    Image profileImage = new Image("icons8-male-user-64.png");
+                    iv = new ImageView();
+                    iv.setImage(profileImage);
+                }
+                else if (loggedIn.get(0).getProfileImg() == 5) {
+                    Image profileImage = new Image("icons8-person-female-64.png");
+                    iv = new ImageView();
+                    iv.setImage(profileImage);
+                }
+                else if (loggedIn.get(0).getProfileImg() == 6) {
+                    Image profileImage = new Image("icons8-user-64.png");
+                    iv = new ImageView();
+                    iv.setImage(profileImage);
+                }
+                else {
+                    iv = new ImageView();
+                    iv.setImage(null);
+                }
+                Button choosePic = new Button("Choose picture");
+                choosePic.setOnAction(e -> {
+                    VBox choosePicLayout = new VBox();
+                    ToggleGroup profilePictures = new ToggleGroup();
+                    RadioButton r0 = new RadioButton("None");
+                    RadioButton r1 = new RadioButton("Anonymous");
+                    RadioButton r2 = new RadioButton("Cat");
+                    RadioButton r3 = new RadioButton("Contacts");
+                    RadioButton r4 = new RadioButton("Male");
+                    RadioButton r5 = new RadioButton("Female");
+                    RadioButton r6 = new RadioButton("User");
+                    r0.setToggleGroup(profilePictures);
+                    r1.setToggleGroup(profilePictures);
+                    r2.setToggleGroup(profilePictures);
+                    r3.setToggleGroup(profilePictures);
+                    r4.setToggleGroup(profilePictures);
+                    r5.setToggleGroup(profilePictures);
+                    r6.setToggleGroup(profilePictures);
+                    r0.setSelected(true);
+                    Button doneChoosing = new Button("Finish and return");
+                    doneChoosing.setOnAction(e2 -> {
+                        if (r1.isSelected()) {
+                            loggedIn.get(0).setProfileImg(1);
+                        }
+                        else if (r2.isSelected()) {
+                            loggedIn.get(0).setProfileImg(2);
+                        }
+                        else if (r3.isSelected()) {
+                            loggedIn.get(0).setProfileImg(3);
+                        }
+                        else if (r4.isSelected()) {
+                            loggedIn.get(0).setProfileImg(4);
+                        }
+                        else if (r5.isSelected()) {
+                            loggedIn.get(0).setProfileImg(5);
+                        }
+                        else if (r6.isSelected()) {
+                            loggedIn.get(0).setProfileImg(6);
+                        }
+                        else {
+                            loggedIn.get(0).setProfileImg(0);
+                        }
+                        makeDash.set(false);
+                        makeDash.set(true);
+                        primaryStage.setScene(dashScene);
+                    });
+                    choosePicLayout.getChildren().addAll(r0, r1, r2, r3, r4, r5, r6, doneChoosing);
+                    Scene picScene = new Scene(choosePicLayout, 600, 600);
+                    primaryStage.setScene(picScene);
+                });
+                information.getChildren().addAll(usernameLabel, usernameData, firstName, firstNameData, secondName, secondNameData, winRate, winRateData, profilePic, iv, choosePic);
                 news = new VBox();
                 Label leaderboardPrev = new Label("Leaderboard position on last logout:");
                 Label leaderboardPrevData;
@@ -470,6 +556,7 @@ public class Main extends Application {
                     leaderboardCurData = new Label("" + loggedIn.get(0).getLeaderboardPosition());
                 }
                 Label newUsers = new Label("Click the drop down list to see all new users added since last login:");
+                newUsers.setWrapText(true);
                 ChoiceBox<String> newUserDropDownList = new ChoiceBox<>();
                 if (loggedIn.get(0).getPreviousLoginTime() != null) {
                     for (Administrator a:adminList) {
@@ -592,6 +679,7 @@ public class Main extends Application {
                     for (int i = tempAllUsers.size(); i > 0; --i) {
                         tempAllUsers.get(i - 1).setLeaderboardPosition(tempAllUsers.size() - i + 1);
                     }
+                    makeDash.set(false);
                     makeDash.set(true);
                     primaryStage.setScene(dashScene);
                     password.clear();

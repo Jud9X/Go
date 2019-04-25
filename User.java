@@ -21,7 +21,7 @@ public class User implements Serializable {
     private int previousLeaderboardPosition;
     private int leaderboardPosition;
     private ZonedDateTime joinDate;
-    //TODO: profile image
+    private int profileImg;
     
     public User(String username, String password, String fname, String lname) {
         this.username = username;
@@ -34,6 +34,7 @@ public class User implements Serializable {
         previousLeaderboardPosition = 0;
         leaderboardPosition = 0;
         joinDate = ZonedDateTime.now();
+        profileImg = 0;
     }
     
     public String getUsername() {
@@ -104,6 +105,14 @@ public class User implements Serializable {
     
     public void setLeaderboardPosition(int pos) {
         leaderboardPosition = pos;
+    }
+    
+    public int getProfileImg() {
+        return profileImg;
+    }
+    
+    public void setProfileImg(int choice) {
+        profileImg = choice;
     }
     
     public String toString() { //necessary?
