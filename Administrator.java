@@ -45,7 +45,7 @@ public class Administrator extends User {
      * @param password The password, which can be non-unique and empty.
      * @param fname The player's first name, which can be non-unique and empty.
      * @param lname The player's last name, which can be non-unique and empty.
-     * @return Player A new Player object.
+     * @return Player A new Player object (non-null).
      * */
     public static Player createPlayer(String username, String password, String fname, String lname) {
         return new Player(username, password, fname, lname);
@@ -58,7 +58,7 @@ public class Administrator extends User {
      * @param fname The administrator's first name, which can be non-unique and empty.
      * @param lname The administrator's last name, which can be non-unique and empty.
      * @param adminID The administrator's admin ID, which must be an integer.
-     * @return Player A new Administrator object.
+     * @return Player A new Administrator object (non-null).
      * */
     public static Administrator createAdmin(String username, String password, String fname, String lname, int adminID) {
         return new Administrator(username, password, fname, lname, adminID);
