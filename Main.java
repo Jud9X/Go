@@ -495,14 +495,19 @@ public class Main extends Application {
                 information.setPadding(new Insets(10,10,10,10));
                 information.setSpacing(10);
                 Label usernameLabel = new Label("Username:");
+                usernameLabel.setStyle("-fx-font-weight: bold");
                 Label usernameData = new Label(loggedIn.get(0).getUsername());
                 Label firstName = new Label("First name:");
+                firstName.setStyle("-fx-font-weight: bold");
                 Label firstNameData = new Label(loggedIn.get(0).getFname());
                 Label secondName = new Label("Second name:");
+                secondName.setStyle("-fx-font-weight: bold");
                 Label secondNameData = new Label(loggedIn.get(0).getLname());
                 Label winRate = new Label("Win rate (%):");
+                winRate.setStyle("-fx-font-weight: bold");
                 Label winRateData = new Label("" + loggedIn.get(0).getWinRate());
                 Label profilePic = new Label("Profile picture:");
+                profilePic.setStyle("-fx-font-weight: bold");
                 ImageView iv;
                 if (loggedIn.get(0).getProfileImg() == 1) {
                     Image profileImage = new Image("icons8-anonymous-mask-64.png");
@@ -597,6 +602,9 @@ public class Main extends Application {
                 news.setPadding(new Insets(10,10,10,10));
                 news.setSpacing(10);
                 news.setMaxWidth(150);
+                Label newsIntro = new Label("Below is the news section");
+                newsIntro.setWrapText(true);
+                newsIntro.setStyle("-fx-font-weight: bold");
                 Label leaderboardPrev = new Label("Leaderboard position on last logout:");
                 leaderboardPrev.setWrapText(true);
                 Label leaderboardPrevData;
@@ -668,12 +676,13 @@ public class Main extends Application {
                     Scene newGamesScene = new Scene(gamesSinceLayout, 600, 600);
                     primaryStage.setScene(newGamesScene);
                 });
-                news.getChildren().addAll(leaderboardPrev, leaderboardPrevData, leaderboardCur, leaderboardCurData, newUsers, newUserDropDownList, gamesSince, gamesSinceButton);
+                news.getChildren().addAll(newsIntro, leaderboardPrev, leaderboardPrevData, leaderboardCur, leaderboardCurData, newUsers, newUserDropDownList, gamesSince, gamesSinceButton);
                 VBox allMyGamesLayout = new VBox();
                 allMyGamesLayout.setPadding(new Insets(10,10,10,10));
                 allMyGamesLayout.setSpacing(10);
                 Label gamesHistoryInfo = new Label("Below is a list of all games you have played:");
                 gamesHistoryInfo.setWrapText(true);
+                gamesHistoryInfo.setStyle("-fx-font-weight: bold");
                 ObservableList<GameRecord> myGameRecords = FXCollections.observableArrayList();
                 for (GameRecord game:GameContainer.getGamesPlayed()) {
                     if (game.getWinner().getUsername().equals(loggedIn.get(0).getUsername()) || game.getLoser().getUsername().equals(loggedIn.get(0).getUsername())) {
