@@ -10,6 +10,7 @@ import java.time.temporal.ChronoUnit;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import javafx.application.Application;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -171,6 +172,8 @@ public class Main extends Application {
                 r2.setToggleGroup(gridSizes);
                 r2.setSelected(true);
                 Button startGame = new Button("Start game");
+                //the line below came from https://stackoverflow.com/questions/43410312/javafx-choicebox-how-to-check-if-selected-activated
+                startGame.visibleProperty().bind(Bindings.isNotNull(userDropDownList.valueProperty()));
                 setupPage.setMargin(startGame, new Insets(20, 0, 0, 0));
                 setupPage.getChildren().addAll(setupIntroInfo, curUser, opponentInfo, userDropDownList, chooseGridSize, r1, r2, startGame);
                 startGame.setOnAction(e -> {
