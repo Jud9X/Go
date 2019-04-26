@@ -29,7 +29,7 @@ public class GameContainer {
     
     /**
      * Sets the current static GameState object.
-     * @param gridSize The size of the grid.
+     * @param gridSize The size of the grid given as one length.
      * @param player1 The first User object.
      * @param player2 The second User object.
      * */
@@ -47,7 +47,7 @@ public class GameContainer {
     
     /**
      * Sets the current static GameGrid object.
-     * @param gridSize The size of the grid.
+     * @param gridSize The size of the grid given as one length.
      * */
     public static void setGrid(int gridSize) {
         grid = new GameGrid(gridSize);

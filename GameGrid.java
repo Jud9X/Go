@@ -13,11 +13,19 @@ public class GameGrid extends GridPane {
     
     private Tile[][] grid;
     
+    /**
+     * Makes a new GameGrid grid to display.
+     * @param k The size of the grid given as one length.
+     * */
     public GameGrid(int k) {
         grid = new Tile[k][k];
         makeGrid(k);
     }
     
+    /**
+     * Makes a new grid according to the Tile required.
+     * @param k The size of the grid given as one length.
+     * */
     private void makeGrid(int k) {
         for (int i = 0; i < k; ++i) {
             for (int j = 0; j < k; ++j) {
@@ -61,10 +69,17 @@ public class GameGrid extends GridPane {
         }
     }
     
+    /**
+     * Gets the new grid.
+     * @return Tile[][] The grid as a 2D array of Tile objects.
+     * */
     public Tile[][] getGrid() {
         return grid;
     }
     
+    /**
+     * Updates the grid. For use during gameplay when a piece is placed.
+     * */
     public void updateGrid() {
         for (int i = 0; i < GameContainer.getG().getBoard().length; ++i) {
             for (int j = 0; j < GameContainer.getG().getBoard().length; ++j) {
@@ -92,6 +107,10 @@ public class GameGrid extends GridPane {
         }
     }
     
+    /**
+     * Updates the grid. For use during the removal of dead stones during scoring.
+     * @param score The current Score object.
+     * */
     public void updateGrid(Score score) {
         for (int i = 0; i < score.getEndingBoard().length; ++i) {
             for (int j = 0; j < score.getEndingBoard().length; ++j) {
