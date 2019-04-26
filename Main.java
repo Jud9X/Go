@@ -499,15 +499,19 @@ public class Main extends Application {
                 Label usernameData = new Label(loggedIn.get(0).getUsername());
                 Label firstName = new Label("First name:");
                 firstName.setStyle("-fx-font-weight: bold");
+                information.setMargin(firstName, new Insets(10, 0, 0, 0));
                 Label firstNameData = new Label(loggedIn.get(0).getFname());
                 Label secondName = new Label("Second name:");
                 secondName.setStyle("-fx-font-weight: bold");
+                information.setMargin(secondName, new Insets(10, 0, 0, 0));
                 Label secondNameData = new Label(loggedIn.get(0).getLname());
                 Label winRate = new Label("Win rate (%):");
                 winRate.setStyle("-fx-font-weight: bold");
+                information.setMargin(winRate, new Insets(10, 0, 0, 0));
                 Label winRateData = new Label("" + loggedIn.get(0).getWinRate());
                 Label profilePic = new Label("Profile picture:");
                 profilePic.setStyle("-fx-font-weight: bold");
+                information.setMargin(profilePic, new Insets(10, 0, 0, 0));
                 ImageView iv;
                 if (loggedIn.get(0).getProfileImg() == 1) {
                     Image profileImage = new Image("icons8-anonymous-mask-64.png");
