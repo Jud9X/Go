@@ -22,6 +22,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -33,10 +34,13 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.Scene;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
 /**
  * Holds the stage, all of the scenes and almost all of the GUI controls.
+ * This is a large class partly because of the constraint that it is only allowed to contain one method.
  * @author Oliver
  * @version 2.5
  * */
@@ -63,6 +67,8 @@ public class Main extends Application {
         primaryStage.setTitle("Play Go!");
         
         VBox setupPage = new VBox();
+        setupPage.setPadding(new Insets(10,10,10,10));
+        setupPage.setSpacing(10);
         ArrayList<Administrator> adminList = new ArrayList<>();
         ArrayList<Player> playerList = new ArrayList<>();
         if (!(new File("userdata").isFile())) {
@@ -140,7 +146,9 @@ public class Main extends Application {
         BooleanProperty setupTime = new SimpleBooleanProperty(false);
         setupTime.addListener((observable, oV0, nV0) -> {
             if (nV0) {
+                Label setupIntroInfo = new Label("Set up a new game below");
                 Label curUser = new Label("Your username: " + loggedIn.get(0).getUsername());
+                setupPage.setMargin(curUser, new Insets(10, 0, 0, 0));
                 Label opponentInfo = new Label("Players you can play against are listed in the drop-down list below. If the list is empty, you first need to create a new user.");
                 opponentInfo.setWrapText(true);
                 ChoiceBox<String> userDropDownList = new ChoiceBox<>();
@@ -154,7 +162,8 @@ public class Main extends Application {
                         userDropDownList.getItems().addAll(p.getUsername());
                     }
                 }
-                Label label7 = new Label("Select grid size:");
+                Label chooseGridSize = new Label("Select grid size:");
+                setupPage.setMargin(chooseGridSize, new Insets(20, 0, 0, 0));
                 ToggleGroup gridSizes = new ToggleGroup();
                 RadioButton r1 = new RadioButton(GRID_SIZE_OPTION_1);
                 RadioButton r2 = new RadioButton(GRID_SIZE_OPTION_2);
@@ -162,8 +171,9 @@ public class Main extends Application {
                 r2.setToggleGroup(gridSizes);
                 r2.setSelected(true);
                 Button startGame = new Button("Start game");
-                setupPage.getChildren().addAll(curUser, opponentInfo, userDropDownList, label7, r1, r2, startGame);
-                startGame.setOnAction(e -> { //tidy up this huge button click?
+                setupPage.setMargin(startGame, new Insets(20, 0, 0, 0));
+                setupPage.getChildren().addAll(setupIntroInfo, curUser, opponentInfo, userDropDownList, chooseGridSize, r1, r2, startGame);
+                startGame.setOnAction(e -> {
                     User p1 = loggedIn.get(0);
                     //code on next line adapted from https://stackoverflow.com/questions/17526608/how-to-find-an-object-in-an-arraylist-by-property
                     User p2 = adminList.stream().filter(user -> userDropDownList.getValue().equals(user.getUsername())).findFirst().orElse(null); //make sure that a value in userdropdownlist is selected first
@@ -173,32 +183,54 @@ public class Main extends Application {
                     GameContainer.setG(Integer.parseInt(((RadioButton)gridSizes.getSelectedToggle()).getText()), p1, p2);
                     GameContainer.setGrid(Integer.parseInt(((RadioButton)gridSizes.getSelectedToggle()).getText()));
                     GameContainer.getGrid().setAlignment(Pos.CENTER);
-                    GameContainer.getGrid().setMinSize(400, 400); //edit and fix the bad ratioing that has appeared
+                    GameContainer.getGrid().setMinSize(400, 400);
                     GameContainer.getGrid().setMaxSize(600, 600);
                     //layout of page 2
                     BorderPane layout2 = new BorderPane();
                     layout2.setCenter(GameContainer.getGrid());
                     VBox gameInfo = new VBox();
-                    Label black = new Label("Black: " + GameContainer.getG().getBlack());
-                    Label white = new Label("White: " + GameContainer.getG().getWhite());
+                    gameInfo.setPadding(new Insets(10,10,10,10));
+                    gameInfo.setSpacing(10);
+                    TextFlow firstPlayer = new TextFlow();
+                    Text black1 = new Text("Black: ");
+                    black1.setStyle("-fx-font-weight: bold");
+                    Text black2 = new Text(GameContainer.getG().getBlack());
+                    firstPlayer.getChildren().addAll(black1, black2);
+                    TextFlow secondPlayer = new TextFlow();
+                    Text white1 = new Text("White: ");
+                    white1.setStyle("-fx-font-weight: bold");
+                    Text white2 = new Text(GameContainer.getG().getWhite());
+                    secondPlayer.getChildren().addAll(white1, white2);
                     Label tn = new Label("Turns played: ");
+                    tn.setStyle("-fx-font-weight: bold");
+                    gameInfo.setMargin(tn, new Insets(20, 0, 0, 0));
                     Label tnLive = new Label();
                     tnLive.textProperty().bind(GameContainer.getG().getTurnNoP());
                     Label capsB = new Label("Captures by black: ");
+                    capsB.setStyle("-fx-font-weight: bold");
+                    gameInfo.setMargin(capsB, new Insets(10, 0, 0, 0));
                     Label capsBLive = new Label();
                     capsBLive.textProperty().bind(GameContainer.getG().getCapsBP());
                     Label capsW = new Label("Captures by white: ");
+                    capsW.setStyle("-fx-font-weight: bold");
+                    gameInfo.setMargin(capsW, new Insets(10, 0, 0, 0));
                     Label capsWLive = new Label();
                     capsWLive.textProperty().bind(GameContainer.getG().getCapsWP());
                     Label pc = new Label("Pass count: ");
+                    pc.setStyle("-fx-font-weight: bold");
+                    gameInfo.setMargin(pc, new Insets(10, 0, 0, 0));
                     Label pcLive = new Label();
                     pcLive.textProperty().bind(GameContainer.getG().getPassCountP());
                     Label CPT = new Label("Current player's turn: ");
+                    CPT.setStyle("-fx-font-weight: bold");
+                    gameInfo.setMargin(CPT, new Insets(10, 0, 0, 0));
                     Label CPTLive = new Label();
                     CPTLive.textProperty().bind(GameContainer.getG().getCurrentPlayerTurnP());
-                    gameInfo.getChildren().addAll(black, white, tn, tnLive, capsB, capsBLive, capsW, capsWLive, pc, pcLive, CPT, CPTLive);
+                    gameInfo.getChildren().addAll(firstPlayer, secondPlayer, tn, tnLive, capsB, capsBLive, capsW, capsWLive, pc, pcLive, CPT, CPTLive);
                     layout2.setRight(gameInfo);
                     VBox gameControl = new VBox();
+                    gameControl.setPadding(new Insets(10,10,10,10));
+                    gameControl.setSpacing(10);
                     Label passInfo = new Label("Click the button below to pass your turn:");
                     passInfo.setMaxWidth(100);
                     passInfo.setWrapText(true);
@@ -207,6 +239,7 @@ public class Main extends Application {
                     Label undoInfo = new Label("Click the button below to undo the previous move (unless that move was passed):");
                     undoInfo.setMaxWidth(100);
                     undoInfo.setWrapText(true);
+                    gameControl.setMargin(undoInfo, new Insets(20, 0, 0, 0));
                     Button undo = new Button("Undo");
                     undo.setDisable(true);
                     undo.setOnAction(e3 -> {
@@ -225,6 +258,7 @@ public class Main extends Application {
                     undoMarkInfo.setMaxWidth(100);
                     undoMarkInfo.setWrapText(true);
                     undoMarkInfo.setVisible(false);
+                    gameControl.setMargin(undoMarkInfo, new Insets(20, 0, 0, 0));
                     Button undoMark = new Button("Undo mark");
                     undoMark.setDisable(true);
                     undoMark.setVisible(false);
@@ -309,7 +343,7 @@ public class Main extends Application {
                     });
                     gameControl.getChildren().addAll(passInfo, pass, undoInfo, undo, instructions, done, undoMarkInfo, undoMark);
                     layout2.setLeft(gameControl);
-                    gameScene = new Scene(layout2, 802, 702); //fix these random screen size values, maybe using: https://stackoverflow.com/questions/38216268/how-to-listen-resize-event-of-stage-in-javafx
+                    gameScene = new Scene(layout2, 862, 672);
                     primaryStage.setScene(gameScene);
                     primaryStage.centerOnScreen();
                 });
@@ -321,9 +355,14 @@ public class Main extends Application {
             if (nV0) {
                 BorderPane dashboard = new BorderPane();
                 VBox topPanel = new VBox();
-                HBox topRow = new HBox();
+                topPanel.setPadding(new Insets(10,10,10,10));
+                topPanel.setSpacing(10);
+                HBox secondRow = new HBox();
+                secondRow.setPadding(new Insets(1,1,1,1));
+                secondRow.setSpacing(10);
                 Label dashIntro = new Label("Welcome to the user dashboard!");
-                Label lastLogin = new Label("Previous login:");
+                dashIntro.setStyle("-fx-font-weight: bold");
+                Label lastLogin = new Label("Previous login: ");
                 Label lastLoginDate;
                 if (loggedIn.get(0).getPreviousLoginTime() == null) {
                     lastLoginDate = new Label("This is your first time logging in");
@@ -331,11 +370,15 @@ public class Main extends Application {
                 else {
                     lastLoginDate = new Label(loggedIn.get(0).getPreviousLoginTime().toString());
                 }
-                topRow.getChildren().addAll(dashIntro, lastLogin, lastLoginDate);
-                HBox secondRow = new HBox();
+                secondRow.getChildren().addAll(lastLogin, lastLoginDate);
+                HBox thirdRow = new HBox();
+                thirdRow.setPadding(new Insets(1,1,1,1));
+                thirdRow.setSpacing(10);
                 Button leaderboardButton = new Button("Show leaderboard");
                 leaderboardButton.setOnAction(e -> {
                     VBox leaderboardLayout = new VBox();
+                    leaderboardLayout.setPadding(new Insets(10,10,10,10));
+                    leaderboardLayout.setSpacing(10);
                     ObservableList<User> leaderboardRecords = FXCollections.observableArrayList();
                     for (Administrator a:adminList) {
                         leaderboardRecords.add(a);
@@ -428,22 +471,29 @@ public class Main extends Application {
                     }
                     primaryStage.setScene(loginScene);
                 });
-                secondRow.getChildren().addAll(leaderboardButton, gameSetupButton, logout);
+                thirdRow.getChildren().addAll(leaderboardButton, gameSetupButton, logout);
+                thirdRow.setAlignment(Pos.CENTER);
                 HBox adminRow = new HBox();
+                adminRow.setPadding(new Insets(5,5,5,5));
+                adminRow.setSpacing(10);
+                Label adminOptionInfo = new Label("Administrator option: ");
                 Button createUser = new Button("Create new user...");
                 createUser.setOnAction(e -> {
                     primaryStage.setScene(createUserScene);
                     setupTime.set(false);
                     setupPage.getChildren().clear();
                 });
-                adminRow.getChildren().addAll(createUser);
+                adminRow.getChildren().addAll(adminOptionInfo, createUser);
+                adminRow.setAlignment(Pos.CENTER);
                 if (loggedIn.get(0).getClass().getName().equals("Player")) {
-                    topPanel.getChildren().addAll(topRow, secondRow);
+                    topPanel.getChildren().addAll(dashIntro, secondRow, thirdRow);
                 }
                 else {
-                    topPanel.getChildren().addAll(topRow, secondRow, adminRow);
+                    topPanel.getChildren().addAll(dashIntro, secondRow, thirdRow, adminRow);
                 }
                 VBox information = new VBox();
+                information.setPadding(new Insets(10,10,10,10));
+                information.setSpacing(10);
                 Label usernameLabel = new Label("Username:");
                 Label usernameData = new Label(loggedIn.get(0).getUsername());
                 Label firstName = new Label("First name:");
@@ -491,6 +541,10 @@ public class Main extends Application {
                 Button choosePic = new Button("Choose picture");
                 choosePic.setOnAction(e -> {
                     VBox choosePicLayout = new VBox();
+                    choosePicLayout.setPadding(new Insets(10,10,10,10));
+                    choosePicLayout.setSpacing(10);
+                    Label chooseAPic = new Label("Please select a profile picture from the list below:");
+                    chooseAPic.setWrapText(true);
                     ToggleGroup profilePictures = new ToggleGroup();
                     RadioButton r0 = new RadioButton("None");
                     RadioButton r1 = new RadioButton("Anonymous");
@@ -534,13 +588,17 @@ public class Main extends Application {
                         makeDash.set(true);
                         primaryStage.setScene(dashScene);
                     });
-                    choosePicLayout.getChildren().addAll(r0, r1, r2, r3, r4, r5, r6, doneChoosing);
+                    choosePicLayout.getChildren().addAll(chooseAPic, r0, r1, r2, r3, r4, r5, r6, doneChoosing);
                     Scene picScene = new Scene(choosePicLayout, 600, 600);
                     primaryStage.setScene(picScene);
                 });
                 information.getChildren().addAll(usernameLabel, usernameData, firstName, firstNameData, secondName, secondNameData, winRate, winRateData, profilePic, iv, choosePic);
                 news = new VBox();
+                news.setPadding(new Insets(10,10,10,10));
+                news.setSpacing(10);
+                news.setMaxWidth(150);
                 Label leaderboardPrev = new Label("Leaderboard position on last logout:");
+                leaderboardPrev.setWrapText(true);
                 Label leaderboardPrevData;
                 if (loggedIn.get(0).getPreviousLoginTime() == null) {
                     leaderboardPrevData = new Label("This is your first login");
@@ -549,6 +607,7 @@ public class Main extends Application {
                     leaderboardPrevData = new Label("" + loggedIn.get(0).getPreviousLeaderboardPosition());
                 }
                 Label leaderboardCur = new Label("Current leaderboard position:");
+                leaderboardCur.setWrapText(true);
                 if (loggedIn.get(0).getLeaderboardPosition() == 0) {
                     leaderboardCurData = new Label("" + (adminList.size() + playerList.size()));
                 }
@@ -575,6 +634,8 @@ public class Main extends Application {
                 Button gamesSinceButton = new Button("Games Completed");
                 gamesSinceButton.setOnAction(e -> {
                     VBox gamesSinceLayout = new VBox();
+                    gamesSinceLayout.setPadding(new Insets(10,10,10,10));
+                    gamesSinceLayout.setSpacing(10);
                     ObservableList<GameRecord> newGameRecords = FXCollections.observableArrayList();
                     if (loggedIn.get(0).getPreviousLoginTime() != null) {
                         for (GameRecord game:GameContainer.getGamesPlayed()) {
@@ -585,7 +646,7 @@ public class Main extends Application {
                     }
                     TableView<GameRecord> gamesSinceTable = new TableView<>();
                     TableColumn<GameRecord, String> dateCol = new TableColumn<>("Date Completed");
-                    dateCol.setMinWidth(100);
+                    dateCol.setMinWidth(200);
                     dateCol.setCellValueFactory(new PropertyValueFactory<>("dateCompleted"));
                     TableColumn<GameRecord, String> winnerCol = new TableColumn<>("Winner");
                     winnerCol.setMinWidth(100);
@@ -608,6 +669,11 @@ public class Main extends Application {
                     primaryStage.setScene(newGamesScene);
                 });
                 news.getChildren().addAll(leaderboardPrev, leaderboardPrevData, leaderboardCur, leaderboardCurData, newUsers, newUserDropDownList, gamesSince, gamesSinceButton);
+                VBox allMyGamesLayout = new VBox();
+                allMyGamesLayout.setPadding(new Insets(10,10,10,10));
+                allMyGamesLayout.setSpacing(10);
+                Label gamesHistoryInfo = new Label("Below is a list of all games you have played:");
+                gamesHistoryInfo.setWrapText(true);
                 ObservableList<GameRecord> myGameRecords = FXCollections.observableArrayList();
                 for (GameRecord game:GameContainer.getGamesPlayed()) {
                     if (game.getWinner().getUsername().equals(loggedIn.get(0).getUsername()) || game.getLoser().getUsername().equals(loggedIn.get(0).getUsername())) {
@@ -616,7 +682,7 @@ public class Main extends Application {
                 }
                 TableView<GameRecord> myHistoryTable = new TableView<>();
                 TableColumn<GameRecord, String> dateCol = new TableColumn<>("Date Completed");
-                dateCol.setMinWidth(100);
+                dateCol.setMinWidth(110);
                 dateCol.setCellValueFactory(new PropertyValueFactory<>("dateCompleted"));
                 TableColumn<GameRecord, String> winnerCol = new TableColumn<>("Winner");
                 winnerCol.setMinWidth(100);
@@ -630,10 +696,11 @@ public class Main extends Application {
                 myHistoryTable.getColumns().add(winnerCol);
                 myHistoryTable.getColumns().add(loserCol);
                 myHistoryTable.getSortOrder().add(dateCol);
+                allMyGamesLayout.getChildren().addAll(gamesHistoryInfo, myHistoryTable);
                 dashboard.setTop(topPanel);
                 dashboard.setLeft(information);
                 dashboard.setRight(news);
-                dashboard.setCenter(myHistoryTable);
+                dashboard.setCenter(allMyGamesLayout);
                 dashScene = new Scene(dashboard, 600, 600);
             }
         });
@@ -647,9 +714,9 @@ public class Main extends Application {
         TextField username = new TextField(); //limit the input to this and all other text fields...
         username.setPromptText("Username");
         username.setMaxWidth(200);
-        TextField password = new TextField();
+        PasswordField password = new PasswordField();
         password.setPromptText("Password");
-        password.setMaxWidth(200); //hide the password text
+        password.setMaxWidth(200);
         Button loginButton = new Button("Login");
         loginButton.requestFocus();
         authenticated = new SimpleBooleanProperty(false);
@@ -742,6 +809,9 @@ public class Main extends Application {
         
         //create users page
         VBox createUserLayout = new VBox();
+        createUserLayout.setPadding(new Insets(10,10,10,10));
+        createUserLayout.setSpacing(10);
+        Label createNewUserInfo = new Label("Create a new user using the form below:");
         ToggleGroup userTypes = new ToggleGroup();
         RadioButton np = new RadioButton("Normal Player");
         RadioButton admin = new RadioButton("Administrator");
@@ -749,15 +819,20 @@ public class Main extends Application {
         admin.setToggleGroup(userTypes);
         np.setSelected(true);
         Label chooseUsername = new Label("Type username below:");
-        TextField newUsername = new TextField(); //set max size and restrict this to have no spaces
+        TextField newUsername = new TextField(); //restrict this to have no spaces
+        newUsername.setMaxWidth(200);
         Label choosePass = new Label("Type password below:");
         TextField newPass = new TextField();
+        newPass.setMaxWidth(200);
         Label chooseFName = new Label("Type first name below:");
         TextField newFName = new TextField();
+        newFName.setMaxWidth(200);
         Label chooseLName = new Label("Type last name below:");
         TextField newLName = new TextField();
+        newLName.setMaxWidth(200);
         Label chooseAdminID = new Label("Type new admin ID below:");
         TextField newAdminID = new TextField(); //enforce this to be an integer
+        newAdminID.setMaxWidth(200);
         chooseAdminID.setVisible(false);
         newAdminID.setVisible(false);
         admin.selectedProperty().addListener((observable, wasSelected, isSelected) -> {
@@ -861,6 +936,7 @@ public class Main extends Application {
             }
         });
         Button leaveCreateUser = new Button("Return to user dashboard");
+        createUserLayout.setMargin(leaveCreateUser, new Insets(20, 0, 0, 0));
         leaveCreateUser.setOnAction(e -> {
             makeDash.set(true);
             primaryStage.setScene(dashScene);
@@ -870,7 +946,7 @@ public class Main extends Application {
             newLName.clear();
             newAdminID.clear();
         });
-        createUserLayout.getChildren().addAll(np, admin, chooseUsername, newUsername, choosePass, newPass, chooseFName, newFName, chooseLName, newLName, chooseAdminID, newAdminID, createUserButton, leaveCreateUser);
+        createUserLayout.getChildren().addAll(createNewUserInfo, np, admin, chooseUsername, newUsername, choosePass, newPass, chooseFName, newFName, chooseLName, newLName, chooseAdminID, newAdminID, createUserButton, leaveCreateUser);
         createUserScene = new Scene(createUserLayout, 600, 600);
         
         primaryStage.setOnCloseRequest(e -> {

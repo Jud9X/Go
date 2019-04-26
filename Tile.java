@@ -107,6 +107,7 @@ public class Tile extends Pane {
         this.hasBlack = false;
         this.hasWhite = false;
         setStyle("-fx-border-color : beige");
+        setStyle("-fx-background-color : sandybrown");
         this.setPrefSize(50, 50);
         line1 = new Line(this.getWidth()/2, this.getHeight(), this.getWidth()/2, 0);
         line1.startXProperty().bind(this.widthProperty().divide(2)); //remove all these properties if they're not needed
@@ -135,6 +136,7 @@ public class Tile extends Pane {
         this.hasBlack = false;
         this.hasWhite = false;
         setStyle("-fx-border-color : beige");
+        setStyle("-fx-background-color : sandybrown");
         this.setPrefSize(50, 50);
         if (position.equals("left edge")) {
             line1 = new Line(this.getWidth()/2, this.getHeight(), this.getWidth()/2, 0);
