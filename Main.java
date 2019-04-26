@@ -179,7 +179,7 @@ public class Main extends Application {
                 startGame.setOnAction(e -> {
                     User p1 = loggedIn.get(0);
                     //code on next line adapted from https://stackoverflow.com/questions/17526608/how-to-find-an-object-in-an-arraylist-by-property
-                    User p2 = adminList.stream().filter(user -> userDropDownList.getValue().equals(user.getUsername())).findFirst().orElse(null); //make sure that a value in userdropdownlist is selected first
+                    User p2 = adminList.stream().filter(user -> userDropDownList.getValue().equals(user.getUsername())).findFirst().orElse(null);
                     if (p2 == null) {
                         p2 = playerList.stream().filter(user -> userDropDownList.getValue().equals(user.getUsername())).findFirst().orElse(null);
                     }
@@ -836,7 +836,7 @@ public class Main extends Application {
         admin.setToggleGroup(userTypes);
         np.setSelected(true);
         Label chooseUsername = new Label("Type username below:");
-        TextField newUsername = new TextField(); //restrict this to have no spaces
+        TextField newUsername = new TextField();
         newUsername.setMaxWidth(200);
         Label choosePass = new Label("Type password below:");
         TextField newPass = new TextField();
@@ -865,7 +865,7 @@ public class Main extends Application {
         BooleanProperty notTaken = new SimpleBooleanProperty(true);
         BooleanProperty usernameNotTaken = new SimpleBooleanProperty(true);
         Button createUserButton = new Button("Create user");
-        createUserButton.setOnAction(e -> { //check all fields first?
+        createUserButton.setOnAction(e -> {
             if (admin.isSelected()) {
                 notTaken.set(true);
                 usernameNotTaken.set(true);
@@ -886,6 +886,7 @@ public class Main extends Application {
                     }
                 }
                 if (notTaken.getValue() && usernameNotTaken.getValue()) {
+                    try {
                     Administrator newAdmin = new Administrator(newUsername.getText(), newPass.getText(), newFName.getText(), newLName.getText(), Integer.parseInt(newAdminID.getText()));
                     adminList.add(newAdmin);
                     InformationBox.display("Created new administrator", "New administrator successfully created");
@@ -909,6 +910,10 @@ public class Main extends Application {
                         tempAllUsers.get(i - 1).setLeaderboardPosition(tempAllUsers.size() - i + 1);
                     }
                     makeDash.set(false);
+                    }
+                    catch (Exception exc) {
+                        InformationBox.display("Admin ID Error", "The admin ID must be an integer.");
+                    }
                 }
             }
             else {
