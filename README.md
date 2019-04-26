@@ -15,7 +15,6 @@ java --module-path %PATH_TO_FX% --add-modules=javafx.controls Main
 Current big "to-do's":
 
 1. Review meeting minutes.
-3. Add exception handling where necessary
 4. Add Javadoc (following the lecture guidelines) and produce the final output of it
 5. Check coding conventions (following the lecture guidelines)
 7. Record the demonstration videos
