@@ -400,6 +400,9 @@ public class Main extends Application {
                     TableColumn<User, Integer> gameCountCol = new TableColumn<>("Games Played");
                     gameCountCol.setMinWidth(100);
                     gameCountCol.setCellValueFactory(new PropertyValueFactory<>("gameCount"));
+                    TableColumn<User, Integer> winCountCol = new TableColumn<>("Games Won");
+                    winCountCol.setMinWidth(100);
+                    winCountCol.setCellValueFactory(new PropertyValueFactory<>("winCount"));
                     TableColumn<User, Integer> winRateCol = new TableColumn<>("Win Rate (%)");
                     winRateCol.setMinWidth(100);
                     winRateCol.setCellValueFactory(new PropertyValueFactory<>("winRate"));
@@ -407,6 +410,7 @@ public class Main extends Application {
                     leaderboardTable.getColumns().add(leaderboardPositionCol);
                     leaderboardTable.getColumns().add(usernameCol);
                     leaderboardTable.getColumns().add(gameCountCol);
+                    leaderboardTable.getColumns().add(winCountCol);
                     leaderboardTable.getColumns().add(winRateCol);
                     leaderboardTable.getSortOrder().add(leaderboardPositionCol);
                     Button leaveLeaderboard = new Button("Return to dashboard");

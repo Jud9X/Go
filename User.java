@@ -57,6 +57,10 @@ public class User implements Serializable {
         return gameCount;
     }
     
+    public int getWinCount() {
+        return winCount;
+    }
+    
     public int getWinRate() {
         return (int) winRate;
     }
