@@ -142,7 +142,6 @@ public class Score {
         GameContainer.getGamesPlayed().add(result);
     }
     
-    //need to reset the static variables before running?
     private boolean isTerritory(int[][] board, int y, int x) {
         possibleTerritory.add(Arrays.asList(y, x));
         int[] adjs = GameLogic.getAdjacentCoordinates(y, x, board.length);

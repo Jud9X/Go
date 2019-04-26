@@ -2,7 +2,7 @@ import java.io.Serializable;
 import java.time.ZonedDateTime;
 
 /**
- * Parent class of the Player and Administrator classes.
+ * Parent class of the Player and Administrator classes which contains shared user information and methods.
  * @author Oliver
  * @version 1.2
  * */
@@ -119,10 +119,10 @@ public class User implements Serializable {
         profileImg = choice;
     }
     
-    public String toString() { //necessary?
+    public String toString() {
         if (previousLoginTime == null) {
             return "Username: " + username + " "
-                + "Password: " + password + " " //should be present?
+                + "Password: " + password + " "
                 + "First name: " + fname + " "
                 + "Last name: " + lname + " "
                 + "Win rate: " + winRate + " " 

@@ -1,5 +1,5 @@
 /**
- * Player class that is a child of the User class, inheriting its constructor and methods.
+ * A child of the User class, inheriting its constructor and methods, this class contains Player user information.
  * @author Oliver
  * @version 1.0
  * */
@@ -8,7 +8,11 @@ public class Player extends User {
         super(username, password, fname, lname);
     }
     
-    public String toString() { //necessary?
+    /**
+     * Turn the Administrator object into a String for printing.
+     * @return A String containing the object information, which cannot be null.
+     * */
+    public String toString() {
         return super.toString();
     }
 }
