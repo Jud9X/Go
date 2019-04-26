@@ -32,6 +32,12 @@ public class GameState {
     private BooleanProperty undoStateP;
     private BooleanProperty ready;
     
+    /**
+     * Creates a new game.
+     * @param k The size of the board, given as a length.
+     * @param player1 The User object for the first player.
+     * @param player2 The User object for the second player.
+     * */
     public GameState(int k, User player1, User player2) { //k is board size (e.g. height), player1 is a user object
         board = new int[k][k]; //0 in the array will mean empty, 1 will mean black and 2 will mean white
         this.player1 = player1;
@@ -46,7 +52,7 @@ public class GameState {
         }
         else {
             white = player1.getUsername();
-            black = player2.getUsername(); //can randomise this later if time/desired
+            black = player2.getUsername(); //can randomise this later if desired
         }
         passCount = 0;
         turnNo = 0;
@@ -64,7 +70,12 @@ public class GameState {
         ready = new SimpleBooleanProperty(false);
     }
     
-    //y is the first index, x is the second index, starting from (0,0) in the top left corner to (k-1, k-1)
+    /**
+     * Puts a piece on the board if the move is legal.
+     * y is the first index and x is the second, starting from (0, 0) in the top left corner.
+     * @param y The y coordinate of the desired piece.
+     * @param x The x coordinate of the desired piece.
+     * */
     public void placePiece(int y, int x) {
         int currentPlayerColour = (currentPlayerTurn == white) ? WHITE : BLACK;
         int otherPlayerColour = (currentPlayerColour == BLACK) ? WHITE : BLACK;
@@ -122,6 +133,9 @@ public class GameState {
         return;
     }
     
+    /**
+     * Undoes the previous move.
+     * */
     public void undoLastMove() {
         if (passCount > 0) {
             return;
@@ -190,7 +204,7 @@ public class GameState {
         return board;
     }
     
-    public int[] getCaptures() { //remove these if unused
+    public int[] getCaptures() {
         return captures;
     }
     
@@ -242,6 +256,9 @@ public class GameState {
         return capsWP;
     }
     
+    /**
+     * Passes the move.
+     * */
     public void pass() {
         ++passCount;
         passCountP.set("" + passCount);
@@ -261,11 +278,6 @@ public class GameState {
             currentPlayerTurn = white;
         }
         currentPlayerTurnP.set(currentPlayerTurn);
-        return;
-    }
-    
-    public void forfeitAndQuit() { //optional method that I didn't have time to implement
-        //stuff
         return;
     }
 }
