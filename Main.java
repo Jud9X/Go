@@ -911,7 +911,7 @@ public class Main extends Application {
                     }
                     makeDash.set(false);
                     }
-                    catch (Exception exc) {
+                    catch (NumberFormatException nfe) {
                         InformationBox.display("Admin ID Error", "The admin ID must be an integer.");
                     }
                 }
