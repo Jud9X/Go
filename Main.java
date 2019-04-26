@@ -173,7 +173,7 @@ public class Main extends Application {
                 r2.setSelected(true);
                 Button startGame = new Button("Start game");
                 //the line below came from https://stackoverflow.com/questions/43410312/javafx-choicebox-how-to-check-if-selected-activated
-                startGame.visibleProperty().bind(Bindings.isNotNull(userDropDownList.valueProperty()));
+                startGame.disableProperty().bind(Bindings.isNull(userDropDownList.valueProperty()));
                 setupPage.setMargin(startGame, new Insets(20, 0, 0, 0));
                 setupPage.getChildren().addAll(setupIntroInfo, curUser, opponentInfo, userDropDownList, chooseGridSize, r1, r2, startGame);
                 startGame.setOnAction(e -> {
@@ -853,7 +853,7 @@ public class Main extends Application {
         TextField newLName = new TextField();
         newLName.setMaxWidth(200);
         Label chooseAdminID = new Label("Type new admin ID below:");
-        TextField newAdminID = new TextField(); //enforce this to be an integer
+        TextField newAdminID = new TextField();
         newAdminID.setMaxWidth(200);
         chooseAdminID.setVisible(false);
         newAdminID.setVisible(false);
@@ -870,6 +870,7 @@ public class Main extends Application {
         BooleanProperty notTaken = new SimpleBooleanProperty(true);
         BooleanProperty usernameNotTaken = new SimpleBooleanProperty(true);
         Button createUserButton = new Button("Create user");
+        createUserButton.disableProperty().bind(newUsername.textProperty().isEmpty());
         createUserButton.setOnAction(e -> {
             if (admin.isSelected()) {
                 notTaken.set(true);
@@ -892,29 +893,29 @@ public class Main extends Application {
                 }
                 if (notTaken.getValue() && usernameNotTaken.getValue()) {
                     try {
-                    Administrator newAdmin = new Administrator(newUsername.getText(), newPass.getText(), newFName.getText(), newLName.getText(), Integer.parseInt(newAdminID.getText()));
-                    adminList.add(newAdmin);
-                    InformationBox.display("Created new administrator", "New administrator successfully created");
-                    ArrayList<User> tempAllUsers = new ArrayList<>();
-                    for (Administrator a:adminList) {
-                        tempAllUsers.add(a);
-                    }
-                    for (Player p:playerList) {
-                        tempAllUsers.add(p);
-                    }
-                    for (int i = 0; i < tempAllUsers.size() - 1; ++i) {
-                        for (int j = 0; j < tempAllUsers.size() - i - 1; ++j) {
-                            if (tempAllUsers.get(j).getWinRate() > tempAllUsers.get(j + 1).getWinRate()) {
-                                User t = tempAllUsers.get(j);
-                                tempAllUsers.set(j, tempAllUsers.get(j + 1));
-                                tempAllUsers.set(j + 1, t);
+                        Administrator newAdmin = new Administrator(newUsername.getText(), newPass.getText(), newFName.getText(), newLName.getText(), Integer.parseInt(newAdminID.getText()));
+                        adminList.add(newAdmin);
+                        InformationBox.display("Created new administrator", "New administrator successfully created");
+                        ArrayList<User> tempAllUsers = new ArrayList<>();
+                        for (Administrator a:adminList) {
+                            tempAllUsers.add(a);
+                        }
+                        for (Player p:playerList) {
+                            tempAllUsers.add(p);
+                        }
+                        for (int i = 0; i < tempAllUsers.size() - 1; ++i) {
+                            for (int j = 0; j < tempAllUsers.size() - i - 1; ++j) {
+                                if (tempAllUsers.get(j).getWinRate() > tempAllUsers.get(j + 1).getWinRate()) {
+                                    User t = tempAllUsers.get(j);
+                                    tempAllUsers.set(j, tempAllUsers.get(j + 1));
+                                    tempAllUsers.set(j + 1, t);
+                                }
                             }
                         }
-                    }
-                    for (int i = tempAllUsers.size(); i > 0; --i) {
-                        tempAllUsers.get(i - 1).setLeaderboardPosition(tempAllUsers.size() - i + 1);
-                    }
-                    makeDash.set(false);
+                        for (int i = tempAllUsers.size(); i > 0; --i) {
+                            tempAllUsers.get(i - 1).setLeaderboardPosition(tempAllUsers.size() - i + 1);
+                        }
+                        makeDash.set(false);
                     }
                     catch (NumberFormatException nfe) {
                         InformationBox.display("Admin ID Error", "The admin ID must be an integer.");
