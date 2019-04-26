@@ -189,7 +189,7 @@ public class Main extends Application {
                     BorderPane layout2 = new BorderPane();
                     layout2.setCenter(GameContainer.getGrid());
                     VBox gameInfo = new VBox();
-                    gameInfo.setPadding(new Insets(10,10,10,10));
+                    gameInfo.setPadding(new Insets(10,10,10,20));
                     gameInfo.setSpacing(10);
                     TextFlow firstPlayer = new TextFlow();
                     Text black1 = new Text("Black: ");
@@ -343,7 +343,7 @@ public class Main extends Application {
                     });
                     gameControl.getChildren().addAll(passInfo, pass, undoInfo, undo, instructions, done, undoMarkInfo, undoMark);
                     layout2.setLeft(gameControl);
-                    gameScene = new Scene(layout2, 862, 672);
+                    gameScene = new Scene(layout2, 872, 672);
                     primaryStage.setScene(gameScene);
                     primaryStage.centerOnScreen();
                 });
@@ -611,6 +611,7 @@ public class Main extends Application {
                 newsIntro.setStyle("-fx-font-weight: bold");
                 Label leaderboardPrev = new Label("Leaderboard position on last logout:");
                 leaderboardPrev.setWrapText(true);
+                news.setMargin(leaderboardPrev, new Insets(10, 0, 0, 0));
                 Label leaderboardPrevData;
                 if (loggedIn.get(0).getPreviousLoginTime() == null) {
                     leaderboardPrevData = new Label("This is your first login");
