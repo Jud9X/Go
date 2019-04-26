@@ -622,6 +622,7 @@ public class Main extends Application {
                 Label leaderboardPrevData;
                 if (loggedIn.get(0).getPreviousLoginTime() == null) {
                     leaderboardPrevData = new Label("This is your first login");
+                    leaderboardPrevData.setWrapText(true);
                 }
                 else {
                     leaderboardPrevData = new Label("" + loggedIn.get(0).getPreviousLeaderboardPosition());
