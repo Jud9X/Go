@@ -71,7 +71,7 @@ public class GameGrid extends GridPane {
     
     /**
      * Gets the new grid.
-     * @return Tile[][] The grid as a 2D array of Tile objects.
+     * @return The grid as a 2D array of Tile objects.
      * */
     public Tile[][] getGrid() {
         return grid;

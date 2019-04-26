@@ -21,7 +21,7 @@ public class GameContainer {
     
     /**
      * Gets the current static GameState object.
-     * @return GameState The current GameState object.
+     * @return The current GameState object.
      * */
     public static GameState getG() {
         return g;
@@ -39,7 +39,7 @@ public class GameContainer {
     
     /**
      * Returns the current static GameGrid object.
-     * @return GameGrid The current GameGrid object.
+     * @return The current GameGrid object.
      * */
     public static GameGrid getGrid() {
         return grid;
@@ -47,7 +47,7 @@ public class GameContainer {
     
     /**
      * Sets the current static GameGrid object.
-     * @param gridSize The size of the grid given as one length.
+     * @param The size of the grid given as one length.
      * */
     public static void setGrid(int gridSize) {
         grid = new GameGrid(gridSize);
@@ -55,7 +55,7 @@ public class GameContainer {
     
     /**
      * Gets the current static Score object.
-     * @return Score The Score object.
+     * @return The current Score object.
      * */
     public static Score getS() {
         return s;
@@ -71,7 +71,7 @@ public class GameContainer {
     
     /**
      * Gets the record of all games played.
-     * @return ArrayList<GameRecord> An ArrayList containing GameRecord objects of each game played.
+     * @return An ArrayList containing GameRecord objects of each game played.
      * */
     public static ArrayList<GameRecord> getGamesPlayed() {
         return gamesPlayed;

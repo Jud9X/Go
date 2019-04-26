@@ -5,6 +5,7 @@ import java.util.Set;
 
 /**
  * Only contains static variables and functions that contain the logic of the game. Cannot be instantiated.
+ * The coordinates take the top left hand corner of the board as (0, 0).
  * @author Oliver
  * @version 1.6
  * */
@@ -12,9 +13,21 @@ public class GameLogic {
     private static Set<List<Integer>> visited = new HashSet<List<Integer>>();
     private static boolean willBeCaptured = true;
     
+    /**
+     * Private, empty constructor to prevent GameContainer objects from being instantiated.
+     * */
     private GameLogic() {
     }
     
+    /**
+     * Checks to see if the desired move is illegal.
+     * @param previousBoard The state of the board in the previous turn (for checking "ko").
+     * @param board The current state of the board.
+     * @param y The y coordinate of the desired new piece.
+     * @param x The x coordinate of the desired new piece.
+     * @param currentPlayerColour The current player's colour as an integer.
+     * @return A boolean value which is true if the move is illegal and false otherwise.
+     * */
     public static boolean moveIsIllegal(int[][] previousBoard, int[][] board, int y, int x, int currentPlayerColour) {
         //check move is legal: place is free?
         if (board[y][x] != 0) {
@@ -58,6 +71,14 @@ public class GameLogic {
         return Same;
     }
     
+    /**
+     * Updates the board.
+     * @param board The current state of the board.
+     * @param y The y coordinate of the desired new piece.
+     * @param x The x coordinate of the desired new piece.
+     * @param currentPlayerColour The current player's colour as an integer.
+     * @return A 2D int array which is the new board after the move is made.
+     * */
     public static int[][] updateBoard(int[][] board, int y, int x, int currentPlayerColour) { //updates board as a result of current player placing a piece at (x, y)
         int[] adjacentCoordinates = getAdjacentCoordinates(y, x, board.length);
         for (int i = 0; i < adjacentCoordinates.length - 1; i += 2) {
@@ -93,7 +114,14 @@ public class GameLogic {
         return board;
     }
     
-    //need to empty the hashset before each use...?
+    /**
+     * Checks to see if the given piece will be captured.
+     * @param board The current state of the board.
+     * @param y The y coordinate of the piece to be checked.
+     * @param x The x coordinate of the piece to be checked.
+     * @param colour The colour of the piece to be checked.
+     * @return A boolean value which is true if the piece will be captured, false otherwise.
+     * */
     private static boolean willBeCaptured(int[][] board, int y, int x, int colour) {
         visited.add(Arrays.asList(y, x));
         if (getLiberties(y, x, board).length != 0) {
@@ -108,8 +136,13 @@ public class GameLogic {
         return willBeCaptured;
     }
     
-    //function gets the coordinates of all existing adjacent places (NESW) to an input coordinate pair
-    //returns them as consecutive (y, x) pairs, e.g. first two elements in int[] being 3, 2 means y=3, x=2
+    /**
+     * Gets the coordinates of all existing adjacent places (NESW) to an input coordinate pair.
+     * @param y The y coordinate of the input location.
+     * @param x The x coordinate of the input location.
+     * @param height The height of the board.
+     * @return An int[] of all adjacent coordinates as consecutive (y, x) pairs.
+     * */
     public static int[] getAdjacentCoordinates(int y, int x, int height) {
         //1. interior point case
         if (x > 0 && x < height - 1 && y > 0 && y < height - 1) {
@@ -176,8 +209,13 @@ public class GameLogic {
         }
     }
     
-    //function gets the coordinates of all existing liberties around an input coordinate pair
-    //returns them as consecutive (y, x) pairs, e.g. first two elements in int[] being 3, 2 means y=3, x=2
+    /**
+     * Gets the coordinates of all existing liberties around an input coordinate pair.
+     * @param y The y coordinate of the input location.
+     * @param x The x coordinate of the input location.
+     * @param board The current state of the board.
+     * @return An int[] of all liberties' coordinates as consecutive (y, x) pairs.
+     * */
     private static int[] getLiberties(int y, int x, int[][] board) {
         int[] adjacents = getAdjacentCoordinates(y, x, board.length);
         int libertyCount = 0;
